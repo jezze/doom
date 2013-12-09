@@ -1,0 +1,502 @@
+#include "doomstat.h"
+#include "w_wad.h"
+#include "r_draw.h"
+#include "r_main.h"
+#include "r_sky.h"
+#include "i_system.h"
+#include "r_bsp.h"
+#include "r_things.h"
+#include "p_tick.h"
+#include "lprintf.h"
+#include "p_tick.h"
+
+typedef struct
+{
+  short originx;
+  short originy;
+  short patch;
+  short stepdir;
+  short colormap;
+} __attribute__((packed)) mappatch_t;
+
+typedef struct
+{
+  char       name[8];
+  char       pad2[4];
+  short      width;
+  short      height;
+  char       pad[4];
+  short      patchcount;
+  mappatch_t patches[1];
+} __attribute__((packed)) maptexture_t;
+
+int firstcolormaplump, lastcolormaplump;
+
+int       firstflat, lastflat, numflats;
+int       firstspritelump, lastspritelump, numspritelumps;
+int       numtextures;
+texture_t **textures;
+fixed_t   *textureheight;
+int       *flattranslation;
+int       *texturetranslation;
+
+const byte *R_GetTextureColumn(const rpatch_t *texpatch, int col) {
+  while (col < 0)
+    col += texpatch->width;
+  col &= texpatch->widthmask;
+  
+  return texpatch->columns[col].pixels;
+}
+
+static void R_InitTextures (void)
+{
+  const maptexture_t *mtexture;
+  texture_t    *texture;
+  const mappatch_t   *mpatch;
+  texpatch_t   *patch;
+  int  i, j;
+  int         maptex_lump[2] = {-1, -1};
+  const int  *maptex;
+  const int  *maptex1, *maptex2;
+  char name[9];
+  int names_lump;
+  const char *names;
+  const char *name_p;
+  int  *patchlookup;
+  int  totalwidth;
+  int  nummappatches;
+  int  offset;
+  int  maxoff, maxoff2;
+  int  numtextures1, numtextures2;
+  const int *directory;
+  int  errors = 0;
+
+  name[8] = 0;
+  names = W_CacheLumpNum(names_lump = W_GetNumForName("PNAMES"));
+  nummappatches = LONG(*((const int *)names));
+  name_p = names+4;
+  patchlookup = malloc(nummappatches*sizeof(*patchlookup));
+
+  for (i=0 ; i<nummappatches ; i++)
+    {
+      strncpy (name,name_p+i*8, 8);
+      patchlookup[i] = W_CheckNumForName(name);
+      if (patchlookup[i] == -1)
+        {
+
+          patchlookup[i] = (W_CheckNumForName)(name, ns_sprites);
+
+        }
+    }
+  W_UnlockLumpNum(names_lump);
+
+  maptex = maptex1 = W_CacheLumpNum(maptex_lump[0] = W_GetNumForName("TEXTURE1"));
+  numtextures1 = LONG(*maptex);
+  maxoff = W_LumpLength(maptex_lump[0]);
+  directory = maptex+1;
+
+  if (W_CheckNumForName("TEXTURE2") != -1)
+    {
+      maptex2 = W_CacheLumpNum(maptex_lump[1] = W_GetNumForName("TEXTURE2"));
+      numtextures2 = LONG(*maptex2);
+      maxoff2 = W_LumpLength(maptex_lump[1]);
+    }
+  else
+    {
+      maptex2 = NULL;
+      numtextures2 = 0;
+      maxoff2 = 0;
+    }
+  numtextures = numtextures1 + numtextures2;
+  textures = Z_Malloc(numtextures*sizeof*textures, PU_STATIC, 0);
+  textureheight = Z_Malloc(numtextures*sizeof*textureheight, PU_STATIC, 0);
+  totalwidth = 0;
+
+  for (i=0 ; i<numtextures ; i++, directory++)
+    {
+      if (i == numtextures1)
+        {
+
+          maptex = maptex2;
+          maxoff = maxoff2;
+          directory = maptex+1;
+        }
+
+      offset = LONG(*directory);
+
+      if (offset > maxoff)
+        I_Error("R_InitTextures: Bad texture directory");
+
+      mtexture = (const maptexture_t *) ( (const byte *)maptex + offset);
+
+      texture = textures[i] =
+        Z_Malloc(sizeof(texture_t) +
+                 sizeof(texpatch_t)*(SHORT(mtexture->patchcount)-1),
+                 PU_STATIC, 0);
+
+      texture->width = SHORT(mtexture->width);
+      texture->height = SHORT(mtexture->height);
+      texture->patchcount = SHORT(mtexture->patchcount);
+
+      {
+        int j;
+        for(j=0;j<sizeof(texture->name);j++)
+          texture->name[j]=mtexture->name[j];
+      }
+
+      mpatch = mtexture->patches;
+      patch = texture->patches;
+
+      for (j=0 ; j<texture->patchcount ; j++, mpatch++, patch++)
+        {
+          patch->originx = SHORT(mpatch->originx);
+          patch->originy = SHORT(mpatch->originy);
+          patch->patch = patchlookup[SHORT(mpatch->patch)];
+          if (patch->patch == -1)
+            {
+
+              lprintf(LO_ERROR,"\nR_InitTextures: Missing patch %d in texture %.8s",
+                     SHORT(mpatch->patch), texture->name);
+              ++errors;
+            }
+        }
+
+      for (j=1; j*2 <= texture->width; j<<=1)
+        ;
+      texture->widthmask = j-1;
+      textureheight[i] = texture->height<<FRACBITS;
+
+      totalwidth += texture->width;
+    }
+
+  free(patchlookup);
+
+  for (i=0; i<2; i++)
+    if (maptex_lump[i] != -1)
+      W_UnlockLumpNum(maptex_lump[i]);
+
+  if (errors)
+    I_Error("R_InitTextures: %d errors", errors);
+
+  texturetranslation =
+    Z_Malloc((numtextures+1)*sizeof*texturetranslation, PU_STATIC, 0);
+
+  for (i=0 ; i<numtextures ; i++)
+    texturetranslation[i] = i;
+
+
+  for (i = 0; i<numtextures; i++)
+    textures[i]->index = -1;
+  while (--i >= 0)
+    {
+      int j = W_LumpNameHash(textures[i]->name) % (unsigned) numtextures;
+      textures[i]->next = textures[j]->index;
+      textures[j]->index = i;
+    }
+}
+
+static void R_InitFlats(void)
+{
+  int i;
+
+  firstflat = W_GetNumForName("F_START") + 1;
+  lastflat  = W_GetNumForName("F_END") - 1;
+  numflats  = lastflat - firstflat + 1;
+  flattranslation =
+    Z_Malloc((numflats+1)*sizeof(*flattranslation), PU_STATIC, 0);
+
+  for (i=0 ; i<numflats ; i++)
+    flattranslation[i] = i;
+}
+
+static void R_InitSpriteLumps(void)
+{
+  firstspritelump = W_GetNumForName("S_START") + 1;
+  lastspritelump = W_GetNumForName("S_END") - 1;
+  numspritelumps = lastspritelump - firstspritelump + 1;
+}
+
+static void R_InitColormaps(void)
+{
+  int i;
+  firstcolormaplump = W_GetNumForName("C_START");
+  lastcolormaplump  = W_GetNumForName("C_END");
+  numcolormaps = lastcolormaplump - firstcolormaplump;
+  colormaps = Z_Malloc(sizeof(*colormaps) * numcolormaps, PU_STATIC, 0);
+  colormaps[0] = (const lighttable_t *)W_CacheLumpName("COLORMAP");
+  for (i=1; i<numcolormaps; i++)
+    colormaps[i] = (const lighttable_t *)W_CacheLumpNum(i+firstcolormaplump);
+
+}
+
+int R_ColormapNumForName(const char *name)
+{
+  register int i = 0;
+  if (strncasecmp(name,"COLORMAP",8))
+    if ((i = (W_CheckNumForName)(name, ns_colormaps)) != -1)
+      i -= firstcolormaplump;
+  return i;
+}
+
+static inline int between(int l,int u,int x)
+{ return (l > x ? l : x > u ? u : x); }
+
+const lighttable_t* R_ColourMap(int lightlevel, fixed_t spryscale)
+{
+  if (fixedcolormap) return fixedcolormap;
+  else {
+    if (curline)
+      if (curline->v1->y == curline->v2->y)
+        lightlevel -= 1 << LIGHTSEGSHIFT;
+      else
+        if (curline->v1->x == curline->v2->x)
+          lightlevel += 1 << LIGHTSEGSHIFT;
+
+    lightlevel += extralight << LIGHTSEGSHIFT;
+
+    return fullcolormap + between(0,NUMCOLORMAPS-1,
+          ((256-lightlevel)*2*NUMCOLORMAPS/256) - 4
+          - (FixedMul(spryscale,pspriteiscale)/2 >> LIGHTSCALESHIFT)
+          )*256;
+  }
+}
+
+int tran_filter_pct = 66;
+
+#define TSC 12        /* number of fixed point digits in filter percent */
+
+void R_InitTranMap(int progress)
+{
+  int lump = W_CheckNumForName("TRANMAP");
+
+  if (lump != -1)
+    main_tranmap = W_CacheLumpNum(lump);
+  else if (W_CheckNumForName("PLAYPAL")!=-1)
+    {
+      const byte *playpal = W_CacheLumpName("PLAYPAL");
+      byte       *my_tranmap;
+
+      char fname[PATH_MAX+1];
+      struct {
+        unsigned char pct;
+        unsigned char playpal[256];
+      } cache;
+      FILE *cachefp = fopen(strcat(strcpy(fname, I_DoomExeDir()), "/tranmap.dat"),"rb");
+
+      main_tranmap = my_tranmap = Z_Malloc(256*256, PU_STATIC, 0);
+
+      if (!cachefp ||
+          fread(&cache, 1, sizeof cache, cachefp) != sizeof cache ||
+          cache.pct != tran_filter_pct ||
+          memcmp(cache.playpal, playpal, sizeof cache.playpal) ||
+          fread(my_tranmap, 256, 256, cachefp) != 256 )
+        {
+          long pal[3][256], tot[256], pal_w1[3][256];
+          long w1 = ((unsigned long) tran_filter_pct<<TSC)/100;
+          long w2 = (1l<<TSC)-w1;
+
+          if (progress)
+            lprintf(LO_INFO, "Tranmap build [        ]\x08\x08\x08\x08\x08\x08\x08\x08\x08");
+
+
+
+
+          {
+            register int i = 255;
+            register const unsigned char *p = playpal+255*3;
+            do
+              {
+                register long t,d;
+                pal_w1[0][i] = (pal[0][i] = t = p[0]) * w1;
+                d = t*t;
+                pal_w1[1][i] = (pal[1][i] = t = p[1]) * w1;
+                d += t*t;
+                pal_w1[2][i] = (pal[2][i] = t = p[2]) * w1;
+                d += t*t;
+                p -= 3;
+                tot[i] = d << (TSC-1);
+              }
+            while (--i>=0);
+          }
+
+          {
+            int i,j;
+            byte *tp = my_tranmap;
+            for (i=0;i<256;i++)
+              {
+                long r1 = pal[0][i] * w2;
+                long g1 = pal[1][i] * w2;
+                long b1 = pal[2][i] * w2;
+                if (!(i & 31) && progress)
+
+                  lprintf(LO_INFO,".");
+                for (j=0;j<256;j++,tp++)
+                  {
+                    register int color = 255;
+                    register long err;
+                    long r = pal_w1[0][j] + r1;
+                    long g = pal_w1[1][j] + g1;
+                    long b = pal_w1[2][j] + b1;
+                    long best = LONG_MAX;
+                    do
+                      if ((err = tot[color] - pal[0][color]*r
+                          - pal[1][color]*g - pal[2][color]*b) < best)
+                        best = err, *tp = color;
+                    while (--color >= 0);
+                  }
+              }
+          }
+          if ((cachefp = fopen(fname,"wb")) != NULL)
+            {
+              cache.pct = tran_filter_pct;
+              memcpy(cache.playpal, playpal, 256);
+              fseek(cachefp, 0, SEEK_SET);
+              fwrite(&cache, 1, sizeof cache, cachefp);
+              fwrite(main_tranmap, 256, 256, cachefp);
+
+            }
+        }
+
+      if (cachefp)
+        fclose(cachefp);
+
+      W_UnlockLumpName("PLAYPAL");
+    }
+}
+
+void R_InitData(void)
+{
+  lprintf(LO_INFO, "Textures ");
+  R_InitTextures();
+  lprintf(LO_INFO, "Flats ");
+  R_InitFlats();
+  lprintf(LO_INFO, "Sprites ");
+  R_InitSpriteLumps();
+  if (default_translucency)
+    R_InitTranMap(1);
+  R_InitColormaps();
+}
+
+int R_FlatNumForName(const char *name)
+{
+  int i = (W_CheckNumForName)(name, ns_flats);
+  if (i == -1)
+    I_Error("R_FlatNumForName: %.8s not found", name);
+  return i - firstflat;
+}
+
+int R_CheckTextureNumForName(const char *name)
+{
+  int i = NO_TEXTURE;
+  if (*name != '-')
+    {
+      i = textures[W_LumpNameHash(name) % (unsigned) numtextures]->index;
+      while (i >= 0 && strncasecmp(textures[i]->name,name,8))
+        i = textures[i]->next;
+    }
+  return i;
+}
+
+int R_TextureNumForName(const char *name)
+{
+  int i = R_CheckTextureNumForName(name);
+  if (i == -1)
+    I_Error("R_TextureNumForName: %.8s not found", name);
+  return i;
+}
+
+int R_SafeTextureNumForName(const char *name, int snum)
+{
+  int i = R_CheckTextureNumForName(name);
+  if (i == -1) {
+    i = NO_TEXTURE;
+    lprintf(LO_DEBUG,"bad texture '%s' in sidedef %d\n",name,snum);
+  }
+  return i;
+}
+
+static inline void precache_lump(int l)
+{
+  W_CacheLumpNum(l); W_UnlockLumpNum(l);
+}
+
+void R_PrecacheLevel(void)
+{
+  register int i;
+  register byte *hitlist;
+
+  if (demoplayback)
+    return;
+
+  {
+    size_t size = numflats > numsprites  ? numflats : numsprites;
+    hitlist = malloc((size_t)numtextures > size ? numtextures : size);
+  }
+
+
+
+  memset(hitlist, 0, numflats);
+
+  for (i = numsectors; --i >= 0; )
+    hitlist[sectors[i].floorpic] = hitlist[sectors[i].ceilingpic] = 1;
+
+  for (i = numflats; --i >= 0; )
+    if (hitlist[i])
+      precache_lump(firstflat + i);
+
+
+
+  memset(hitlist, 0, numtextures);
+
+  for (i = numsides; --i >= 0;)
+    hitlist[sides[i].bottomtexture] =
+      hitlist[sides[i].toptexture] =
+      hitlist[sides[i].midtexture] = 1;
+
+  hitlist[skytexture] = 1;
+
+  for (i = numtextures; --i >= 0; )
+    if (hitlist[i])
+      {
+        texture_t *texture = textures[i];
+        int j = texture->patchcount;
+        while (--j >= 0)
+          precache_lump(texture->patches[j].patch);
+      }
+
+
+  memset(hitlist, 0, numsprites);
+
+  {
+    thinker_t *th = NULL;
+    while ((th = P_NextThinker(th,th_all)) != NULL)
+      if (th->function == P_MobjThinker)
+        hitlist[((mobj_t *)th)->sprite] = 1;
+  }
+
+  for (i=numsprites; --i >= 0;)
+    if (hitlist[i])
+      {
+        int j = sprites[i].numframes;
+        while (--j >= 0)
+          {
+            short *sflump = sprites[i].spriteframes[j].lump;
+            int k = 7;
+            do
+              precache_lump(firstspritelump + sflump[k]);
+            while (--k >= 0);
+          }
+      }
+  free(hitlist);
+}
+
+void R_SetPatchNum(patchnum_t *patchnum, const char *name)
+{
+  const rpatch_t *patch = R_CachePatchName(name);
+  patchnum->width = patch->width;
+  patchnum->height = patch->height;
+  patchnum->leftoffset = patch->leftoffset;
+  patchnum->topoffset = patch->topoffset;
+  patchnum->lumpnum = W_GetNumForName(name);
+  R_UnlockPatchName(name);
+}
