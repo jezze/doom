@@ -18,7 +18,6 @@ void S_UpdateSounds(void *listener);
 void S_SetMusicVolume(int volume);
 void S_SetSfxVolume(int volume);
 
-extern int default_numChannels;
 extern int numChannels;
 extern int idmusnum;
 

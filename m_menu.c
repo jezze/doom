@@ -1864,11 +1864,6 @@ setup_menu_t* gen_settings[] =
   NULL
 };
 
-enum {
-  general_sndchan,
-  general_pitch
-};
-
 #define G_X 250
 #define G_YA  44
 #define G_YA2 (G_YA+9*8)
@@ -1877,8 +1872,6 @@ enum {
 
 setup_menu_t gen_settings1[] = {
     {"Sound & Music", S_SKIP|S_TITLE, m_null, G_X, G_YA3 - 12},
-    {"Number of Sound Channels", S_NUM|S_PRGWARN, m_null, G_X, G_YA3 + general_sndchan * 8, {"snd_channels"}},
-    {"Enable v1.1 Pitch Effects", S_YESNO, m_null, G_X, G_YA3 + general_pitch*8, {"pitched_sounds"}},
     {0, S_RESET, m_null, X_BUTTON, Y_BUTTON},
     {"NEXT ->", S_SKIP | S_NEXT, m_null, KB_NEXT, KB_Y +20 * 8, {gen_settings2}},
     {0, S_SKIP|S_END,m_null}

@@ -58,7 +58,6 @@ extern boolean fastparm;
 extern GameMode_t gamemode;
 extern GameMission_t gamemission;
 extern complevel_t compatibility_level, default_compatibility_level;
-extern int pitched_sounds;
 extern int demo_insurance, default_demo_insurance;
 extern int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
 extern skill_t startskill;

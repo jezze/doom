@@ -32,7 +32,7 @@ int snd_SfxVolume = 15;
 int snd_MusicVolume = 15;
 static boolean mus_paused;
 static musicinfo_t *mus_playing;
-int default_numChannels;
+int default_numChannels = 8;
 int numChannels;
 int idmusnum;
 void S_StopChannel(int cnum);
