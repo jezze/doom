@@ -409,40 +409,12 @@ void I_InitGraphics(void)
 
 }
 
-static int I_GetModeFromString(const char *modestr)
-{
-
-    video_mode_t mode;
-
-    if (!strcasecmp(modestr,"15"))
-        mode = VID_MODE15;
-    else if (!strcasecmp(modestr,"15bit"))
-        mode = VID_MODE15;
-    else if (!strcasecmp(modestr,"16"))
-        mode = VID_MODE16;
-    else if (!strcasecmp(modestr,"16bit"))
-        mode = VID_MODE16;
-    else if (!strcasecmp(modestr,"32"))
-        mode = VID_MODE32;
-    else if (!strcasecmp(modestr,"32bit"))
-        mode = VID_MODE32;
-    else
-        mode = VID_MODE8;
-
-    return mode;
-
-}
-
 void I_UpdateVideoMode(void)
 {
 
-    video_mode_t mode;
-
     lprintf(LO_INFO, "I_UpdateVideoMode: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
 
-    mode = I_GetModeFromString(default_videomode);
-
-    V_InitMode(mode);
+    V_InitMode(VID_MODE8);
     V_DestroyUnusedTrueColorPalettes();
     V_FreeScreens();
     I_SetRes();

@@ -1865,7 +1865,6 @@ setup_menu_t* gen_settings[] =
 };
 
 enum {
-  general_videomode,
   general_uncapped,
 };
 
@@ -1880,13 +1879,8 @@ enum {
 #define G_YA3 (G_YA2+5*8)
 #define GF_X 76
 
-static const char *videomodes[] = {
-    "8bit","15bit","16bit", "32bit", NULL
-};
-
 setup_menu_t gen_settings1[] = {
     {"Video", S_SKIP | S_TITLE, m_null, G_X, G_YA - 12},
-    {"Video mode", S_CHOICE|S_PRGWARN, m_null, G_X, G_YA + general_videomode * 8, {"videomode"}, 0, 0, NULL, videomodes},
     {"Uncapped Framerate", S_YESNO, m_null, G_X, G_YA + general_uncapped * 8, {"uncapped_framerate"}},
     {"Sound & Music", S_SKIP|S_TITLE, m_null, G_X, G_YA3 - 12},
     {"Number of Sound Channels", S_NUM|S_PRGWARN, m_null, G_X, G_YA3 + general_sndchan * 8, {"snd_channels"}},

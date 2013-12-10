@@ -80,8 +80,6 @@ extern unsigned int *V_Palette32;
 #define VID_PAL16(color, weight) V_Palette16[ (color)*VID_NUMCOLORWEIGHTS + (weight) ]
 #define VID_PAL32(color, weight) V_Palette32[ (color)*VID_NUMCOLORWEIGHTS + (weight) ]
 
-extern const char *default_videomode;
-
 void V_InitMode(video_mode_t mode);
 video_mode_t V_GetMode(void);
 int V_GetModePixelDepth(video_mode_t mode);

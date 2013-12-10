@@ -154,7 +154,6 @@ default_t defaults[] =
   {"mus_pause_opt", {&mus_pause_opt}, {2}, 0, 2, def_int, ss_none},
   {"snd_channels", {&default_numChannels}, {8}, 1, 32, def_int, ss_none},
   {"Video settings", {NULL}, {0}, UL, UL, def_none, ss_none},
-  {"videomode", {NULL, &default_videomode}, {0,"8"}, UL, UL, def_str, ss_none},
   {"screen_width", {&desired_screenwidth}, {640}, 320, MAX_SCREENWIDTH, def_int, ss_none},
   {"screen_height", {&desired_screenheight}, {480}, 200, MAX_SCREENHEIGHT, def_int, ss_none},
   {"screenblocks", {&screenblocks}, {10}, 3, 11, def_int, ss_none},
