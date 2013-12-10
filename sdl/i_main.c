@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include "doomdef.h"
+#include "doomtype.h"
 #include "d_main.h"
 #include "m_fixed.h"
 #include "i_system.h"
