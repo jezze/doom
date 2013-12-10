@@ -478,14 +478,6 @@ static void HUlib_delCharFromIText(hu_itext_t* it)
 
 }
 
-static void HUlib_eraseLineFromIText(hu_itext_t* it)
-{
-
-    while (it->lm != it->l.len)
-        HUlib_delCharFromTextLine(&it->l);
-
-}
-
 void HUlib_resetIText(hu_itext_t* it)
 {
 

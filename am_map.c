@@ -122,8 +122,6 @@ mline_t thintriangle_guy[] =
 #undef R
 #define NUMTHINTRIANGLEGUYLINES (sizeof(thintriangle_guy)/sizeof(mline_t))
 
-int ddt_cheating = 0;
-
 static int leveljuststarted = 1;
 
 enum automapmode_e automapmode;
@@ -850,9 +848,9 @@ static void AM_drawWalls(void)
     }
 
 
-    if (ddt_cheating || (lines[i].flags & ML_MAPPED))
+    if ((lines[i].flags & ML_MAPPED))
     {
-      if ((lines[i].flags & ML_DONTDRAW) && !ddt_cheating)
+      if ((lines[i].flags & ML_DONTDRAW))
         continue;
       {
         /* cph - show keyed doors and lines */
@@ -985,7 +983,7 @@ static void AM_drawWalls(void)
         {
           AM_drawMline(&l, mapcolor_cchg);
         }
-        else if (mapcolor_flat && ddt_cheating)
+        else if (mapcolor_flat)
         {
           AM_drawMline(&l, mapcolor_flat);
         }
@@ -1067,28 +1065,7 @@ static void AM_drawPlayers(void)
 {
   int   i;
 
-    if (ddt_cheating)
-      AM_drawLineCharacter
-      (
-        cheat_player_arrow,
-        NUMCHEATPLYRLINES,
-        0,
-        plr->mo->angle,
-        mapcolor_sngl,
-        plr->mo->x >> FRACTOMAPBITS,
-        plr->mo->y >> FRACTOMAPBITS
-      );
-    else
-      AM_drawLineCharacter
-      (
-        player_arrow,
-        NUMPLYRLINES,
-        0,
-        plr->mo->angle,
-        mapcolor_sngl,
-        plr->mo->x >> FRACTOMAPBITS,
-        plr->mo->y >> FRACTOMAPBITS);
-    return;
+  AM_drawLineCharacter(player_arrow, NUMPLYRLINES, 0, plr->mo->angle, mapcolor_sngl, plr->mo->x >> FRACTOMAPBITS, plr->mo->y >> FRACTOMAPBITS);
 
 }
 
@@ -1160,14 +1137,8 @@ static void AM_drawThings(void)
         NUMTHINTRIANGLEGUYLINES,
         16<<MAPBITS,
         t->angle,
-    t->flags & MF_FRIEND && !t->player ? mapcolor_frnd : 
-    /* cph 2006/07/30 - Show count-as-kills in red. */
-          ((t->flags & (MF_COUNTKILL | MF_CORPSE)) == MF_COUNTKILL) ? mapcolor_enemy :
-        /* bbm 2/28/03 Show countable items in yellow. */
-          t->flags & MF_COUNTITEM ? mapcolor_item : mapcolor_sprt,
-        x, y
-      );
-      t = t->snext;
+        t->flags & MF_FRIEND && !t->player ? mapcolor_frnd : ((t->flags & (MF_COUNTKILL | MF_CORPSE)) == MF_COUNTKILL) ? mapcolor_enemy : t->flags & MF_COUNTITEM ? mapcolor_item : mapcolor_sprt, x, y);
+        t = t->snext;
     }
   }
 }
@@ -1245,9 +1216,7 @@ void AM_Drawer (void)
 
     AM_drawWalls();
     AM_drawPlayers();
-
-    if (ddt_cheating == 2)
-        AM_drawThings();
+    AM_drawThings();
         
     AM_drawCrosshair(mapcolor_hair);
     AM_drawMarks();

@@ -298,22 +298,6 @@ void M_DrawNewGame(void)
 
 }
 
-static void M_RestartLevelResponse(int ch)
-{
-
-    if (ch != 'y')
-        return;
-
-    if (demorecording)
-        exit(0);
-
-    currentMenu->lastOn = itemOn;
-
-    M_ClearMenus ();
-    G_RestartLevel();
-
-}
-
 void M_NewGame(int choice)
 {
 
