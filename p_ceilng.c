@@ -4,6 +4,7 @@
 #include "p_tick.h"
 #include "s_sound.h"
 #include "sounds.h"
+#include "z_zone.h"
 
 ceilinglist_t *activeceilings;
 

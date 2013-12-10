@@ -6,6 +6,7 @@
 #include "r_main.h"
 #include "d_englsh.h"
 #include "lprintf.h"
+#include "z_zone.h"
 
 void T_VerticalDoor (vldoor_t* door)
 {

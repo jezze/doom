@@ -8,6 +8,7 @@
 #include "g_game.h"
 #include "am_map.h"
 #include "lprintf.h"
+#include "z_zone.h"
 
 #define FUZZTABLE                       50
 #define FUZZOFF                         1

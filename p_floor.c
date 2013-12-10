@@ -5,6 +5,7 @@
 #include "p_tick.h"
 #include "s_sound.h"
 #include "sounds.h"
+#include "z_zone.h"
 
 result_e T_MovePlane
 ( sector_t*     sector,

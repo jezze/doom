@@ -8,6 +8,7 @@
 #include "r_fps.h"
 #include "v_video.h"
 #include "lprintf.h"
+#include "z_zone.h"
 
 #define MINZ        (FRACUNIT*4)
 #define BASEYCENTER 100

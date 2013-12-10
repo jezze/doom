@@ -9,6 +9,7 @@
 #include "am_map.h"
 #include "p_enemy.h"
 #include "lprintf.h"
+#include "z_zone.h"
 
 byte *save_p;
 

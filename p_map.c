@@ -11,6 +11,7 @@
 #include "m_random.h"
 #include "m_bbox.h"
 #include "lprintf.h"
+#include "z_zone.h"
 
 static mobj_t    *tmthing;
 static fixed_t   tmx;

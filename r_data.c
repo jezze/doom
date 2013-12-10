@@ -9,6 +9,7 @@
 #include "p_tick.h"
 #include "lprintf.h"
 #include "p_tick.h"
+#include "z_zone.h"
 
 typedef struct
 {

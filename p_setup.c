@@ -16,6 +16,7 @@
 #include "v_video.h"
 #include "r_demo.h"
 #include "r_fps.h"
+#include "z_zone.h"
 
 int      numvertexes;
 vertex_t *vertexes;

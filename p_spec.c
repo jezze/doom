@@ -15,6 +15,7 @@
 #include "m_bbox.h"
 #include "r_plane.h"
 #include "lprintf.h"
+#include "z_zone.h"
 
 typedef struct
 {

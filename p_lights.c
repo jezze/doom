@@ -4,6 +4,7 @@
 #include "r_main.h"
 #include "p_spec.h"
 #include "p_tick.h"
+#include "z_zone.h"
 
 void T_FireFlicker (fireflicker_t* flick)
 {

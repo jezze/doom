@@ -22,16 +22,4 @@ void *(Z_Calloc)(size_t n, size_t n2, int tag, void **user);
 void *(Z_Realloc)(void *p, size_t n, int tag, void **user);
 char *(Z_Strdup)(const char *s, int tag, void **user);
 
-#undef malloc
-#undef free
-#undef realloc
-#undef calloc
-#undef strdup
-
-#define malloc(n)          Z_Malloc(n,PU_STATIC,0)
-#define free(p)            Z_Free(p)
-#define realloc(p,n)       Z_Realloc(p,n,PU_STATIC,0)
-#define calloc(n1,n2)      Z_Calloc(n1,n2,PU_STATIC,0)
-#define strdup(s)          Z_Strdup(s,PU_STATIC,0)
-
 #endif

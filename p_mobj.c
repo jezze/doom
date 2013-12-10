@@ -14,6 +14,7 @@
 #include "p_inter.h"
 #include "lprintf.h"
 #include "r_demo.h"
+#include "z_zone.h"
 
 boolean P_SetMobjState(mobj_t* mobj,statenum_t state)
   {

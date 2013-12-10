@@ -5,6 +5,7 @@
 #include "m_random.h"
 #include "s_sound.h"
 #include "sounds.h"
+#include "z_zone.h"
 
 int EV_DoGenFloor
 ( line_t*       line )

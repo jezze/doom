@@ -33,6 +33,7 @@
 #include "i_system.h"
 #include "r_demo.h"
 #include "r_fps.h"
+#include "z_zone.h"
 
 #define SAVEGAMESIZE  0x20000
 #define SAVESTRINGSIZE  24

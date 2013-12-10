@@ -22,6 +22,7 @@
 #include "r_draw.h"
 #include "r_demo.h"
 #include "r_fps.h"
+#include "z_zone.h"
 
 static inline void I_BeginRead(void) {}
 static inline void I_EndRead(void) {}
