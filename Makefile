@@ -5,12 +5,12 @@ OBJ=am_map.o doomdef.o doomstat.o g_game.o hu_lib.o hu_stuff.o info.o lprintf.o 
 
 OBJ_sdl=sdl/i_main.o sdl/i_sound.o sdl/i_system.o sdl/i_video.o
 LIB_sdl=sdl/libsdldoom.a
-CFLAGS_sdl=-I../src -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -std=c99
+CFLAGS_sdl=-I. -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -std=c99
 LDFLAGS_sdl=-lm -L/usr/lib -lSDL -lpthread
 
 OBJ_fudge=fudge/i_main.o fudge/i_sound.o fudge/i_system.o fudge/i_video.o
 LIB_fudge=fudge/libfudgedoom.a
-CFLAGS_fudge=-I../src 
+CFLAGS_fudge=-I. 
 LDFLAGS_fudge=-lm
 
 all: doom
@@ -25,7 +25,7 @@ $(LIB_fudge): $(OBJ_fudge)
 	$(AR) crv $@ $^
 
 doom: $(OBJ) $(LIB_$(BACKEND))
-	$(CC) -o $@ $(OBJ) $(LDFLAGS_$(BACKEND)) $(LIB_$(BACKEND))
+	$(CC) -o $@ $^ $(LDFLAGS_$(BACKEND))
 
 clean:
 	rm -f $(OBJ_sdl)
