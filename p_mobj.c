@@ -688,46 +688,9 @@ static int P_FindDoomedNum(unsigned type)
   return i;
 }
 
-void P_RespawnSpecials (void)
-  {
-  fixed_t       x;
-  fixed_t       y;
-  fixed_t       z;
-  subsector_t*  ss;
-  mobj_t*       mo;
-  mapthing_t*   mthing;
-  int           i;
-
-  if (iquehead == iquetail)
-    return;
-
-  if (leveltime - itemrespawntime[iquetail] < 30*35)
-    return;
-
-  mthing = &itemrespawnque[iquetail];
-  x = mthing->x << FRACBITS;
-  y = mthing->y << FRACBITS;
-  ss = R_PointInSubsector (x,y);
-  mo = P_SpawnMobj (x, y, ss->sector->floorheight , MT_IFOG);
-
-  S_StartSound (mo, sfx_itmbk);
-
-  i = P_FindDoomedNum(mthing->type);
-
-  if (mobjinfo[i].flags & MF_SPAWNCEILING)
-    z = ONCEILINGZ;
-  else
-    z = ONFLOORZ;
-
-  mo = P_SpawnMobj (x,y,z, i);
-  mo->spawnpoint = *mthing;
-  mo->angle = ANG45 * (mthing->angle/45);
-  iquetail = (iquetail+1)&(ITEMQUESIZE-1);
-  }
-
 extern byte playernumtotrans[MAXPLAYERS];
 
-void P_SpawnPlayer (int n, const mapthing_t* mthing)
+void P_SpawnPlayer(int n, const mapthing_t* mthing)
   {
   player_t* p;
   fixed_t   x;

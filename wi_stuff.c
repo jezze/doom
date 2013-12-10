@@ -564,25 +564,6 @@ void WI_drawNoState(void)
   WI_drawShowNextLoc();
 }
 
-static int WI_fragSum(int playernum)
-{
-  int   i;
-  int   frags = 0;
-
-  for (i=0 ; i<MAXPLAYERS ; i++)
-  {
-    if (playeringame[i]
-       && i!=playernum)
-    {
-      frags += plrs[playernum].frags[i];
-    }
-  }
-
-  frags -= plrs[playernum].frags[playernum];
-
-  return frags;
-}
-
 static short *cnt_kills;
 static short *cnt_items;
 static short *cnt_secret;

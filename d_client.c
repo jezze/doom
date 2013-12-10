@@ -1,5 +1,4 @@
 #include <sys/types.h>
-
 #include "doomtype.h"
 #include "doomstat.h"
 #include "d_client.h"

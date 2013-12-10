@@ -4,9 +4,6 @@
 #define DEVMAPS "devmaps"
 #define DEVDATA "devdata"
 
-#define D_DEVSTR    "Development mode ON.\n"
-#define D_CDROM     "CD-ROM Version: default.cfg from c:\\doomdata\n"
-
 #define PRESSKEY    "press a key."
 #define PRESSYN     "press y or n."
 #define QUITMSG     "are you sure you want to\nquit this great game?"
@@ -16,30 +13,12 @@
 #define QSPROMPT    "quicksave over your game named\n\n'%s'?\n\n"PRESSYN
 #define QLPROMPT    "do you want to quickload the game named\n\n'%s'?\n\n"PRESSYN
 
-#define NEWGAME \
-  "you can't start a new game\n"\
-  "while in a network game.\n\n"PRESSKEY
-
-#define NIGHTMARE \
-  "are you sure? this skill level\n"\
-  "isn't even remotely fair.\n\n"PRESSYN
-
-#define SWSTRING  \
-  "this is the shareware version of doom.\n\n"\
-  "you need to order the entire trilogy.\n\n"PRESSKEY
+#define NEWGAME     "you can't start a new game\nwhile in a network game.\n\n"PRESSKEY
+#define NIGHTMARE   "are you sure? this skill level\nisn't even remotely fair.\n\n"PRESSYN
 
 #define MSGOFF      "Messages OFF"
 #define MSGON       "Messages ON"
-#define ENDGAME     "are you sure you want to end the game?\n\n"PRESSYN
-#define RESTARTLEVEL "restart the level?\n\n"PRESSYN
 
-#define DETAILHI    "High detail"
-#define DETAILLO    "Low detail"
-#define GAMMALVL0   "Gamma correction OFF"
-#define GAMMALVL1   "Gamma correction level 1"
-#define GAMMALVL2   "Gamma correction level 2"
-#define GAMMALVL3   "Gamma correction level 3"
-#define GAMMALVL4   "Gamma correction level 4"
 #define EMPTYSTRING "empty slot"
 
 #define GOTARMOR    "Picked up the armor."
