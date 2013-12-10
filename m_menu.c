@@ -1865,10 +1865,6 @@ setup_menu_t* gen_settings[] =
 };
 
 enum {
-  general_uncapped,
-};
-
-enum {
   general_sndchan,
   general_pitch
 };
@@ -1880,8 +1876,6 @@ enum {
 #define GF_X 76
 
 setup_menu_t gen_settings1[] = {
-    {"Video", S_SKIP | S_TITLE, m_null, G_X, G_YA - 12},
-    {"Uncapped Framerate", S_YESNO, m_null, G_X, G_YA + general_uncapped * 8, {"uncapped_framerate"}},
     {"Sound & Music", S_SKIP|S_TITLE, m_null, G_X, G_YA3 - 12},
     {"Number of Sound Channels", S_NUM|S_PRGWARN, m_null, G_X, G_YA3 + general_sndchan * 8, {"snd_channels"}},
     {"Enable v1.1 Pitch Effects", S_YESNO, m_null, G_X, G_YA3 + general_pitch*8, {"pitched_sounds"}},

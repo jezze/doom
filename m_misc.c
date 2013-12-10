@@ -158,7 +158,6 @@ default_t defaults[] =
   {"screen_height", {&desired_screenheight}, {480}, 200, MAX_SCREENHEIGHT, def_int, ss_none},
   {"screenblocks", {&screenblocks}, {10}, 3, 11, def_int, ss_none},
   {"usegamma", {&usegamma}, {3}, 0, 4, def_int, ss_none},
-  {"uncapped_framerate", {&movement_smooth}, {0}, 0, 1, def_bool, ss_stat},
   {"filter_wall", {(int*)&drawvars.filterwall}, {RDRAW_FILTER_POINT}, RDRAW_FILTER_POINT, RDRAW_FILTER_ROUNDED, def_int, ss_none},
   {"filter_floor", {(int*)&drawvars.filterfloor}, {RDRAW_FILTER_POINT}, RDRAW_FILTER_POINT, RDRAW_FILTER_ROUNDED, def_int, ss_none},
   {"filter_sprite", {(int*)&drawvars.filtersprite}, {RDRAW_FILTER_POINT}, RDRAW_FILTER_POINT, RDRAW_FILTER_ROUNDED, def_int, ss_none},
