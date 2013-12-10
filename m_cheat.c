@@ -26,7 +26,15 @@ static void cheat_rate();
 static void cheat_megaarmour();
 static void cheat_health();
 
-struct cheat_s cheat[] = {
+static struct cheat_s
+{
+
+    const char *cheat;
+    void (*const func)();
+    const int arg;
+    uint_64_t code, mask;
+
+} cheat[] = {
     {"idchoppers", cheat_choppers},
     {"iddqd", cheat_god},
     {"idkfa", cheat_kfa},
