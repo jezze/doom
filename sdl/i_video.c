@@ -22,7 +22,6 @@ extern void M_QuitDOOM(int choice);
 static SDL_Surface *screen;
 int leds_always_off = 0;
 static int newpal = 0;
-extern int usemouse;
 static boolean mouse_enabled;
 static boolean mouse_currently_grabbed;
 
@@ -190,7 +189,7 @@ void I_StartFrame(void)
 static void I_InitInputs(void)
 {
 
-    mouse_enabled = usemouse;
+    mouse_enabled = 1;
 
     SDL_WarpMouse((unsigned short)(SCREENWIDTH / 2), (unsigned short)(SCREENHEIGHT / 2));
 

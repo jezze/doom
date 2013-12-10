@@ -72,7 +72,6 @@ int M_ReadFile(char const *name, byte **buffer)
   return -1;
 }
 
-int usemouse;
 boolean    precache = true; /* if true, load all graphics at start */
 extern int mousebfire;
 extern int mousebstrafe;
@@ -164,7 +163,6 @@ default_t defaults[] =
   {"filter_threshold", {(int*)&drawvars.mag_threshold}, {49152}, 0, UL, def_int, ss_none},
   {"sprite_edges", {(int*)&drawvars.sprite_edges}, {RDRAW_MASKEDCOLUMNEDGE_SQUARE}, RDRAW_MASKEDCOLUMNEDGE_SQUARE, RDRAW_MASKEDCOLUMNEDGE_SLOPED, def_int, ss_none},
   {"patch_edges", {(int*)&drawvars.patch_edges}, {RDRAW_MASKEDCOLUMNEDGE_SQUARE}, RDRAW_MASKEDCOLUMNEDGE_SQUARE, RDRAW_MASKEDCOLUMNEDGE_SLOPED, def_int, ss_none},
-  {"Mouse settings", {NULL}, {0}, UL, UL, def_none, ss_none}, {"use_mouse", {&usemouse}, {1}, 0, 1, def_bool, ss_none},
   {"mouse_sensitivity_horiz", {&mouseSensitivity_horiz}, {10}, 0, UL, def_int, ss_none},
   {"mouse_sensitivity_vert", {&mouseSensitivity_vert}, {10}, 0, UL, def_int, ss_none},
   {"mouseb_fire", {&mousebfire}, {0}, -1, MAX_MOUSEB, def_int, ss_keys},

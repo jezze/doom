@@ -1851,7 +1851,6 @@ void M_DrawEnemy(void)
     M_DrawDefVerify();
 }
 
-extern int usemouse, default_mus_card, default_snd_card;
 extern int detect_voices, realtic_clock_rate;
 
 setup_menu_t gen_settings1[], gen_settings2[], gen_settings3[];
@@ -1878,15 +1877,8 @@ setup_menu_t gen_settings1[] = {
 };
 
 enum {
-  general_mouse,
-  general_leds
-};
-
-enum {
   general_wad1,
   general_wad2,
-  general_deh1,
-  general_deh2
 };
 
 enum {
@@ -1907,7 +1899,6 @@ static const char *gen_skillstrings[] = {
 
 setup_menu_t gen_settings2[] = {
     {"Input Devices"     ,S_SKIP|S_TITLE, m_null, G_X, G_YB - 12},
-    {"Enable Mouse", S_YESNO, m_null, G_X, G_YB + general_mouse * 8, {"use_mouse"}},
     {"Files Preloaded at Game Startup",S_SKIP|S_TITLE, m_null, G_X, G_YB1 - 12},
     {"WAD # 1", S_FILE, m_null, GF_X, G_YB1 + general_wad1 * 8, {"wadfile_1"}},
     {"WAD #2", S_FILE, m_null, GF_X, G_YB1 + general_wad2 * 8, {"wadfile_2"}},
