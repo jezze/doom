@@ -109,7 +109,6 @@ default_t defaults[] =
   {"monster_infighting", {&default_monster_infighting}, {1}, 0, 1, def_bool, ss_enem, &monster_infighting},
   {"monster_backing", {&default_monster_backing}, {0}, 0, 1, def_bool, ss_enem, &monster_backing},
   {"monster_avoid_hazards", {&default_monster_avoid_hazards}, {1}, 0, 1, def_bool, ss_enem, &monster_avoid_hazards},
-  {"monkeys", {&default_monkeys}, {0}, 0, 1, def_bool, ss_enem, &monkeys},
   {"monster_friction", {&default_monster_friction}, {1}, 0, 1, def_bool, ss_enem, &monster_friction},
   {"help_friends", {&default_help_friends}, {1}, 0, 1, def_bool, ss_enem, &help_friends},
   {"allow_pushers", {&default_allow_pushers}, {1}, 0, 1, def_bool,ss_weap, &allow_pushers},

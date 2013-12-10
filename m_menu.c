@@ -1798,7 +1798,6 @@ enum {
   enem_infighting,
   enem_remember = 1,
   enem_backing,
-  enem_monkeys,
   enem_avoid_hazards,
   enem_friction,
   enem_help_friends,
@@ -1810,26 +1809,12 @@ setup_menu_t enem_settings1[] =
 {
 
   {"Monster Infighting When Provoked",S_YESNO,m_null,E_X,E_Y+ enem_infighting*8, {"monster_infighting"}},
-
   {"Remember Previous Enemy",S_YESNO,m_null,E_X,E_Y+ enem_remember*8, {"monsters_remember"}},
-
-
   {"Monster Backing Out",S_YESNO,m_null,E_X,E_Y+ enem_backing*8, {"monster_backing"}},
-
-  {"Climb Steep Stairs", S_YESNO,m_null,E_X,E_Y+enem_monkeys*8, {"monkeys"}},
-
-
   {"Intelligently Avoid Hazards",S_YESNO,m_null,E_X,E_Y+ enem_avoid_hazards*8, {"monster_avoid_hazards"}},
-
-
   {"Affected by Friction",S_YESNO,m_null,E_X,E_Y+ enem_friction*8, {"monster_friction"}},
-
   {"Rescue Dying Friends",S_YESNO,m_null,E_X,E_Y+ enem_help_friends*8, {"help_friends"}},
-
-
   {0,S_RESET,m_null,X_BUTTON,Y_BUTTON},
-
-
   {0,S_SKIP|S_END,m_null}
 
 };

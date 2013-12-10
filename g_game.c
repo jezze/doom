@@ -1346,7 +1346,6 @@ void G_Compatibility(void)
     monster_avoid_hazards = 0;
     monster_friction = 0;
     help_friends = 0;
-    monkeys = 0;
   }
 }
 
@@ -1364,7 +1363,6 @@ void G_ReloadDefaults(void)
   monster_avoid_hazards = default_monster_avoid_hazards;
   monster_friction = default_monster_friction;
   help_friends = default_help_friends;
-  monkeys = default_monkeys;
   respawnparm = clrespawnparm;
   fastparm = clfastparm;
   nomonsters = clnomonsters;
@@ -1640,7 +1638,7 @@ byte *G_WriteOptions(byte *demo_p)
   *demo_p++ = monster_friction;
   *demo_p++ = help_friends;
   *demo_p++ = 0;
-  *demo_p++ = monkeys;
+  *demo_p++ = 0;
 
   {
     int i;
@@ -1706,8 +1704,7 @@ const byte *G_ReadOptions(const byte *demo_p)
       help_friends = *demo_p++;
 
       demo_p++;
-
-      monkeys = *demo_p++;
+      demo_p++;
 
       {
   int i;
@@ -1891,7 +1888,6 @@ static const byte* G_ReadDemoHeader(const byte *demo_p, size_t size, boolean fai
       monster_avoid_hazards = 0;
       monster_friction = 0;
       help_friends = 0;
-      monkeys = 0;
 
       if ((skill=demover) >= 100)
         {

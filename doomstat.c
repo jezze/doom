@@ -26,5 +26,4 @@ int monster_avoid_hazards, default_monster_avoid_hazards;
 int help_friends, default_help_friends;
 int flashing_hom;
 int doom_weapon_toggles;
-int monkeys, default_monkeys;
 

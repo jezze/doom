@@ -126,6 +126,5 @@ extern int help_friends, default_help_friends;
 extern int flashing_hom;
 extern int doom_weapon_toggles;
 extern int monster_infighting, default_monster_infighting;
-extern int monkeys, default_monkeys;
 
 #endif

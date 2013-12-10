@@ -550,7 +550,7 @@ boolean P_TryMove(mobj_t* thing,fixed_t x,fixed_t y,
          (tmfloorz-tmdropoffz > 128*FRACUNIT ||
           !thing->target || thing->target->z >tmdropoffz)))
       {
-        if (!monkeys || !mbf_features ?
+        if (!mbf_features ?
       tmfloorz - tmdropoffz > 24*FRACUNIT :
       thing->floorz  - tmfloorz > 24*FRACUNIT ||
       thing->dropoffz - tmdropoffz > 24*FRACUNIT)
