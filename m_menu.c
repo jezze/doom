@@ -1865,7 +1865,6 @@ setup_menu_t* gen_settings[] =
 };
 
 enum {
-  general_fullscreen,
   general_videomode,
   general_uncapped,
 };
@@ -1887,7 +1886,6 @@ static const char *videomodes[] = {
 
 setup_menu_t gen_settings1[] = {
     {"Video", S_SKIP | S_TITLE, m_null, G_X, G_YA - 12},
-    {"Fullscreen Video mode", S_YESNO | S_PRGWARN, m_null, G_X, G_YA + general_fullscreen*8, {"use_fullscreen"}, 0, 0, NULL},
     {"Video mode", S_CHOICE|S_PRGWARN, m_null, G_X, G_YA + general_videomode * 8, {"videomode"}, 0, 0, NULL, videomodes},
     {"Uncapped Framerate", S_YESNO, m_null, G_X, G_YA + general_uncapped * 8, {"uncapped_framerate"}},
     {"Sound & Music", S_SKIP|S_TITLE, m_null, G_X, G_YA3 - 12},

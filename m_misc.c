@@ -157,7 +157,6 @@ default_t defaults[] =
   {"videomode", {NULL, &default_videomode}, {0,"8"}, UL, UL, def_str, ss_none},
   {"screen_width", {&desired_screenwidth}, {640}, 320, MAX_SCREENWIDTH, def_int, ss_none},
   {"screen_height", {&desired_screenheight}, {480}, 200, MAX_SCREENHEIGHT, def_int, ss_none},
-  {"use_fullscreen", {&use_fullscreen}, {1}, 0, 1, def_bool, ss_none},
   {"screenblocks", {&screenblocks}, {10}, 3, 11, def_int, ss_none},
   {"usegamma", {&usegamma}, {3}, 0, 4, def_int, ss_none},
   {"uncapped_framerate", {&movement_smooth}, {0}, 0, 1, def_bool, ss_stat},

@@ -13,8 +13,6 @@
 #include "w_wad.h"
 #include "st_stuff.h"
 
-int use_fullscreen;
-
 void I_StartTic(void)
 {
 

@@ -16,6 +16,4 @@ void I_FinishUpdate(void);
 void I_StartTic(void);
 void I_StartFrame(void);
 
-extern int use_fullscreen;
-
 #endif

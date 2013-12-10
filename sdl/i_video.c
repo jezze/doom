@@ -19,7 +19,6 @@
 
 extern void M_QuitDOOM(int choice);
 
-int use_fullscreen;
 static SDL_Surface *screen;
 int leds_always_off = 0;
 static int newpal = 0;
