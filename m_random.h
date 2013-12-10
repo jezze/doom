@@ -77,7 +77,7 @@ typedef struct {
 extern rng_t rng;
 extern unsigned long rngseed;
 
-int P_Random(pr_class_t DA(const char *, int));
+int P_Random(pr_class_t);
 
 #define M_Random() P_Random(pr_misc)
 
