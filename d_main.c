@@ -728,8 +728,6 @@ static void D_DoomMainSetup(void)
         }
     }
 
-    general_translucency = default_translucency;
-
     lprintf(LO_INFO,"D_InitNetGame: Checking for network game.\n");
     D_InitNetGame();
 

@@ -275,7 +275,7 @@ static void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
           ((vis->mobjflags & MF_TRANSLATION) >> (MF_TRANSSHIFT-8) );
       }
     else
-      if (vis->mobjflags & MF_TRANSLUCENT && general_translucency)
+      if (vis->mobjflags & MF_TRANSLUCENT)
         {
           colfunc = R_GetDrawColumnFunc(RDC_PIPELINE_TRANSLUCENT, filter, filterz);
           tranmap = main_tranmap;

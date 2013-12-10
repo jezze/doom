@@ -261,7 +261,7 @@ const lighttable_t* R_ColourMap(int lightlevel, fixed_t spryscale)
   }
 }
 
-int tran_filter_pct = 66;
+static int tran_filter_pct = 66;
 
 #define TSC 12        /* number of fixed point digits in filter percent */
 
@@ -285,11 +285,7 @@ void R_InitTranMap(int progress)
 
       main_tranmap = my_tranmap = Z_Malloc(256*256, PU_STATIC, 0);
 
-      if (!cachefp ||
-          fread(&cache, 1, sizeof cache, cachefp) != sizeof cache ||
-          cache.pct != tran_filter_pct ||
-          memcmp(cache.playpal, playpal, sizeof cache.playpal) ||
-          fread(my_tranmap, 256, 256, cachefp) != 256 )
+      if (!cachefp || fread(&cache, 1, sizeof cache, cachefp) != sizeof cache || cache.pct != tran_filter_pct || memcmp(cache.playpal, playpal, sizeof cache.playpal) || fread(my_tranmap, 256, 256, cachefp) != 256 )
         {
           long pal[3][256], tot[256], pal_w1[3][256];
           long w1 = ((unsigned long) tran_filter_pct<<TSC)/100;
@@ -372,8 +368,7 @@ void R_InitData(void)
   R_InitFlats();
   lprintf(LO_INFO, "Sprites ");
   R_InitSpriteLumps();
-  if (default_translucency)
-    R_InitTranMap(1);
+  R_InitTranMap(1);
   R_InitColormaps();
 }
 

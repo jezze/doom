@@ -67,7 +67,7 @@ void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
   curline = ds->curline;
   colfunc = R_GetDrawColumnFunc(RDC_PIPELINE_STANDARD, drawvars.filterwall, drawvars.filterz);
 
-  if (curline->linedef->tranlump >= 0 && general_translucency)
+  if (curline->linedef->tranlump >= 0)
     {
       colfunc = R_GetDrawColumnFunc(RDC_PIPELINE_TRANSLUCENT, drawvars.filterwall, drawvars.filterz);
       tranmap = main_tranmap;
@@ -149,7 +149,7 @@ void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
         maskedtexturecol[dcvars.x] = INT_MAX;
       }
 
-  if (curline->linedef->tranlump > 0 && general_translucency)
+  if (curline->linedef->tranlump > 0)
     W_UnlockLumpNum(curline->linedef->tranlump-1);
 
   R_UnlockTextureCompositePatchNum(texnum);

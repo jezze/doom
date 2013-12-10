@@ -337,12 +337,6 @@ static void cheat_pushers()
 
 static void cheat_tnttran()
 {
-  plyr->message =
-    (general_translucency = !general_translucency) ? "Translucency enabled" :
-                                                     "Translucency disabled";
-
-
-  if (general_translucency && !main_tranmap)
     R_InitTranMap(0);
 }
 

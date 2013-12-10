@@ -1883,7 +1883,7 @@ void M_DrawEnemy(void)
 }
 
 extern int usemouse, default_mus_card, default_snd_card;
-extern int detect_voices, realtic_clock_rate, tran_filter_pct;
+extern int detect_voices, realtic_clock_rate;
 
 setup_menu_t gen_settings1[], gen_settings2[], gen_settings3[];
 
@@ -1896,8 +1896,6 @@ setup_menu_t* gen_settings[] =
 };
 
 enum {
-  general_trans,
-  general_transpct,
   general_fullscreen,
   general_videomode,
   general_uncapped,
@@ -1920,8 +1918,6 @@ static const char *videomodes[] = {
 
 setup_menu_t gen_settings1[] = {
     {"Video", S_SKIP | S_TITLE, m_null, G_X, G_YA - 12},
-    {"Enable Translucency", S_YESNO, m_null, G_X, G_YA + general_trans * 8, {"translucency"}, 0, 0, M_Trans},
-    {"Translucency filter percentage", S_NUM, m_null, G_X, G_YA + general_transpct*8, {"tran_filter_pct"}, 0, 0, M_Trans},
     {"Fullscreen Video mode", S_YESNO | S_PRGWARN, m_null, G_X, G_YA + general_fullscreen*8, {"use_fullscreen"}, 0, 0, NULL},
     {"Video mode", S_CHOICE|S_PRGWARN, m_null, G_X, G_YA + general_videomode * 8, {"videomode"}, 0, 0, NULL, videomodes},
     {"Uncapped Framerate", S_YESNO, m_null, G_X, G_YA + general_uncapped * 8, {"uncapped_framerate"}},
@@ -2032,9 +2028,6 @@ setup_menu_t gen_settings3[] = {
 
 void M_Trans(void)
 {
-  general_translucency = default_translucency;
-
-  if (general_translucency)
     R_InitTranMap(0);
 }
 
