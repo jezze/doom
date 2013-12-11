@@ -84,7 +84,7 @@ void TryRunTics(void)
 
             WasRenderedInTryRunTics = true;
 
-            if (movement_smooth && gamestate == wipegamestate)
+            if (movement_smooth)
             {
 
                 D_Display();

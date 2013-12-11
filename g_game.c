@@ -421,9 +421,6 @@ static void G_DoLoadLevel (void)
   if (!demo_compatibility && !mbf_features)
     basetic = gametic;
 
-  if (wipegamestate == GS_LEVEL)
-    wipegamestate = -1;
-
   gamestate = GS_LEVEL;
 
   for (i=0 ; i<MAXPLAYERS ; i++)
@@ -459,7 +456,7 @@ static void G_DoLoadLevel (void)
 boolean G_Responder (event_t* ev)
 {
 
-  if (gameaction == ga_nothing && (demoplayback || gamestate == GS_DEMOSCREEN))
+  if (gameaction == ga_nothing && (demoplayback))
     {
 
       if (ev->type == ev_keydown && ev->data1 == key_pause)
@@ -471,7 +468,7 @@ boolean G_Responder (event_t* ev)
     return true;
   }
 
-      return gamestate == GS_DEMOSCREEN && !(paused & 2) && !(automapmode & am_active) && ((ev->type == ev_keydown) || (ev->type == ev_mouse && ev->data1)) ? M_StartControlPanel(), true : false;
+      return !(paused & 2) && !(automapmode & am_active) && ((ev->type == ev_keydown) || (ev->type == ev_mouse && ev->data1)) ? M_StartControlPanel(), true : false;
     }
 
   if (gamestate == GS_FINALE && F_Responder(ev))
@@ -956,11 +953,6 @@ void G_LoadGame(int slot, boolean command)
 static void G_LoadGameErr(const char *msg)
 {
   Z_Free(savebuffer);
-  if (command_loadgame)
-    {
-      D_StartTitle();
-      gamestate = GS_DEMOSCREEN;
-    }
 }
 
 

@@ -12,7 +12,6 @@
 #include "s_sound.h"
 #include "v_video.h"
 #include "f_finale.h"
-#include "f_wipe.h"
 #include "m_misc.h"
 #include "m_menu.h"
 #include "i_main.h"
@@ -31,8 +30,6 @@
 #include "d_main.h"
 #include "lprintf.h"
 #include "am_map.h"
-
-static void D_PageDrawer(void);
 
 boolean clnomonsters;
 boolean clrespawnparm;
@@ -78,39 +75,6 @@ void D_PostEvent(event_t *ev)
 
 }
 
-static void D_Wipe(void)
-{
-
-    boolean done;
-    int wipestart = I_GetTime () - 1;
-
-    do
-    {
-
-        int nowtime, tics;
-
-        do
-        {
-
-            I_uSleep(5000);
-
-            nowtime = I_GetTime();
-            tics = nowtime - wipestart;
-
-        } while (!tics);
-
-        wipestart = nowtime;
-        done = wipe_ScreenWipe(tics);
-
-        I_UpdateNoBlit();
-        M_Drawer();
-        I_FinishUpdate();
-
-    } while (!done);
-
-}
-
-gamestate_t wipegamestate = GS_DEMOSCREEN;
 extern boolean setsizeneeded;
 extern int showMessages;
 
@@ -120,14 +84,10 @@ void D_Display (void)
     static boolean isborderstate = false;
     static boolean borderwillneedredraw = false;
     static gamestate_t oldgamestate = -1;
-    boolean wipe;
     boolean viewactive = false, isborder = false;
 
     if (!I_StartDisplay())
         return;
-
-    if ((wipe = gamestate != wipegamestate))
-        wipe_StartScreen();
 
     if (gamestate != GS_LEVEL)
     {
@@ -154,11 +114,6 @@ void D_Display (void)
 
         case GS_FINALE:
             F_Drawer();
-
-            break;
-
-        case GS_DEMOSCREEN:
-            D_PageDrawer();
 
             break;
 
@@ -220,7 +175,7 @@ void D_Display (void)
     }
 
     isborderstate = isborder;
-    oldgamestate = wipegamestate = gamestate;
+    oldgamestate = gamestate;
 
     if (paused)
     {
@@ -231,22 +186,7 @@ void D_Display (void)
 
     M_Drawer();
     D_BuildNewTiccmds();
-
-    if (!wipe)
-    {
-
-        I_FinishUpdate();
-
-    }
-
-    else
-    {
-
-        wipe_EndScreen();
-        D_Wipe();
-
-    }
-
+    I_FinishUpdate();
     I_EndDisplay();
 
     if (paused)
@@ -290,30 +230,10 @@ static void D_DoomLoop(void)
         if (players[displayplayer].mo)
             S_UpdateSounds(players[displayplayer].mo);
 
-        if (!movement_smooth || !WasRenderedInTryRunTics || gamestate != wipegamestate)
+        if (!movement_smooth || !WasRenderedInTryRunTics)
             D_Display();
 
     }
-
-}
-
-static int pagetic;
-static const char *pagename;
-
-static void D_PageDrawer(void)
-{
-
-    if (pagename)
-        V_DrawNamePatch(0, 0, 0, pagename, CR_DEFAULT, VPT_STRETCH);
-    else
-        M_DrawCredits();
-
-}
-
-void D_StartTitle(void)
-{
-
-    gameaction = ga_nothing;
 
 }
 

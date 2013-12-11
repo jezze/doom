@@ -211,7 +211,6 @@ void F_Ticker(void)
 
                 finalecount = 0;
                 finalestage = 1;
-                wipegamestate = -1;
 
                 if (gameepisode == 3)
                     S_StartMusic(mus_bunny);
@@ -341,7 +340,6 @@ boolean castattacking;
 void F_StartCast(void)
 {
 
-    wipegamestate = -1;
     castnum = 0;
     caststate = &states[mobjinfo[castorder[castnum].type].seestate];
     casttics = caststate->tics;
