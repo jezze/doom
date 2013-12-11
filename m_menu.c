@@ -147,7 +147,6 @@ void M_ChangeDemoSmoothTurns(void);
 void M_General(int);
 void M_DrawCompat(void);
 void M_DrawGeneral(void);
-void M_FullScreen(void);
 
 menu_t NewDef;
 
@@ -1533,15 +1532,9 @@ setup_menu_t* gen_settings[] =
 #define GF_X 76
 
 setup_menu_t gen_settings1[] = {
-    {"Sound & Music", S_SKIP|S_TITLE, m_null, G_X, G_YA3 - 12},
     {0, S_RESET, m_null, X_BUTTON, Y_BUTTON},
     {"NEXT ->", S_SKIP | S_NEXT, m_null, KB_NEXT, KB_Y +20 * 8, {gen_settings2}},
     {0, S_SKIP|S_END,m_null}
-};
-
-enum {
-  general_wad1,
-  general_wad2,
 };
 
 enum {
@@ -1559,11 +1552,6 @@ static const char *gen_skillstrings[] = {
 };
 
 setup_menu_t gen_settings2[] = {
-    {"Input Devices"     ,S_SKIP|S_TITLE, m_null, G_X, G_YB - 12},
-    {"Files Preloaded at Game Startup",S_SKIP|S_TITLE, m_null, G_X, G_YB1 - 12},
-    {"WAD # 1", S_FILE, m_null, GF_X, G_YB1 + general_wad1 * 8, {"wadfile_1"}},
-    {"WAD #2", S_FILE, m_null, GF_X, G_YB1 + general_wad2 * 8, {"wadfile_2"}},
-    {"Miscellaneous"  ,S_SKIP|S_TITLE, m_null, G_X, G_YB2 - 12},
     {"Maximum number of player corpses", S_NUM|S_PRGWARN, m_null, G_X, G_YB2 + general_corpse*8, {"max_player_corpse"}},
     {"Game speed, percentage of normal", S_NUM|S_PRGWARN, m_null, G_X, G_YB2 + general_realtic*8, {"realtic_clock_rate"}},
     {"Default skill level", S_CHOICE, m_null, G_X, G_YB2 + general_defskill * 8, {"default_skill"}, 0, 0, NULL, gen_skillstrings},
@@ -1623,12 +1611,6 @@ setup_menu_t gen_settings3[] = {
 
   {0,S_SKIP|S_END,m_null}
 };
-
-void M_FullScreen(void)
-{
-  I_UpdateVideoMode();
-  V_SetPalette(0);
-}
 
 void M_General(int choice)
 {

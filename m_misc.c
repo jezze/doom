@@ -87,7 +87,6 @@ int map_point_coordinates;
 
 default_t defaults[] =
 {
-  {"Misc settings", {NULL}, {0}, UL, UL, def_none,ss_none},
   {"default_compatibility_level", {(int*)&default_compatibility_level}, {-1}, -1, MAX_COMPATIBILITY_LEVEL - 1, def_int,ss_none},
   {"realtic_clock_rate", {&realtic_clock_rate}, {100}, 0, UL, def_int, ss_none},
   {"max_player_corpse", {&bodyquesize}, {32}, -1, UL, def_int, ss_none},
@@ -95,8 +94,7 @@ default_t defaults[] =
   {"demo_insurance", {&default_demo_insurance}, {2}, 0, 2, def_int, ss_none},
   {"endoom_mode", {&endoom_mode},{5},0,7, def_hex, ss_none},
   {"level_precache", {(int*)&precache}, {0}, 0, 1, def_bool, ss_none},
-  {"Files", {NULL}, {0}, UL, UL, def_none,ss_none}, {"wadfile_1", {NULL, &wad_files[0]} , {0,""} , UL, UL, def_str, ss_none},
-  {"wadfile_2", {NULL, &wad_files[1]}, {0,""}, UL, UL, def_str, ss_none}, {"Game settings", {NULL}, {0}, UL, UL, def_none, ss_none},
+  {"Game settings", {NULL}, {0}, UL, UL, def_none, ss_none},
   {"default_skill", {&defaultskill}, {3}, 1, 5, def_int, ss_none},
   {"weapon_recoil", {&default_weapon_recoil}, {0}, 0, 1, def_bool, ss_weap, &weapon_recoil},
   {"doom_weapon_toggles", {&doom_weapon_toggles}, {1}, 0, 1, def_bool, ss_weap},
