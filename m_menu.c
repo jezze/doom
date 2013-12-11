@@ -126,7 +126,6 @@ void M_Setup(int choice);
 void M_KeyBindings(int choice);
 void M_Weapons(int);
 void M_StatusBar(int);
-void M_Automap(int);
 void M_Enemy(int);
 void M_Messages(int);
 void M_ChatStrings(int);
@@ -136,7 +135,6 @@ void M_DrawWeapons(void);
 static void M_DrawMenuString(int,int,int);
 static void M_DrawStringCentered(int,int,int,const char*);
 void M_DrawStatusHUD(void);
-void M_DrawAutoMap(void);
 void M_DrawEnemy(void);
 void M_DrawMessages(void);
 void M_DrawChatStrings(void);
@@ -526,7 +524,6 @@ boolean setup_active      = false;
 boolean set_keybnd_active = false;
 boolean set_weapon_active = false;
 boolean set_status_active = false;
-boolean set_auto_active   = false;
 boolean set_enemy_active  = false;
 boolean set_mess_active   = false;
 boolean set_chat_active   = false;
@@ -547,7 +544,6 @@ enum
   set_key_bindings,
   set_weapons,
   set_statbar,
-  set_automap,
   set_enemy,
   set_messages,
   set_chatstrings,
@@ -561,7 +557,6 @@ menuitem_t SetupMenu[] = {
     {1, "M_KEYBND", M_KeyBindings},
     {1, "M_WEAP", M_Weapons},
     {1, "M_STAT", M_StatusBar},
-    {1, "M_AUTO", M_Automap},
     {1, "M_ENEM", M_Enemy},
     {1, "M_MESS", M_Messages},
     {1, "M_CHAT", M_ChatStrings}
@@ -617,16 +612,6 @@ menu_t StatusHUDDef =
   &SetupDef,
   Generic_Setup,
   M_DrawStatusHUD,
-  34,5,
-  0
-};
-
-menu_t AutoMapDef =
-{
-  generic_setup_end,
-  &SetupDef,
-  Generic_Setup,
-  M_DrawAutoMap,
   34,5,
   0
 };
@@ -1389,55 +1374,9 @@ setup_menu_t auto_settings2[] =
 
 };
 
-void M_Automap(int choice)
-{
-  M_SetupNextMenu(&AutoMapDef);
-
-  setup_active = true;
-  setup_screen = ss_auto;
-  set_auto_active = true;
-  setup_select = false;
-  colorbox_active = false;
-  default_verify = false;
-  setup_gather = false;
-  set_menu_itemon = 0;
-  mult_screens_index = 0;
-  current_setup_menu = auto_settings[0];
-  while (current_setup_menu[set_menu_itemon++].m_flags & S_SKIP);
-  current_setup_menu[--set_menu_itemon].m_flags |= S_HILITE;
-}
-
 int color_palette_x;
 int color_palette_y;
 byte palette_background[16*(CHIP_SIZE+1)+8];
-
-static void M_DrawColPal(void)
-{
-  int cpx, cpy;
-
-  V_DrawNamePatch(COLORPALXORIG-5, COLORPALYORIG-5, 0, "M_COLORS", CR_DEFAULT, VPT_STRETCH);
-
-  cpx = COLORPALXORIG+color_palette_x*(CHIP_SIZE+1)-1;
-  cpy = COLORPALYORIG+color_palette_y*(CHIP_SIZE+1)-1;
-
-  V_DrawNamePatch(cpx,cpy,0,"M_PALSEL",CR_DEFAULT,VPT_STRETCH);
-}
-
-void M_DrawAutoMap(void)
-
-{
-
-  M_DrawBackground("FLOOR4_6", 0);
-
-  V_DrawNamePatch(109, 2, 0, "M_AUTO", CR_DEFAULT, VPT_STRETCH);
-  M_DrawInstructions();
-  M_DrawScreenItems(current_setup_menu);
-
-  if (colorbox_active)
-    M_DrawColPal();
-  else if (default_verify)
-    M_DrawDefVerify();
-}
 
 #define E_X 250
 #define E_Y  31
@@ -2688,50 +2627,6 @@ boolean M_Responder(event_t* ev)
       return true;
     }
 
-      if (set_auto_active)
-  if (setup_select)
-    {
-      if (ch == key_menu_down)
-        {
-    if (++color_palette_y == 16)
-      color_palette_y = 0;
-    S_StartSound(NULL,sfx_itemup);
-    return true;
-        }
-
-      if (ch == key_menu_up)
-        {
-    if (--color_palette_y < 0)
-      color_palette_y = 15;
-    S_StartSound(NULL,sfx_itemup);
-    return true;
-        }
-
-      if (ch == key_menu_left)
-        {
-    if (--color_palette_x < 0)
-      color_palette_x = 15;
-    S_StartSound(NULL,sfx_itemup);
-    return true;
-        }
-
-      if (ch == key_menu_right)
-        {
-    if (++color_palette_x == 16)
-      color_palette_x = 0;
-    S_StartSound(NULL,sfx_itemup);
-    return true;
-        }
-
-      if (ch == key_menu_enter)
-        {
-    *ptr1->var.def->location.pi = color_palette_x + 16*color_palette_y;
-    M_SelectDone(ptr1);
-    colorbox_active = false;
-    return true;
-        }
-    }
-
 
       if (setup_select &&
     set_enemy_active | set_general_active | set_chat_active |
@@ -2897,7 +2792,6 @@ boolean M_Responder(event_t* ev)
     set_keybnd_active = false;
     set_weapon_active = false;
     set_status_active = false;
-    set_auto_active = false;
     set_enemy_active = false;
     set_mess_active = false;
     set_chat_active = false;
