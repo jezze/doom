@@ -94,10 +94,6 @@ void M_SfxVol(int choice);
 void M_MusicVol(int choice);
 void M_StartGame(int choice);
 void M_Sound(int choice);
-void M_Mouse(int choice, int *sens);
-void M_MouseVert(int choice);
-void M_MouseHoriz(int choice);
-void M_DrawMouse(void);
 void M_DrawMainMenu(void);
 void M_DrawNewGame(void);
 void M_DrawEpisode(void);
@@ -276,8 +272,6 @@ enum
     general,
     setup,
     messages,
-    mousesens,
-    soundvol,
     opt_end
 
 } options_e;
@@ -286,8 +280,6 @@ menuitem_t OptionsMenu[] = {
     {1, "M_GENERL", M_General},
     {1, "M_SETUP", M_Setup},
     {1, "M_MESSG", M_ChangeMessages},
-    {1, "M_MSENS", M_ChangeSensitivity},
-    {1, "M_SVOL", M_Sound}
 };
 
 menu_t OptionsDef = {
@@ -322,154 +314,6 @@ void M_QuitDOOM(int choice)
 
     exit(0);
 
-}
-
-enum
-{
-  sfx_vol,
-  sfx_empty1,
-  music_vol,
-  sfx_empty2,
-  sound_end
-} sound_e;
-
-menuitem_t SoundMenu[] = {
-    {2, "M_SFXVOL", M_SfxVol},
-    {-1, "", 0},
-    {2, "M_MUSVOL", M_MusicVol},
-    {-1, "", 0}
-};
-
-menu_t SoundDef =
-{
-  sound_end,
-  &OptionsDef,
-  SoundMenu,
-  M_DrawSound,
-  80,64,
-  0
-};
-
-void M_DrawSound(void)
-{
-
-  V_DrawNamePatch(60, 38, 0, "M_SVOL", CR_DEFAULT, VPT_STRETCH);
-
-  M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),16,snd_SfxVolume);
-
-  M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),16,snd_MusicVolume);
-}
-
-void M_Sound(int choice)
-{
-  M_SetupNextMenu(&SoundDef);
-}
-
-void M_SfxVol(int choice)
-{
-  switch(choice)
-    {
-    case 0:
-      if (snd_SfxVolume)
-        snd_SfxVolume--;
-      break;
-    case 1:
-      if (snd_SfxVolume < 15)
-        snd_SfxVolume++;
-      break;
-    }
-
-  S_SetSfxVolume(snd_SfxVolume /* *8 */);
-}
-
-void M_MusicVol(int choice)
-{
-  switch(choice)
-    {
-    case 0:
-      if (snd_MusicVolume)
-        snd_MusicVolume--;
-      break;
-    case 1:
-      if (snd_MusicVolume < 15)
-        snd_MusicVolume++;
-      break;
-    }
-
-  S_SetMusicVolume(snd_MusicVolume /* *8 */);
-}
-
-enum
-{
-  mouse_horiz,
-  mouse_empty1,
-  mouse_vert,
-  mouse_empty2,
-  mouse_end
-} mouse_e;
-
-menuitem_t MouseMenu[] = {
-    {2, "M_HORSEN", M_MouseHoriz},
-    {-1, "", 0},
-    {2, "M_VERSEN", M_MouseVert},
-    {-1, "", 0}
-};
-
-menu_t MouseDef =
-{
-  mouse_end,
-  &OptionsDef,
-  MouseMenu,
-  M_DrawMouse,
-  60,64,
-  0
-};
-
-#define MOUSE_SENS_MAX 100
-
-void M_DrawMouse(void)
-{
-  int mhmx,mvmx;
-
-
-  V_DrawNamePatch(60, 38, 0, "M_MSENS", CR_DEFAULT, VPT_STRETCH);
-
-
-  mhmx = mouseSensitivity_horiz>99? 99 : mouseSensitivity_horiz; /*mead*/
-  M_DrawThermo(MouseDef.x,MouseDef.y+LINEHEIGHT*(mouse_horiz+1),100,mhmx);
-
-  mvmx = mouseSensitivity_vert>99? 99 : mouseSensitivity_vert; /*mead*/
-  M_DrawThermo(MouseDef.x,MouseDef.y+LINEHEIGHT*(mouse_vert+1),100,mvmx);
-}
-
-void M_ChangeSensitivity(int choice)
-{
-  M_SetupNextMenu(&MouseDef);
-}
-
-void M_MouseHoriz(int choice)
-{
-  M_Mouse(choice, &mouseSensitivity_horiz);
-}
-
-void M_MouseVert(int choice)
-{
-  M_Mouse(choice, &mouseSensitivity_vert);
-}
-
-void M_Mouse(int choice, int *sens)
-{
-  switch(choice)
-    {
-    case 0:
-      if (*sens)
-        --*sens;
-      break;
-    case 1:
-      if (*sens < 99)
-        ++*sens;
-      break;
-    }
 }
 
 void M_ChangeMessages(int choice)
