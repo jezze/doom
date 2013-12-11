@@ -9,10 +9,8 @@
 #define SAVEDESCLEN                     32
 
 boolean G_Responder(event_t *ev);
-boolean G_CheckDemoStatus(void);
 void G_InitNew(skill_t skill, int episode, int map);
 void G_DeferedInitNew(skill_t skill, int episode, int map);
-void G_DeferedPlayDemo(const char *demo);
 void G_LoadGame(int slot, boolean is_command);
 void G_DoLoadGame(void);
 void G_SaveGame(int slot, char *description);
@@ -26,10 +24,7 @@ void G_SaveGameName(char *, size_t, int, boolean);
 void G_SetFastParms(int);
 void G_DoNewGame(void);
 void G_DoReborn(int playernum);
-void G_DoPlayDemo(void);
 void G_DoCompleted(void);
-void G_ReadDemoTiccmd(ticcmd_t *cmd);
-void G_WriteDemoTiccmd(ticcmd_t *cmd);
 void G_DoWorldDone(void);
 void G_Compatibility(void);
 const byte *G_ReadOptions(const byte *demo_p);
@@ -39,7 +34,7 @@ void G_RestartLevel(void);
 void G_DoVictory(void);
 void G_BuildTiccmd (ticcmd_t* cmd);
 void G_ChangedPlayerColour(int pn, int cl);
-void G_MakeSpecialEvent(buttoncode_t bc, ...); /* cph - new event stuff */
+void G_MakeSpecialEvent(buttoncode_t bc, ...);
 void doom_printf(const char *, ...) __attribute__((format(printf,1,2)));
 
 extern int key_right;

@@ -176,7 +176,6 @@ int    bodyqueslot, bodyquesize;
 mobj_t **bodyque = 0;
 
 static void G_DoSaveGame (boolean menu);
-static const byte* G_ReadDemoHeader(const byte* demo_p, size_t size, boolean failonerror);
 
 static inline signed char fudgef(signed char b)
 {
@@ -548,9 +547,6 @@ void G_Ticker (void)
         case ga_savegame:
           G_DoSaveGame (false);
           break;
-        case ga_playdemo:
-          G_DoPlayDemo ();
-          break;
         case ga_completed:
           G_DoCompleted ();
           break;
@@ -577,19 +573,6 @@ void G_Ticker (void)
           ticcmd_t *cmd = &players[i].cmd;
 
           memcpy(cmd, &netcmds[i][buf], sizeof *cmd);
-
-          if (demoplayback)
-            G_ReadDemoTiccmd (cmd);
-          if (demorecording)
-            G_WriteDemoTiccmd (cmd);
-
-          if ((demoplayback) && cmd->forwardmove > TURBOTHRESHOLD &&
-              !(gametic&31) && ((gametic>>5)&3) == i )
-            {
-        extern char *player_names[];
-        /* cph - don't use sprintf, use doom_printf */
-              doom_printf ("%s is turbo!", player_names[i]);
-            }
 
         }
     }
@@ -673,9 +656,6 @@ void G_Ticker (void)
       F_Ticker ();
       break;
 
-    case GS_DEMOSCREEN:
-      D_PageTicker ();
-      break;
     }
 }
 
@@ -1117,11 +1097,6 @@ void G_DoLoadGame(void)
 
   if (!command_loadgame)
     singledemo = false;  /* Clear singledemo flag if loading from menu */
-  else
-    if (singledemo) {
-      gameaction = ga_loadgame; /* Mark that we're loading a game before demo */
-      G_DoPlayDemo();           /* This will detect it and won't reinit level */
-    }
 }
 
 void G_SaveGame(int slot, char *description)
@@ -1492,62 +1467,6 @@ void G_InitNew(skill_t skill, int episode, int map)
 
 #define DEMOMARKER    0x80
 
-void G_ReadDemoTiccmd (ticcmd_t* cmd)
-{
-  unsigned char at;
-
-  if (*demo_p == DEMOMARKER)
-    G_CheckDemoStatus();
-  else if (demoplayback && demo_p + (longtics?5:4) > demobuffer + demolength)
-  {
-    lprintf(LO_WARN, "G_ReadDemoTiccmd: missing DEMOMARKER\n");
-    G_CheckDemoStatus();
-  }
-  else
-    {
-      cmd->forwardmove = ((signed char)*demo_p++);
-      cmd->sidemove = ((signed char)*demo_p++);
-      if (!longtics) {
-        cmd->angleturn = ((unsigned char)(at = *demo_p++))<<8;
-      } else {
-    unsigned int lowbyte = (unsigned char)*demo_p++;
-        cmd->angleturn = (((signed int)(*demo_p++))<<8) + lowbyte;
-      }
-      cmd->buttons = (unsigned char)*demo_p++;
-
-      if (compatibility_level == tasdoom_compatibility)
-      {
-        signed char k = cmd->forwardmove;
-        cmd->forwardmove = cmd->sidemove;
-        cmd->sidemove = (signed char)at;
-        cmd->angleturn = ((unsigned char)cmd->buttons)<<8;
-        cmd->buttons = (byte)k;
-      }
-    }
-}
-
-void G_WriteDemoTiccmd (ticcmd_t* cmd)
-{
-  char buf[5];
-  char *p = buf;
-
-  *p++ = cmd->forwardmove;
-  *p++ = cmd->sidemove;
-  if (!longtics) {
-    *p++ = (cmd->angleturn+128)>>8;
-  } else {
-    signed short a = cmd->angleturn;
-    *p++ = a & 0xff;
-    *p++ = (a >> 8) & 0xff;
-  }
-  *p++ = cmd->buttons;
-  if (fwrite(buf, p-buf, 1, demofp) != 1)
-    I_Error("G_WriteDemoTiccmd: error writing demo");
-
-  demo_p = buf;
-  G_ReadDemoTiccmd (cmd);
-}
-
 extern int forceOldBsp;
 
 byte *G_WriteOptions(byte *demo_p)
@@ -1668,274 +1587,6 @@ const byte *G_ReadOptions(const byte *demo_p)
 
   G_Compatibility();
   return target;
-}
-
-static const char *defdemoname;
-
-void G_DeferedPlayDemo (const char* name)
-{
-  defdemoname = name;
-  gameaction = ga_playdemo;
-}
-
-static int demolumpnum = -1;
-
-static int G_GetOriginalDoomCompatLevel(int ver)
-{
-  if (gamemode == retail) return ultdoom_compatibility;
-  if (gamemission >= pack_tnt) return finaldoom_compatibility;
-  return doom2_19_compatibility;
-}
-
-
-static boolean CheckForOverrun(const byte *start_p, const byte *current_p, size_t maxsize, size_t size, boolean failonerror)
-{
-  size_t pos = current_p - start_p;
-  if (pos + size > maxsize)
-  {
-    if (failonerror)
-      I_Error("G_ReadDemoHeader: wrong demo header\n");
-    else
-      return true;
-  }
-  return false;
-}
-
-static const byte* G_ReadDemoHeader(const byte *demo_p, size_t size, boolean failonerror)
-{
-  skill_t skill;
-  int i, episode, map;
-  const byte *header_p = demo_p;
-
-  basetic = gametic;
-
-  if (CheckForOverrun(header_p, demo_p, size, 1, failonerror))
-    return NULL;
-
-  demover = *demo_p++;
-  longtics = 0;
-
-  if (!((demover >=   0  && demover <=   4) ||
-        (demover >= 104  && demover <= 111) ||
-        (demover >= 200  && demover <= 214)))
-  {
-    I_Error("G_ReadDemoHeader: Unknown demo format %d.", demover);
-  }
-
-  if (demover < 200)
-    {
-      if (demover >= 111) longtics = 1;
-
-      variable_friction = 0;
-      weapon_recoil = 0;
-      allow_pushers = 0;
-      monster_infighting = 1;
-      monster_backing = 0;
-      monster_avoid_hazards = 0;
-      monster_friction = 0;
-      help_friends = 0;
-
-      if ((skill=demover) >= 100)
-        {
-
-          if (CheckForOverrun(header_p, demo_p, size, 8, failonerror))
-            return NULL;
-
-          compatibility_level = G_GetOriginalDoomCompatLevel(demover);
-          skill = *demo_p++;
-          episode = *demo_p++;
-          map = *demo_p++;
-          *demo_p++;
-          respawnparm = *demo_p++;
-          fastparm = *demo_p++;
-          nomonsters = *demo_p++;
-          consoleplayer = *demo_p++;
-        }
-      else
-        {
-
-          if (CheckForOverrun(header_p, demo_p, size, 2, failonerror))
-            return NULL;
-
-          compatibility_level = doom_12_compatibility;
-          episode = *demo_p++;
-          map = *demo_p++;
-          respawnparm = fastparm =
-            nomonsters = consoleplayer = 0;
-        }
-      G_Compatibility();
-    }
-  else
-    {
-      demo_p += 6;
-      switch (demover) {
-      case 200:
-      case 201:
-
-        if (CheckForOverrun(header_p, demo_p, size, 1, failonerror))
-          return NULL;
-
-        if (!*demo_p++)
-      compatibility_level = boom_201_compatibility;
-        else
-      compatibility_level = boom_compatibility_compatibility;
-      break;
-      case 202:
-
-        if (CheckForOverrun(header_p, demo_p, size, 1, failonerror))
-          return NULL;
-
-        if (!*demo_p++)
-      compatibility_level = boom_202_compatibility;
-        else
-      compatibility_level = boom_compatibility_compatibility;
-      break;
-      case 203:
-    switch (*(header_p + 2)) {
-    case 'B':
-      compatibility_level = lxdoom_1_compatibility;
-      break;
-    case 'M':
-      compatibility_level = mbf_compatibility;
-      demo_p++;
-      break;
-    }
-    break;
-      case 210:
-    compatibility_level = prboom_2_compatibility;
-    demo_p++;
-    break;
-      case 211:
-    compatibility_level = prboom_3_compatibility;
-    demo_p++;
-    break;
-      case 212:
-    compatibility_level = prboom_4_compatibility;
-    demo_p++;
-    break;
-      case 213:
-    compatibility_level = prboom_5_compatibility;
-    demo_p++;
-    break;
-      case 214:
-    compatibility_level = prboom_6_compatibility;
-        longtics = 1;
-    demo_p++;
-    break;
-      }
-
-      if (CheckForOverrun(header_p, demo_p, size, 5, failonerror))
-        return NULL;
-
-      skill = *demo_p++;
-      episode = *demo_p++;
-      map = *demo_p++;
-      *demo_p++;
-      consoleplayer = *demo_p++;
-
-      if (CheckForOverrun(header_p, demo_p, size, GAME_OPTION_SIZE, failonerror))
-        return NULL;
-
-      demo_p = G_ReadOptions(demo_p);
-
-      if (demover == 200)
-        demo_p += 256-GAME_OPTION_SIZE;
-    }
-
-  if (sizeof(comp_lev_str)/sizeof(comp_lev_str[0]) != MAX_COMPATIBILITY_LEVEL)
-    I_Error("G_ReadDemoHeader: compatibility level strings incomplete");
-  lprintf(LO_INFO, "G_DoPlayDemo: playing demo with %s compatibility\n",
-    comp_lev_str[compatibility_level]);
-
-  if (demo_compatibility)
-    {
-
-      if (CheckForOverrun(header_p, demo_p, size, 4, failonerror))
-        return NULL;
-
-      for (i=0; i<4; i++)
-        playeringame[i] = *demo_p++;
-      for (;i < MAXPLAYERS; i++)
-        playeringame[i] = 0;
-    }
-  else
-    {
-
-      if (CheckForOverrun(header_p, demo_p, size, MAXPLAYERS, failonerror))
-        return NULL;
-
-      for (i=0 ; i < MAXPLAYERS; i++)
-        playeringame[i] = *demo_p++;
-      demo_p += MIN_MAXPLAYERS - MAXPLAYERS;
-    }
-
-  if (gameaction != ga_loadgame) {
-    G_InitNew(skill, episode, map);
-  }
-
-  for (i=0; i<MAXPLAYERS;i++)
-    players[i].cheats = 0;
-
-  return demo_p;
-}
-
-void G_DoPlayDemo(void)
-{
-  char basename[9];
-
-  ExtractFileBase(defdemoname,basename);
-  basename[8] = 0;
-
-  demolumpnum = W_GetNumForName(basename);
-  demobuffer = W_CacheLumpNum(demolumpnum);
-  demolength = W_LumpLength(demolumpnum);
-
-  demo_p = G_ReadDemoHeader(demobuffer, demolength, true);
-
-  gameaction = ga_nothing;
-  usergame = false;
-
-  demoplayback = true;
-  R_SmoothPlaying_Reset(NULL);
-
-  starttime = I_GetTime_RealTime ();
-}
-
-boolean G_CheckDemoStatus (void)
-{
-  if (demorecording)
-    {
-      demorecording = false;
-      fputc(DEMOMARKER, demofp);
-      I_Error("G_CheckDemoStatus: Demo recorded");
-      return false;
-    }
-
-  if (timingdemo)
-    {
-      int endtime = I_GetTime_RealTime ();
-
-      unsigned realtics = endtime-starttime;
-      I_Error ("Timed %u gametics in %u realtics = %-.1f frames per second",
-               (unsigned) gametic,realtics,
-               (unsigned) gametic * (double) TICRATE / realtics);
-    }
-
-  if (demoplayback)
-    {
-      if (singledemo)
-        exit(0);
-
-      if (demolumpnum != -1) {
-
-  W_UnlockLumpNum(demolumpnum);
-  demolumpnum = -1;
-      }
-      G_ReloadDefaults();
-      D_AdvanceDemo ();
-      return true;
-    }
-  return false;
 }
 
 #define MAX_MESSAGE_SIZE 1024

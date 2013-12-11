@@ -63,7 +63,6 @@ extern int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
 extern skill_t startskill;
 extern int startepisode;
 extern int startmap;
-extern boolean autostart;
 extern skill_t gameskill;
 extern int gameepisode;
 extern int gamemap;

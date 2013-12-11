@@ -49,10 +49,7 @@ extern boolean inhelpscreens;
 skill_t startskill;
 int startepisode;
 int startmap;
-boolean autostart;
 int ffmap;
-
-boolean advancedemo;
 
 char wadfile[PATH_MAX + 1];
 char mapdir[PATH_MAX + 1];
@@ -275,9 +272,6 @@ static void D_DoomLoop(void)
             I_StartTic ();
             G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
 
-            if (advancedemo)
-                D_DoAdvanceDemo();
-
             M_Ticker();
             G_Ticker();
 
@@ -303,17 +297,8 @@ static void D_DoomLoop(void)
 
 }
 
-static int demosequence;
 static int pagetic;
 static const char *pagename;
-
-void D_PageTicker(void)
-{
-
-    if (--pagetic < 0)
-        D_AdvanceDemo();
-
-}
 
 static void D_PageDrawer(void)
 {
@@ -325,132 +310,17 @@ static void D_PageDrawer(void)
 
 }
 
-void D_AdvanceDemo (void)
-{
-
-    advancedemo = true;
-
-}
-
-static void D_SetPageName(const char *name)
-{
-
-    pagename = name;
-
-}
-
-static void D_DrawTitle1(const char *name)
-{
-
-    S_StartMusic(mus_intro);
-
-    pagetic = (TICRATE * 170) / 35;
-
-    D_SetPageName(name);
-
-}
-
-static void D_DrawTitle2(const char *name)
-{
-
-    S_StartMusic(mus_dm2ttl);
-    D_SetPageName(name);
-
-}
-
-static struct
-{
-
-    void (*func)(const char *);
-    const char *name;
-
-} const demostates[][4] = {
-    {
-        {D_DrawTitle1, "TITLEPIC"},
-        {D_DrawTitle1, "TITLEPIC"},
-        {D_DrawTitle2, "TITLEPIC"},
-        {D_DrawTitle1, "TITLEPIC"},
-    },
-    {
-        {G_DeferedPlayDemo, "demo1"},
-        {G_DeferedPlayDemo, "demo1"},
-        {G_DeferedPlayDemo, "demo1"},
-        {G_DeferedPlayDemo, "demo1"},
-    },
-    {
-        {D_SetPageName, NULL},
-        {D_SetPageName, NULL},
-        {D_SetPageName, NULL},
-        {D_SetPageName, NULL},
-    },
-    {
-        {G_DeferedPlayDemo, "demo2"},
-        {G_DeferedPlayDemo, "demo2"},
-        {G_DeferedPlayDemo, "demo2"},
-        {G_DeferedPlayDemo, "demo2"},
-    },
-    {
-        {D_SetPageName, "HELP2"},
-        {D_SetPageName, "HELP2"},
-        {D_SetPageName, "CREDIT"},
-        {D_DrawTitle1,  "TITLEPIC"},
-    },
-    {
-        {G_DeferedPlayDemo, "demo3"},
-        {G_DeferedPlayDemo, "demo3"},
-        {G_DeferedPlayDemo, "demo3"},
-        {G_DeferedPlayDemo, "demo3"},
-    },
-    {
-        {NULL},
-        {NULL},
-        {NULL},
-        {D_SetPageName, "CREDIT"},
-    },
-    {
-        {NULL},
-        {NULL},
-        {NULL},
-        {G_DeferedPlayDemo, "demo4"},
-    },
-    {
-        {NULL},
-        {NULL},
-        {NULL},
-        {NULL},
-    }
-};
-
-void D_DoAdvanceDemo(void)
-{
-
-    players[consoleplayer].playerstate = PST_LIVE;
-    advancedemo = usergame = paused = false;
-    gameaction = ga_nothing;
-    pagetic = TICRATE * 11;
-    gamestate = GS_DEMOSCREEN;
-
-    if (!demostates[++demosequence][gamemode].func)
-        demosequence = 0;
-
-    demostates[demosequence][gamemode].func(demostates[demosequence][gamemode].name);
-
-}
-
-void D_StartTitle (void)
+void D_StartTitle(void)
 {
 
     gameaction = ga_nothing;
-    demosequence = -1;
-
-    D_AdvanceDemo();
 
 }
 
-void D_AddFile (const char *file, wad_source_t source)
+void D_AddFile(const char *file, wad_source_t source)
 {
 
-    char *gwa_filename=NULL;
+    char *gwa_filename = NULL;
 
     wadfiles = realloc(wadfiles, sizeof(*wadfiles) * (numwadfiles + 1));
     wadfiles[numwadfiles].name = AddDefaultExtension(strcpy(malloc(strlen(file) + 5), file), ".wad");
@@ -685,7 +555,6 @@ static void D_DoomMainSetup(void)
     startskill = sk_none;
     startepisode = 1;
     startmap = 1;
-    autostart = false;
     nomusicparm = 0;
     nosfxparm = 0;
 
@@ -757,10 +626,7 @@ static void D_DoomMainSetup(void)
     if (!singledemo)
     {
 
-        if (autostart)
-            G_InitNew(startskill, startepisode, startmap);
-        else
-            D_StartTitle();
+        G_InitNew(startskill, startepisode, startmap);
 
     }
 

@@ -105,9 +105,6 @@ void TryRunTics(void)
     while (runtics--)
     {
 
-        if (advancedemo)
-            D_DoAdvanceDemo();
-
         M_Ticker();
         I_GetTime_SaveMS();
         G_Ticker ();
