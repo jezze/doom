@@ -50,8 +50,6 @@ int warning_about_changes, print_warning_about_changes;
 
 #define M_DrawBackground V_DrawBackground
 
-boolean inhelpscreens;
-
 boolean menuactive;
 
 #define SKULLXOFF  -32
@@ -1190,7 +1188,6 @@ void M_KeyBindings(int choice)
 void M_DrawKeybnd(void)
 
 {
-  inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0);
 
@@ -1277,7 +1274,6 @@ void M_Weapons(int choice)
 
 void M_DrawWeapons(void)
 {
-  inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0);
 
@@ -1348,7 +1344,6 @@ void M_StatusBar(int choice)
 
 void M_DrawStatusHUD(void)
 {
-  inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0);
 
@@ -1431,7 +1426,6 @@ static void M_DrawColPal(void)
 void M_DrawAutoMap(void)
 
 {
-  inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0);
 
@@ -1501,7 +1495,6 @@ void M_Enemy(int choice)
 void M_DrawEnemy(void)
 
 {
-  inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0);
 
@@ -1631,7 +1624,6 @@ void M_General(int choice)
 
 void M_DrawGeneral(void)
 {
-  inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0);
 
@@ -1798,7 +1790,6 @@ void M_Compat(int choice)
 
 void M_DrawCompat(void)
 {
-  inhelpscreens = true;
 
   M_DrawBackground("FLOOR4_6", 0);
   V_DrawNamePatch(52,2,0,"M_COMPAT", CR_DEFAULT, VPT_STRETCH);
@@ -1878,7 +1869,6 @@ void M_Messages(int choice)
 void M_DrawMessages(void)
 
 {
-  inhelpscreens = true;
   M_DrawBackground("FLOOR4_6", 0);
 
   V_DrawNamePatch(103, 2, 0, "M_MESS", CR_DEFAULT, VPT_STRETCH);
@@ -1939,7 +1929,6 @@ void M_ChatStrings(int choice)
 void M_DrawChatStrings(void)
 
 {
-  inhelpscreens = true;
   M_DrawBackground("FLOOR4_6", 0);
 
   V_DrawNamePatch(83, 2, 0, "M_CHAT", CR_DEFAULT, VPT_STRETCH);
@@ -2259,7 +2248,6 @@ setup_menu_t cred_settings[]={
 
 void M_DrawCredits(void)
 {
-  inhelpscreens = true;
   M_DrawBackground(gamemode==shareware ? "CEIL5_1" : "MFLR8_4", 0);
   V_DrawNamePatch(115,9,0, "PRBOOM",CR_GOLD, VPT_TRANS | VPT_STRETCH);
   M_DrawScreenItems(cred_settings);
@@ -3103,8 +3091,6 @@ void M_StartControlPanel (void)
 
 void M_Drawer(void)
 {
-
-    inhelpscreens = false;
 
     if (messageToPrint)
     {

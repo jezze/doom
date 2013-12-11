@@ -28,15 +28,6 @@ static int gettime_scaled(void)
 
 }
 
-static int gettime_fastdemo(void)
-{
-
-    static int fasttic;
-
-    return fasttic++;
-
-}
-
 static int gettime_error(void)
 {
 
@@ -70,30 +61,18 @@ void I_SafeExit(int rc)
 void I_Init(void)
 {
 
-    if (fastdemo)
+    if (realtic_clock_rate != 100)
     {
 
-        I_GetTime = gettime_fastdemo;
+        I_GetTime_Scale = ((int_64_t)realtic_clock_rate << 24) / 100;
+        I_GetTime = gettime_scaled;
 
     }
 
     else
     {
 
-        if (realtic_clock_rate != 100)
-        {
-
-            I_GetTime_Scale = ((int_64_t)realtic_clock_rate << 24) / 100;
-            I_GetTime = gettime_scaled;
-
-        }
-
-        else
-        {
-
-            I_GetTime = I_GetTime_RealTime;
-
-        }
+        I_GetTime = I_GetTime_RealTime;
 
     }
 

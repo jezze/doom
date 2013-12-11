@@ -7,32 +7,11 @@
 #include "sounds.h"
 #include "lprintf.h"
 
-
-
 static int *switchlist;
 static int max_numswitches;
 static int numswitches;
 
 button_t  buttonlist[MAXBUTTONS];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void P_InitSwitchList(void)
 {
@@ -41,7 +20,6 @@ void P_InitSwitchList(void)
                  2 : gamemode == commercial ? 3 : 1;
   const switchlist_t *alphSwitchList;
   int lump = W_GetNumForName("SWITCHES");
-
 
   alphSwitchList = (const switchlist_t *)W_CacheLumpNum(lump);
 
@@ -56,8 +34,6 @@ void P_InitSwitchList(void)
 
       if (!SHORT(alphSwitchList[i].episode))
         break;
-
-
 
       texture1 = R_CheckTextureNumForName(alphSwitchList[i].name1);
       if (texture1 == -1)
@@ -78,16 +54,6 @@ void P_InitSwitchList(void)
   switchlist[index] = -1;
   W_UnlockLumpNum(lump);
 }
-
-
-
-
-
-
-
-
-
-
 
 static void P_StartButton
 ( line_t*       line,
@@ -118,21 +84,9 @@ static void P_StartButton
   I_Error("P_StartButton: no button slots left!");
 }
 
-
-
-
-
-
-
-
-
-
-
-void P_ChangeSwitchTexture
-( line_t*       line,
-  int           useAgain )
+void P_ChangeSwitchTexture(line_t*       line,  int           useAgain )
 {
-  /* Rearranged a bit to avoid too much code duplication */
+
   mobj_t  *soundorg;
   int     i, sound;
   short   *texture, *ttop, *tmid, *tbot;
@@ -143,28 +97,19 @@ void P_ChangeSwitchTexture
   tbot = &sides[line->sidenum[0]].bottomtexture;
 
   sound = sfx_swtchn;
-  /* use the sound origin of the linedef (its midpoint)
-   * unless in a compatibility mode */
   soundorg = (mobj_t *)&line->soundorg;
+
   if (comp[comp_sound] || compatibility_level < prboom_6_compatibility) {
-    /* usually NULL, unless there is another button already pressed in,
-     * in which case it's the sound origin of that button press... */
     soundorg = buttonlist->soundorg;
-  } else {
+  } 
 
-    /* don't do this unless you're in a compatibility mode */
-
-
-
-  }
-
-  /* don't zero line->special until after exit switch test */
   if (!useAgain)
     line->special = 0;
 
-  /* search for a texture to change */
   texture = NULL; position = 0;
-  for (i = 0;i < numswitches*2;i++) { /* this could be more efficient... */
+  for (i = 0;i < numswitches*2;i++)
+  {
+
     if (switchlist[i] == *ttop) {
       texture = ttop; position = top; break;
     } else if (switchlist[i] == *tmid) {
@@ -174,7 +119,7 @@ void P_ChangeSwitchTexture
     }
   }
   if (texture == NULL)
-    return; /* no switch texture was found to change */
+    return;
   *texture = switchlist[i^1];
 
   S_StartSound(soundorg, sound);
@@ -183,31 +128,12 @@ void P_ChangeSwitchTexture
     P_StartButton(line, position, switchlist[i], BUTTONTIME);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-boolean
-P_UseSpecialLine
-( mobj_t*       thing,
-  line_t*       line,
-  int           side )
+boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
 {
 
-
-
-  if ((demoplayback ? (demover != 201) : (compatibility_level != boom_201_compatibility)))
-  if (side)
-    return false;
-
+  if (compatibility_level != boom_201_compatibility)
+    if (side)
+        return false;
 
   if (!demo_compatibility)
   {
@@ -377,9 +303,6 @@ P_UseSpecialLine
       break;
 
     case 11:
-      /* Exit level
-       * killough 10/98: prevent zombies from exiting levels
-       */
       if (thing->player && thing->player->health <= 0 && !comp[comp_zombie])
       {
         S_StartSound(thing, sfx_noway);
@@ -457,9 +380,6 @@ P_UseSpecialLine
       break;
 
     case 51:
-      /* Secret EXIT
-       * killough 10/98: prevent zombies from exiting levels
-       */
       if (thing->player && thing->player->health <= 0 && !comp[comp_zombie])
       {
         S_StartSound(thing, sfx_noway);
@@ -546,15 +466,10 @@ P_UseSpecialLine
         P_ChangeSwitchTexture(line,0);
       break;
 
-
-
-
     default:
       if (!demo_compatibility)
         switch (line->special)
         {
-
-
 
           case 158:
 

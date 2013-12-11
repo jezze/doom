@@ -14,7 +14,6 @@
 ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
 static ticcmd_t* localcmds;
 int maketic;
-int ticdup = 1;
 
 void D_InitNetGame(void)
 {

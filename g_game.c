@@ -41,6 +41,7 @@ static int demolength;
 static FILE    *demofp; /* cph - record straight to file */
 static const byte *demo_p;
 static short    consistancy[MAXPLAYERS][BACKUPTICS];
+static int ticdup = 1;
 
 gameaction_t    gameaction;
 gamestate_t     gamestate;
@@ -53,8 +54,6 @@ boolean         paused;
 static boolean command_loadgame = false;
 
 boolean         usergame;
-boolean         timingdemo;
-boolean         fastdemo;
 int             starttime;
 boolean         playeringame[MAXPLAYERS];
 player_t        players[MAXPLAYERS];
@@ -64,8 +63,6 @@ int             gametic;
 int             basetic;       /* killough 9/29/98: for demo sync */
 int             totalkills, totallive, totalitems, totalsecret;
 boolean         demoplayback;
-int             demover;
-boolean         singledemo;
 wbstartstruct_t wminfo;
 boolean         haswolflevels = false;
 static byte     *savebuffer;
@@ -1012,7 +1009,6 @@ void G_ReloadDefaults(void)
     startskill = (skill_t)(defaultskill-1);
 
   demoplayback = false;
-  singledemo = false;
 
   memset(playeringame+1, 0, sizeof(*playeringame)*(MAXPLAYERS-1));
 

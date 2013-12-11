@@ -13,7 +13,6 @@ extern boolean clrespawnparm;
 extern boolean clfastparm;
 extern boolean nosfxparm;
 extern boolean nomusicparm;
-extern int ffmap;
 
 void D_PostEvent(event_t* ev);
 

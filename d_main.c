@@ -39,12 +39,9 @@ boolean singletics = false;
 boolean nosfxparm;
 boolean nomusicparm;
 
-extern boolean inhelpscreens;
-
 skill_t startskill;
 int startepisode;
 int startmap;
-int ffmap;
 
 char wadfile[PATH_MAX + 1];
 char mapdir[PATH_MAX + 1];
@@ -196,9 +193,6 @@ static void D_DoomLoop(void)
 
         WasRenderedInTryRunTics = false;
         I_StartFrame ();
-
-        if (ffmap == gamemap)
-            ffmap = 0;
 
         if (singletics)
         {
@@ -528,12 +522,7 @@ static void D_DoomMainSetup(void)
 
     idmusnum = -1;
 
-    if (!singledemo)
-    {
-
-        G_InitNew(startskill, startepisode, startmap);
-
-    }
+    G_InitNew(startskill, startepisode, startmap);
 
 }
 
