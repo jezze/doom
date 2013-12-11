@@ -32,15 +32,7 @@
 #include "r_fps.h"
 #include "z_zone.h"
 
-#define SAVEGAMESIZE  0x20000
-#define SAVESTRINGSIZE  24
-
-static size_t   savegamesize = SAVEGAMESIZE;
-static const byte *demobuffer;   /* cph - only used for playback */
-static int demolength;
-static FILE    *demofp; /* cph - record straight to file */
-static const byte *demo_p;
-static short    consistancy[MAXPLAYERS][BACKUPTICS];
+static short consistancy[MAXPLAYERS][BACKUPTICS];
 static int ticdup = 1;
 
 gameaction_t    gameaction;
@@ -65,7 +57,6 @@ int             totalkills, totallive, totalitems, totalsecret;
 boolean         demoplayback;
 wbstartstruct_t wminfo;
 boolean         haswolflevels = false;
-static byte     *savebuffer;
 int             autorun = false;
 int             totalleveltimes;
 int        longtics;
@@ -162,8 +153,6 @@ static int   dclicktime2;
 static int   dclickstate2;
 static int   dclicks2;
 static buttoncode_t special_event;
-static byte  savegameslot;
-char         savedescription[SAVEDESCLEN];
 int defaultskill;
 int    bodyqueslot, bodyquesize;
 mobj_t **bodyque = 0;
@@ -569,28 +558,11 @@ void G_Ticker (void)
                     S_ResumeSound ();
                   break;
 
-                case BTS_SAVEGAME:
-                  if (!savedescription[0])
-                    strcpy(savedescription, "NET GAME");
-                  savegameslot =
-                    (players[i].cmd.buttons & BTS_SAVEMASK)>>BTS_SAVESHIFT;
-                  gameaction = ga_savegame;
-                  break;
-
-
-                case BTS_LOADGAME:
-                  savegameslot =
-                    (players[i].cmd.buttons & BTS_SAVEMASK)>>BTS_SAVESHIFT;
-                  gameaction = ga_loadgame;
-      command_loadgame = false;
-                  break;
-
-
-    case BTS_RESTARTLEVEL:
+                case BTS_RESTARTLEVEL:
                   if (demoplayback || (compatibility_level < lxdoom_1_compatibility))
                     break;
-      gameaction = ga_loadlevel;
-      break;
+                gameaction = ga_loadlevel;
+                break;
                 }
         players[i].cmd.buttons = 0;
             }

@@ -6,7 +6,6 @@
 #include "d_client.h"
 
 #define GAME_OPTION_SIZE                64
-#define SAVEDESCLEN                     32
 
 boolean G_Responder(event_t *ev);
 void G_InitNew(skill_t skill, int episode, int map);
@@ -106,7 +105,6 @@ extern boolean haswolflevels;
 extern int bodyquesize;
 extern int pars[4][10];
 extern int cpars[32];
-extern char savedescription[SAVEDESCLEN];
 extern const char *comp_lev_str[];
 
 #endif
