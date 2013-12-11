@@ -299,8 +299,6 @@ static char hud_keysstr[80];
 static char hud_gkeysstr[80];
 static char hud_monsecstr[80];
 
-extern int map_point_coordinates;
-
 const char* shiftxform;
 
 const char english_shiftxform[] =
@@ -609,23 +607,6 @@ void HU_Start(void)
     HU_FONTSTART,
     hudcolor_xyco
   );
-
-  if (map_point_coordinates)
-  {
-    sprintf(hud_coordstrx,"X: %-5d",0);
-    s = hud_coordstrx;
-    while (*s)
-      HUlib_addCharToTextLine(&w_coordx, *(s++));
-    sprintf(hud_coordstry,"Y: %-5d",0);
-    s = hud_coordstry;
-    while (*s)
-      HUlib_addCharToTextLine(&w_coordy, *(s++));
-    sprintf(hud_coordstrz,"Z: %-5d",0);
-    s = hud_coordstrz;
-    while (*s)
-      HUlib_addCharToTextLine(&w_coordz, *(s++));
-  }
-
 
   strcpy(hud_ammostr,"AMM ");
   s = hud_ammostr;

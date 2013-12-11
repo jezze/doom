@@ -82,7 +82,6 @@ extern int showMessages;
 int         mus_pause_opt;
 int endoom_mode;
 extern const char* S_music_files[];
-int map_point_coordinates;
 
 default_t defaults[] =
 {

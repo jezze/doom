@@ -22,7 +22,6 @@
 
 extern patchnum_t hu_font[HU_FONTSIZE];
 extern boolean  message_dontfuckwithme;
-extern boolean chat_on;
 int mouseSensitivity_horiz;
 int mouseSensitivity_vert;
 int showMessages;
@@ -80,8 +79,6 @@ extern int mousebfire;
 extern int mousebstrafe;
 extern int mousebforward;
 extern int mousebbackward;
-int mapcolor_me;
-extern int map_point_coordinates;
 extern const char* shiftxform;
 extern default_t defaults[];
 extern int numdefaults;
@@ -2164,9 +2161,6 @@ boolean M_Responder(event_t* ev)
 
         if (ch == key_hud)
         {
-
-            if (chat_on)
-                return false;
 
             hud_displayed = 1;
             hud_active = (hud_active + 1) % 3;
