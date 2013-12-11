@@ -628,7 +628,6 @@ static void ST_initData(void)
   for (i=0;i<3;i++)
     keyboxes[i] = -1;
 
-  STlib_init();
 }
 
 static void ST_createWidgets(void)
