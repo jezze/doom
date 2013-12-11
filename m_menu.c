@@ -88,20 +88,13 @@ void M_Episode(int choice);
 void M_ChooseSkill(int choice);
 void M_Options(int choice);
 void M_QuitDOOM(int choice);
-void M_ChangeMessages(int choice);
-void M_ChangeSensitivity(int choice);
-void M_SfxVol(int choice);
-void M_MusicVol(int choice);
 void M_StartGame(int choice);
-void M_Sound(int choice);
 void M_DrawMainMenu(void);
 void M_DrawNewGame(void);
 void M_DrawEpisode(void);
 void M_DrawOptions(void);
-void M_DrawSound(void);
 void M_DrawSetup(void);
 void M_SetupNextMenu(menu_t *menudef);
-void M_DrawThermo(int x,int y,int width,int dot);
 void M_DrawEmptyCell(menu_t *menu,int item);
 void M_DrawSelCell(menu_t *menu,int item);
 void M_WriteText(int x, int y, const char *string);
@@ -128,7 +121,6 @@ void M_DrawEnemy(void);
 void M_DrawMessages(void);
 void M_DrawChatStrings(void);
 void M_Compat(int);
-void M_ChangeDemoSmoothTurns(void);
 void M_General(int);
 void M_DrawCompat(void);
 void M_DrawGeneral(void);
@@ -271,7 +263,6 @@ enum
 
     general,
     setup,
-    messages,
     opt_end
 
 } options_e;
@@ -279,7 +270,6 @@ enum
 menuitem_t OptionsMenu[] = {
     {1, "M_GENERL", M_General},
     {1, "M_SETUP", M_Setup},
-    {1, "M_MESSG", M_ChangeMessages},
 };
 
 menu_t OptionsDef = {
@@ -298,7 +288,6 @@ void M_DrawOptions(void)
 {
 
     V_DrawNamePatch(108, 15, 0, "M_OPTTTL", CR_DEFAULT, VPT_STRETCH);
-    V_DrawNamePatch(OptionsDef.x + 120, OptionsDef.y+LINEHEIGHT*messages, 0, msgNames[showMessages], CR_DEFAULT, VPT_STRETCH);
 
 }
 
@@ -314,20 +303,6 @@ void M_QuitDOOM(int choice)
 
     exit(0);
 
-}
-
-void M_ChangeMessages(int choice)
-{
-
-  choice = 0;
-  showMessages = 1 - showMessages;
-
-  if (!showMessages)
-    players[consoleplayer].message = MSGOFF;
-  else
-    players[consoleplayer].message = MSGON ;
-
-  message_dontfuckwithme = true;
 }
 
 boolean setup_active      = false;
@@ -2752,37 +2727,6 @@ void M_StopMessage(void)
 
     menuactive = messageLastMenuActive;
     messageToPrint = 0;
-
-}
-
-void M_DrawThermo(int x, int y, int width, int dot)
-{
-
-    int xx;
-    int i;
-    int scaler;
-
-    width = (width > 200) ? 200 : width;
-    scaler = (width > 23) ? (200 / width) : 8;
-    xx = x;
-
-    V_DrawNamePatch(xx, y, 0, "M_THERML", CR_DEFAULT, VPT_STRETCH);
-
-    xx += 8;
-
-    for (i = 0; i < width; i++)
-    {
-
-        V_DrawNamePatch(xx, y, 0, "M_THERMM", CR_DEFAULT, VPT_STRETCH);
-
-        xx += scaler;
-
-    }
-
-    xx += (8 - scaler);
-
-    V_DrawNamePatch(xx, y, 0, "M_THERMR", CR_DEFAULT, VPT_STRETCH);
-    V_DrawNamePatch((x + 8) + dot * scaler, y, 0, "M_THERMO", CR_DEFAULT, VPT_STRETCH);
 
 }
 
