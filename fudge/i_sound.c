@@ -9,8 +9,8 @@
 #include "doomtype.h"
 #include "d_main.h"
 
-int snd_card = 0;
-int mus_card = 0;
+int snd_card = 1;
+int mus_card = 1;
 int snd_samplerate = 11025;
 
 void I_UpdateSoundParams(int handle, int volume, int seperation, int pitch)

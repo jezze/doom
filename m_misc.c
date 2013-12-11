@@ -144,8 +144,6 @@ default_t defaults[] =
   {"comp_soul", {&default_comp[comp_soul]}, {0},0,1, def_bool, ss_comp, &comp[comp_soul]},
   {"comp_maskedanim", {&default_comp[comp_maskedanim]}, {0}, 0, 1, def_bool, ss_comp, &comp[comp_maskedanim]},
   {"Sound settings", {NULL}, {0}, UL, UL, def_none, ss_none},
-  {"sound_card", {&snd_card}, {-1}, -1, 7, def_int,ss_none},
-  {"music_card", {&mus_card}, {-1}, -1, 9, def_int, ss_none},
   {"samplerate", {&snd_samplerate}, {22050}, 11025, 48000, def_int, ss_none},
   {"sfx_volume", {&snd_SfxVolume}, {8}, 0, 15, def_int, ss_none},
   {"music_volume", {&snd_MusicVolume}, {8}, 0, 15, def_int,ss_none},
