@@ -1121,9 +1121,7 @@ void G_DoLoadGame(void)
     if (singledemo) {
       gameaction = ga_loadgame; /* Mark that we're loading a game before demo */
       G_DoPlayDemo();           /* This will detect it and won't reinit level */
-    } else /* Command line + record means it's a recordfrom */
-      if (demorecording)
-        G_BeginRecording();
+    }
 }
 
 void G_SaveGame(int slot, char *description)
@@ -1550,57 +1548,6 @@ void G_WriteDemoTiccmd (ticcmd_t* cmd)
   G_ReadDemoTiccmd (cmd);
 }
 
-
-
-
-
-void G_RecordDemo (const char* name)
-{
-  char     demoname[PATH_MAX];
-  usergame = false;
-  AddDefaultExtension(strcpy(demoname, name), ".lmp");
-  demorecording = true;
-  if (access(demoname, F_OK)) {
-    demofp = fopen(demoname, "wb");
-  } else {
-    demofp = fopen(demoname, "r+");
-    if (demofp) {
-      int slot = -1;
-      int rc;
-      int bytes_per_tic;
-      const byte* pos;
-
-      { /* Read the demo header for options etc */
-        byte buf[200];
-        size_t len = fread(buf, 1, sizeof(buf), demofp);
-        pos = G_ReadDemoHeader(buf, len, false);
-        if (pos)
-        {
-          fseek(demofp, pos - buf, SEEK_SET);
-        }
-      }
-      bytes_per_tic = longtics ? 5 : 4;
-    if (pos)
-      do {
-        byte buf[5];
-      
-        rc = fread(buf, 1, bytes_per_tic, demofp);
-        if (buf[0] == DEMOMARKER) break;
-        if (buf[bytes_per_tic-1] & BT_SPECIAL)
-          if ((buf[bytes_per_tic-1] & BT_SPECIALMASK) == BTS_SAVEGAME)
-            slot = (buf[bytes_per_tic-1] & BTS_SAVEMASK)>>BTS_SAVESHIFT;
-      } while (rc == bytes_per_tic);
-
-      if (slot == -1) I_Error("G_RecordDemo: No save in demo, can't continue");
-
-      fseek(demofp, -rc, SEEK_CUR);
-      G_LoadGame(slot, false);
-      autostart = false;
-    }
-  }
-  if (!demofp) I_Error("G_RecordDemo: failed to open %s", name);
-}
-
 extern int forceOldBsp;
 
 byte *G_WriteOptions(byte *demo_p)
@@ -1721,108 +1668,6 @@ const byte *G_ReadOptions(const byte *demo_p)
 
   G_Compatibility();
   return target;
-}
-
-void G_BeginRecording (void)
-{
-  int i;
-  byte *demostart, *demo_p;
-  demostart = demo_p = malloc(1000);
-  longtics = 0;
-
-  if (mbf_features) {
-    {
-      unsigned char v;
-      switch (compatibility_level)
-      {
-        case mbf_compatibility: v = 203; break;
-        case prboom_2_compatibility: v = 210; break;
-        case prboom_3_compatibility: v = 211; break;
-        case prboom_4_compatibility: v = 212; break;
-        case prboom_5_compatibility: v = 213; break;
-        case prboom_6_compatibility:
-        default:
-                     v = 214; 
-                     longtics = 1;
-                     break;
-      }
-      *demo_p++ = v;
-    }
-
-    *demo_p++ = 0x1d;
-    *demo_p++ = 'M';
-    *demo_p++ = 'B';
-    *demo_p++ = 'F';
-    *demo_p++ = 0xe6;
-    *demo_p++ = '\0';
-    *demo_p++ = 0;
-    *demo_p++ = gameskill;
-    *demo_p++ = gameepisode;
-    *demo_p++ = gamemap;
-    *demo_p++ = false;
-    *demo_p++ = consoleplayer;
-    demo_p = G_WriteOptions(demo_p);
-
-    for (i=0 ; i<MAXPLAYERS ; i++)
-      *demo_p++ = playeringame[i];
-
-
-
-
-
-    for (; i<MIN_MAXPLAYERS; i++)
-      *demo_p++ = 0;
-
-  } else if (compatibility_level > boom_compatibility_compatibility) {
-    byte v, c; /* Nominally, version and compatibility bits */
-    switch (compatibility_level) {
-    case boom_compatibility_compatibility: v = 202, c = 1; break;
-    case boom_201_compatibility: v = 201; c = 0; break;
-    case boom_202_compatibility: v = 202, c = 0; break;
-    default: I_Error("G_BeginRecording: Boom compatibility level unrecognised?");
-    }
-    *demo_p++ = v;
-    *demo_p++ = 0x1d;
-    *demo_p++ = 'B';
-    *demo_p++ = 'o';
-    *demo_p++ = 'o';
-    *demo_p++ = 'm';
-    *demo_p++ = 0xe6;
-    *demo_p++ = c;
-    *demo_p++ = gameskill;
-    *demo_p++ = gameepisode;
-    *demo_p++ = gamemap;
-    *demo_p++ = false;
-    *demo_p++ = consoleplayer;
-    demo_p = G_WriteOptions(demo_p);
-
-    for (i=0 ; i<MAXPLAYERS ; i++)
-      *demo_p++ = playeringame[i];
-
-
-
-
-
-    for (; i<MIN_MAXPLAYERS; i++)
-      *demo_p++ = 0;
-  } else {
-    longtics = 0;
-    *demo_p++ = longtics ? 111 : 109;
-    *demo_p++ = gameskill;
-    *demo_p++ = gameepisode;
-    *demo_p++ = gamemap;
-    *demo_p++ = false;
-    *demo_p++ = respawnparm;
-    *demo_p++ = fastparm;
-    *demo_p++ = nomonsters;
-    *demo_p++ = consoleplayer;
-    for (i=0; i<4; i++)
-      *demo_p++ = playeringame[i];
-  }
-
-  if (fwrite(demostart, 1, demo_p-demostart, demofp) != (size_t)(demo_p-demostart))
-    I_Error("G_BeginRecording: Error writing demo header");
-  free(demostart);
 }
 
 static const char *defdemoname;

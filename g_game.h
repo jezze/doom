@@ -16,8 +16,6 @@ void G_DeferedPlayDemo(const char *demo);
 void G_LoadGame(int slot, boolean is_command);
 void G_DoLoadGame(void);
 void G_SaveGame(int slot, char *description);
-void G_BeginRecording(void);
-void G_RecordDemo(const char *name);
 void G_ExitLevel(void);
 void G_SecretExitLevel(void);
 void G_WorldDone(void);

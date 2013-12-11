@@ -758,21 +758,9 @@ static void D_DoomMainSetup(void)
     {
 
         if (autostart)
-        {
-
             G_InitNew(startskill, startepisode, startmap);
-
-            if (demorecording)
-                G_BeginRecording();
-
-        }
-
         else
-        {
-
             D_StartTitle();
-
-        }
 
     }
 
