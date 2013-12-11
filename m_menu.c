@@ -98,7 +98,6 @@ void M_ChangeMessages(int choice);
 void M_ChangeSensitivity(int choice);
 void M_SfxVol(int choice);
 void M_MusicVol(int choice);
-void M_SizeDisplay(int choice);
 void M_StartGame(int choice);
 void M_Sound(int choice);
 void M_Mouse(int choice, int *sens);
@@ -283,8 +282,6 @@ enum
     general,
     setup,
     messages,
-    scrnsize,
-    option_empty1,
     mousesens,
     soundvol,
     opt_end
@@ -295,8 +292,6 @@ menuitem_t OptionsMenu[] = {
     {1, "M_GENERL", M_General},
     {1, "M_SETUP", M_Setup},
     {1, "M_MESSG", M_ChangeMessages},
-    {2, "M_SCRNSZ", M_SizeDisplay},
-    {-1, "", 0},
     {1, "M_MSENS", M_ChangeSensitivity},
     {1, "M_SVOL", M_Sound}
 };
@@ -318,7 +313,6 @@ void M_DrawOptions(void)
 
     V_DrawNamePatch(108, 15, 0, "M_OPTTTL", CR_DEFAULT, VPT_STRETCH);
     V_DrawNamePatch(OptionsDef.x + 120, OptionsDef.y+LINEHEIGHT*messages, 0, msgNames[showMessages], CR_DEFAULT, VPT_STRETCH);
-    M_DrawThermo(OptionsDef.x, OptionsDef.y + LINEHEIGHT * (scrnsize + 1), 9, screenSize);
 
 }
 
@@ -496,28 +490,6 @@ void M_ChangeMessages(int choice)
     players[consoleplayer].message = MSGON ;
 
   message_dontfuckwithme = true;
-}
-
-void M_SizeDisplay(int choice)
-{
-  switch(choice) {
-  case 0:
-    if (screenSize > 0) {
-      screenblocks--;
-      screenSize--;
-      hud_displayed = 0;
-    }
-    break;
-  case 1:
-    if (screenSize < 8) {
-      screenblocks++;
-      screenSize++;
-    }
-    else
-      hud_displayed = !hud_displayed;
-    break;
-  }
-  R_SetViewSize (screenblocks);
 }
 
 boolean setup_active      = false;
@@ -2270,9 +2242,6 @@ boolean M_Responder(event_t* ev)
 
             if (screenSize < 8)
             {
-
-                while (screenSize < 8 || !hud_displayed)
-                    M_SizeDisplay(1);
 
             }
 
