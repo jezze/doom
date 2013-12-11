@@ -28,7 +28,6 @@ int mouseSensitivity_vert;
 int showMessages;
 int hide_setup=1;
 int screenblocks;
-int quickSaveSlot;
 int messageToPrint;
 static const char* messageString;
 int     messx;
@@ -3054,7 +3053,6 @@ void M_Init(void)
     messageToPrint = 0;
     messageString = NULL;
     messageLastMenuActive = menuactive;
-    quickSaveSlot = -1;
 
 }
 
