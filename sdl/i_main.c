@@ -20,7 +20,6 @@
 
 int realtic_clock_rate = 100;
 static int_64_t I_GetTime_Scale = 1 << 24;
-static int has_exited;
 
 static int gettime_scaled(void)
 {
@@ -62,18 +61,9 @@ static void handle_signal(int s)
 static void quit(void)
 {
 
-    if (!has_exited)
-        has_exited = 1;
-
-    if (has_exited == 1)
-    {
-
-        if (demorecording)
-            G_CheckDemoStatus();
-
+/*
         M_SaveDefaults();
-
-    }
+*/
 
 }
 
@@ -82,14 +72,7 @@ int (*I_GetTime)(void) = gettime_error;
 void I_SafeExit(int rc)
 {
 
-    if (!has_exited)
-    {
-
-        has_exited = rc ? 2 : 1;
-
-        exit(rc);
-
-    }
+    exit(rc);
 
 }
 
