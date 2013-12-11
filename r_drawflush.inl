@@ -20,12 +20,7 @@
 #define TEMPBUF int_tempbuf
 #endif
 
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-#define GETDESTCOLOR8(col1, col2) (temptranmap[((col1)<<8)+(col2)])
-#define GETDESTCOLOR15(col1, col2) (GETBLENDED15_3268((col1), (col2)))
-#define GETDESTCOLOR16(col1, col2) (GETBLENDED16_3268((col1), (col2)))
-#define GETDESTCOLOR32(col1, col2) (GETBLENDED32_3268((col1), (col2)))
-#elif (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
+#if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
 #define GETDESTCOLOR8(col) (tempfuzzmap[6*256+(col)])
 #define GETDESTCOLOR15(col) GETBLENDED15_9406(col, 0)
 #define GETDESTCOLOR16(col) GETBLENDED16_9406(col, 0)
@@ -37,17 +32,6 @@
 #define GETDESTCOLOR32(col) (col)
 #endif
 
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-#if (R_DRAWCOLUMN_PIPELINE_BITS == 8)
-#define GETDESTCOLOR(col1, col2) GETDESTCOLOR8(col1, col2)
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 15)
-#define GETDESTCOLOR(col1, col2) GETDESTCOLOR15(col1, col2)
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 16)
-#define GETDESTCOLOR(col1, col2) GETDESTCOLOR16(col1, col2)
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 32)
-#define GETDESTCOLOR(col1, col2) GETDESTCOLOR32(col1, col2)
-#endif
-#else
 #if (R_DRAWCOLUMN_PIPELINE_BITS == 8)
 #define GETDESTCOLOR(col) GETDESTCOLOR8(col)
 #elif (R_DRAWCOLUMN_PIPELINE_BITS == 15)
@@ -56,7 +40,6 @@
 #define GETDESTCOLOR(col) GETDESTCOLOR16(col)
 #elif (R_DRAWCOLUMN_PIPELINE_BITS == 32)
 #define GETDESTCOLOR(col) GETDESTCOLOR32(col)
-#endif
 #endif
 
 static void R_FLUSHWHOLE_FUNCNAME(void)
@@ -77,9 +60,7 @@ static void R_FLUSHWHOLE_FUNCNAME(void)
         while (--count >= 0)
         {
 
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-            *dest = GETDESTCOLOR(*dest, *source);
-#elif (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
+#if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
             *dest = GETDESTCOLOR(dest[fuzzoffset[fuzzpos]]);
          
             if (++fuzzpos == FUZZTABLE) 
@@ -121,9 +102,7 @@ static void R_FLUSHHEADTAIL_FUNCNAME(void)
             while (--count >= 0)
             {
 
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-                *dest = GETDESTCOLOR(*dest, *source);
-#elif (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
+#if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
                 *dest = GETDESTCOLOR(dest[fuzzoffset[fuzzpos]]);
             
                 if (++fuzzpos == FUZZTABLE) 
@@ -150,9 +129,7 @@ static void R_FLUSHHEADTAIL_FUNCNAME(void)
             while (--count >= 0)
             {
 
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-                *dest = GETDESTCOLOR(*dest, *source);
-#elif (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
+#if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
                 *dest = GETDESTCOLOR(dest[fuzzoffset[fuzzpos]]);
             
                 if (++fuzzpos == FUZZTABLE) 
@@ -189,18 +166,7 @@ static void R_FLUSHQUAD_FUNCNAME(void)
 
     count = commonbot - commontop + 1;
 
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-    while (--count >= 0)
-    {
-        dest[0] = GETDESTCOLOR(dest[0], source[0]);
-        dest[1] = GETDESTCOLOR(dest[1], source[1]);
-        dest[2] = GETDESTCOLOR(dest[2], source[2]);
-        dest[3] = GETDESTCOLOR(dest[3], source[3]);
-        source += 4 * sizeof(byte);
-        dest += drawvars.PITCH * sizeof(byte);
-    }
-
-#elif (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
+#if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
     while (--count >= 0)
     {
 

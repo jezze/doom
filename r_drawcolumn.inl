@@ -189,9 +189,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
         tempyl[0] = commontop = dcvars->yl;
         tempyh[0] = commonbot = dcvars->yh;
         temptype = COLTYPE;
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-        temptranmap = tranmap;
-#elif (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
+#if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
         tempfuzzmap = fullcolormap;
 #endif
         R_FlushWholeColumns = R_FLUSHWHOLE_FUNCNAME;

@@ -1243,7 +1243,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_NOBLOCKMAP|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -1321,7 +1321,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_NOBLOCKMAP|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -1373,7 +1373,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     8,
     sfx_None,
-    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -1555,7 +1555,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     8,
     sfx_None,
-    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -1893,7 +1893,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_NOBLOCKMAP|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -1945,7 +1945,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     3,
     sfx_None,
-    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -1971,7 +1971,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     5,
     sfx_None,
-    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -2023,7 +2023,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     5,
     sfx_None,
-    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -2049,7 +2049,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     100,
     sfx_None,
-    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -2075,7 +2075,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     5,
     sfx_None,
-    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_MISSILE|MF_DROPOFF|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -2101,7 +2101,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_NOBLOCKMAP|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -2153,7 +2153,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_NOBLOCKMAP|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -2179,7 +2179,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_NOBLOCKMAP|MF_NOGRAVITY|MF_TRANSLUCENT,
+    MF_NOBLOCKMAP|MF_NOGRAVITY,
     S_NULL
   },
 
@@ -2569,7 +2569,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_SPECIAL|MF_COUNTITEM|MF_TRANSLUCENT,
+    MF_SPECIAL|MF_COUNTITEM,
     S_NULL
   },
 
@@ -2595,7 +2595,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_SPECIAL|MF_COUNTITEM|MF_TRANSLUCENT,
+    MF_SPECIAL|MF_COUNTITEM,
     S_NULL
   },
 
@@ -2647,7 +2647,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_SPECIAL|MF_COUNTITEM|MF_TRANSLUCENT,
+    MF_SPECIAL|MF_COUNTITEM,
     S_NULL
   },
 
@@ -2751,7 +2751,7 @@ mobjinfo_t mobjinfo[NUMMOBJTYPES] = {
     100,
     0,
     sfx_None,
-    MF_SPECIAL|MF_COUNTITEM|MF_TRANSLUCENT,
+    MF_SPECIAL|MF_COUNTITEM,
     S_NULL
   },
 

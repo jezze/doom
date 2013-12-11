@@ -36,12 +36,9 @@ int R_TextureNumForName (const char *name);
 int R_SafeTextureNumForName (const char *name, int snum);
 int R_CheckTextureNumForName (const char *name);
 
-void R_InitTranMap(int);
 int R_ColormapNumForName(const char *name);
 /* cph 2001/11/17 - new func to do lighting calcs and get suitable colour map */
 const lighttable_t* R_ColourMap(int lightlevel, fixed_t spryscale);
-
-extern const byte *main_tranmap, *tranmap;
 
 /* Proff - Added for OpenGL - cph - const char* param */
 void R_SetPatchNum(patchnum_t *patchnum, const char *name);

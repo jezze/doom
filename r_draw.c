@@ -13,7 +13,6 @@
 #define FUZZTABLE                       50
 #define FUZZOFF                         1
 #define RDC_STANDARD                    1
-#define RDC_TRANSLUCENT                 2
 #define RDC_TRANSLATED                  4
 #define RDC_FUZZ                        8
 #define RDC_NOCOLMAP                    16
@@ -39,8 +38,6 @@ int scaledviewwidth;
 int viewheight;
 int viewwindowx;
 int viewwindowy;
-const byte *tranmap;
-const byte *main_tranmap;
 static int temp_x = 0;
 static int tempyl[4], tempyh[4];
 static byte byte_tempbuf[MAX_SCREENHEIGHT * 4];
@@ -49,7 +46,6 @@ static unsigned int int_tempbuf[MAX_SCREENHEIGHT * 4];
 static int startx = 0;
 static int temptype = COL_NONE;
 static int commontop, commonbot;
-static const byte *temptranmap = NULL;
 static const byte *tempfuzzmap;
 
 static const int fuzzoffset_org[FUZZTABLE] = {
@@ -143,13 +139,6 @@ void R_ResetColumnBuffer(void)
 #define R_FLUSHQUAD_FUNCNAME R_FlushQuad8
 #include "r_drawflush.inl"
 
-#define R_DRAWCOLUMN_PIPELINE RDC_TRANSLUCENT
-#define R_DRAWCOLUMN_PIPELINE_BITS 8
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL8
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL8
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL8
-#include "r_drawflush.inl"
-
 #define R_DRAWCOLUMN_PIPELINE RDC_FUZZ
 #define R_DRAWCOLUMN_PIPELINE_BITS 8
 #define R_FLUSHWHOLE_FUNCNAME R_FlushWholeFuzz8
@@ -162,13 +151,6 @@ void R_ResetColumnBuffer(void)
 #define R_FLUSHWHOLE_FUNCNAME R_FlushWhole15
 #define R_FLUSHHEADTAIL_FUNCNAME R_FlushHT15
 #define R_FLUSHQUAD_FUNCNAME R_FlushQuad15
-#include "r_drawflush.inl"
-
-#define R_DRAWCOLUMN_PIPELINE RDC_TRANSLUCENT
-#define R_DRAWCOLUMN_PIPELINE_BITS 15
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL15
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL15
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL15
 #include "r_drawflush.inl"
 
 #define R_DRAWCOLUMN_PIPELINE RDC_FUZZ
@@ -185,13 +167,6 @@ void R_ResetColumnBuffer(void)
 #define R_FLUSHQUAD_FUNCNAME R_FlushQuad16
 #include "r_drawflush.inl"
 
-#define R_DRAWCOLUMN_PIPELINE RDC_TRANSLUCENT
-#define R_DRAWCOLUMN_PIPELINE_BITS 16
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL16
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL16
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL16
-#include "r_drawflush.inl"
-
 #define R_DRAWCOLUMN_PIPELINE RDC_FUZZ
 #define R_DRAWCOLUMN_PIPELINE_BITS 16
 #define R_FLUSHWHOLE_FUNCNAME R_FlushWholeFuzz16
@@ -204,13 +179,6 @@ void R_ResetColumnBuffer(void)
 #define R_FLUSHWHOLE_FUNCNAME R_FlushWhole32
 #define R_FLUSHHEADTAIL_FUNCNAME R_FlushHT32
 #define R_FLUSHQUAD_FUNCNAME R_FlushQuad32
-#include "r_drawflush.inl"
-
-#define R_DRAWCOLUMN_PIPELINE RDC_TRANSLUCENT
-#define R_DRAWCOLUMN_PIPELINE_BITS 32
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL32
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL32
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL32
 #include "r_drawflush.inl"
 
 #define R_DRAWCOLUMN_PIPELINE RDC_FUZZ
@@ -251,40 +219,6 @@ byte *translationtables;
 #define R_FLUSHWHOLE_FUNCNAME R_FlushWhole32
 #define R_FLUSHHEADTAIL_FUNCNAME R_FlushHT32
 #define R_FLUSHQUAD_FUNCNAME R_FlushQuad32
-#include "r_drawcolpipeline.inl"
-
-#undef R_DRAWCOLUMN_PIPELINE_BASE
-#undef R_DRAWCOLUMN_PIPELINE_TYPE
-
-#define R_DRAWCOLUMN_PIPELINE_TYPE RDC_PIPELINE_TRANSLUCENT
-#define R_DRAWCOLUMN_PIPELINE_BASE RDC_TRANSLUCENT
-
-#define R_DRAWCOLUMN_PIPELINE_BITS 8
-#define R_DRAWCOLUMN_FUNCNAME_COMPOSITE(postfix) R_DrawTLColumn8 ## postfix
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL8
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL8
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL8
-#include "r_drawcolpipeline.inl"
-
-#define R_DRAWCOLUMN_PIPELINE_BITS 15
-#define R_DRAWCOLUMN_FUNCNAME_COMPOSITE(postfix) R_DrawTLColumn15 ## postfix
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL15
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL15
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL15
-#include "r_drawcolpipeline.inl"
-
-#define R_DRAWCOLUMN_PIPELINE_BITS 16
-#define R_DRAWCOLUMN_FUNCNAME_COMPOSITE(postfix) R_DrawTLColumn16 ## postfix
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL16
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL16
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL16
-#include "r_drawcolpipeline.inl"
-
-#define R_DRAWCOLUMN_PIPELINE_BITS 32
-#define R_DRAWCOLUMN_FUNCNAME_COMPOSITE(postfix) R_DrawTLColumn32 ## postfix
-#define R_FLUSHWHOLE_FUNCNAME R_FlushWholeTL32
-#define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTTL32
-#define R_FLUSHQUAD_FUNCNAME R_FlushQuadTL32
 #include "r_drawcolpipeline.inl"
 
 #undef R_DRAWCOLUMN_PIPELINE_BASE
@@ -361,82 +295,82 @@ byte *translationtables;
 static R_DrawColumn_f drawcolumnfuncs[VID_MODEMAX][RDRAW_FILTER_MAXFILTERS][RDRAW_FILTER_MAXFILTERS][RDC_PIPELINE_MAXPIPELINES] = {
     {
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn8_PointUV, R_DrawTLColumn8_PointUV, R_DrawTranslatedColumn8_PointUV, R_DrawFuzzColumn8_PointUV,},
-            {R_DrawColumn8_LinearUV, R_DrawTLColumn8_LinearUV, R_DrawTranslatedColumn8_LinearUV, R_DrawFuzzColumn8_LinearUV,},
-            {R_DrawColumn8_RoundedUV, R_DrawTLColumn8_RoundedUV, R_DrawTranslatedColumn8_RoundedUV, R_DrawFuzzColumn8_RoundedUV,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn8_PointUV, R_DrawTranslatedColumn8_PointUV, R_DrawFuzzColumn8_PointUV,},
+            {R_DrawColumn8_LinearUV, R_DrawTranslatedColumn8_LinearUV, R_DrawFuzzColumn8_LinearUV,},
+            {R_DrawColumn8_RoundedUV, R_DrawTranslatedColumn8_RoundedUV, R_DrawFuzzColumn8_RoundedUV,},
         },
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn8_PointUV_PointZ, R_DrawTLColumn8_PointUV_PointZ, R_DrawTranslatedColumn8_PointUV_PointZ, R_DrawFuzzColumn8_PointUV_PointZ,},
-            {R_DrawColumn8_LinearUV_PointZ, R_DrawTLColumn8_LinearUV_PointZ, R_DrawTranslatedColumn8_LinearUV_PointZ, R_DrawFuzzColumn8_LinearUV_PointZ,},
-            {R_DrawColumn8_RoundedUV_PointZ, R_DrawTLColumn8_RoundedUV_PointZ, R_DrawTranslatedColumn8_RoundedUV_PointZ, R_DrawFuzzColumn8_RoundedUV_PointZ,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn8_PointUV_PointZ, R_DrawTranslatedColumn8_PointUV_PointZ, R_DrawFuzzColumn8_PointUV_PointZ,},
+            {R_DrawColumn8_LinearUV_PointZ, R_DrawTranslatedColumn8_LinearUV_PointZ, R_DrawFuzzColumn8_LinearUV_PointZ,},
+            {R_DrawColumn8_RoundedUV_PointZ, R_DrawTranslatedColumn8_RoundedUV_PointZ, R_DrawFuzzColumn8_RoundedUV_PointZ,},
         },
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn8_PointUV_LinearZ, R_DrawTLColumn8_PointUV_LinearZ, R_DrawTranslatedColumn8_PointUV_LinearZ, R_DrawFuzzColumn8_PointUV_LinearZ,},
-            {R_DrawColumn8_LinearUV_LinearZ, R_DrawTLColumn8_LinearUV_LinearZ, R_DrawTranslatedColumn8_LinearUV_LinearZ, R_DrawFuzzColumn8_LinearUV_LinearZ,},
-            {R_DrawColumn8_RoundedUV_LinearZ, R_DrawTLColumn8_RoundedUV_LinearZ, R_DrawTranslatedColumn8_RoundedUV_LinearZ, R_DrawFuzzColumn8_RoundedUV_LinearZ,},
-        },
-    },
-    {
-        {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn15_PointUV, R_DrawTLColumn15_PointUV, R_DrawTranslatedColumn15_PointUV, R_DrawFuzzColumn15_PointUV,},
-            {R_DrawColumn15_LinearUV, R_DrawTLColumn15_LinearUV, R_DrawTranslatedColumn15_LinearUV, R_DrawFuzzColumn15_LinearUV,},
-            {R_DrawColumn15_RoundedUV, R_DrawTLColumn15_RoundedUV, R_DrawTranslatedColumn15_RoundedUV, R_DrawFuzzColumn15_RoundedUV,},
-        },
-        {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn15_PointUV_PointZ, R_DrawTLColumn15_PointUV_PointZ, R_DrawTranslatedColumn15_PointUV_PointZ, R_DrawFuzzColumn15_PointUV_PointZ,},
-            {R_DrawColumn15_LinearUV_PointZ, R_DrawTLColumn15_LinearUV_PointZ, R_DrawTranslatedColumn15_LinearUV_PointZ, R_DrawFuzzColumn15_LinearUV_PointZ,},
-            {R_DrawColumn15_RoundedUV_PointZ, R_DrawTLColumn15_RoundedUV_PointZ, R_DrawTranslatedColumn15_RoundedUV_PointZ, R_DrawFuzzColumn15_RoundedUV_PointZ,},
-        },
-        {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn15_PointUV_LinearZ, R_DrawTLColumn15_PointUV_LinearZ, R_DrawTranslatedColumn15_PointUV_LinearZ, R_DrawFuzzColumn15_PointUV_LinearZ,},
-            {R_DrawColumn15_LinearUV_LinearZ, R_DrawTLColumn15_LinearUV_LinearZ, R_DrawTranslatedColumn15_LinearUV_LinearZ, R_DrawFuzzColumn15_LinearUV_LinearZ,},
-            {R_DrawColumn15_RoundedUV_LinearZ, R_DrawTLColumn15_RoundedUV_LinearZ, R_DrawTranslatedColumn15_RoundedUV_LinearZ, R_DrawFuzzColumn15_RoundedUV_LinearZ,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn8_PointUV_LinearZ, R_DrawTranslatedColumn8_PointUV_LinearZ, R_DrawFuzzColumn8_PointUV_LinearZ,},
+            {R_DrawColumn8_LinearUV_LinearZ, R_DrawTranslatedColumn8_LinearUV_LinearZ, R_DrawFuzzColumn8_LinearUV_LinearZ,},
+            {R_DrawColumn8_RoundedUV_LinearZ, R_DrawTranslatedColumn8_RoundedUV_LinearZ, R_DrawFuzzColumn8_RoundedUV_LinearZ,},
         },
     },
     {
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn16_PointUV, R_DrawTLColumn16_PointUV, R_DrawTranslatedColumn16_PointUV, R_DrawFuzzColumn16_PointUV,},
-            {R_DrawColumn16_LinearUV, R_DrawTLColumn16_LinearUV, R_DrawTranslatedColumn16_LinearUV, R_DrawFuzzColumn16_LinearUV,},
-            {R_DrawColumn16_RoundedUV, R_DrawTLColumn16_RoundedUV, R_DrawTranslatedColumn16_RoundedUV, R_DrawFuzzColumn16_RoundedUV,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn15_PointUV, R_DrawTranslatedColumn15_PointUV, R_DrawFuzzColumn15_PointUV,},
+            {R_DrawColumn15_LinearUV, R_DrawTranslatedColumn15_LinearUV, R_DrawFuzzColumn15_LinearUV,},
+            {R_DrawColumn15_RoundedUV, R_DrawTranslatedColumn15_RoundedUV, R_DrawFuzzColumn15_RoundedUV,},
         },
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn16_PointUV_PointZ, R_DrawTLColumn16_PointUV_PointZ, R_DrawTranslatedColumn16_PointUV_PointZ, R_DrawFuzzColumn16_PointUV_PointZ,},
-            {R_DrawColumn16_LinearUV_PointZ, R_DrawTLColumn16_LinearUV_PointZ, R_DrawTranslatedColumn16_LinearUV_PointZ, R_DrawFuzzColumn16_LinearUV_PointZ,},
-            {R_DrawColumn16_RoundedUV_PointZ, R_DrawTLColumn16_RoundedUV_PointZ, R_DrawTranslatedColumn16_RoundedUV_PointZ, R_DrawFuzzColumn16_RoundedUV_PointZ,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn15_PointUV_PointZ, R_DrawTranslatedColumn15_PointUV_PointZ, R_DrawFuzzColumn15_PointUV_PointZ,},
+            {R_DrawColumn15_LinearUV_PointZ, R_DrawTranslatedColumn15_LinearUV_PointZ, R_DrawFuzzColumn15_LinearUV_PointZ,},
+            {R_DrawColumn15_RoundedUV_PointZ, R_DrawTranslatedColumn15_RoundedUV_PointZ, R_DrawFuzzColumn15_RoundedUV_PointZ,},
         },
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn16_PointUV_LinearZ, R_DrawTLColumn16_PointUV_LinearZ, R_DrawTranslatedColumn16_PointUV_LinearZ, R_DrawFuzzColumn16_PointUV_LinearZ,},
-            {R_DrawColumn16_LinearUV_LinearZ, R_DrawTLColumn16_LinearUV_LinearZ, R_DrawTranslatedColumn16_LinearUV_LinearZ, R_DrawFuzzColumn16_LinearUV_LinearZ,},
-            {R_DrawColumn16_RoundedUV_LinearZ, R_DrawTLColumn16_RoundedUV_LinearZ, R_DrawTranslatedColumn16_RoundedUV_LinearZ, R_DrawFuzzColumn16_RoundedUV_LinearZ,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn15_PointUV_LinearZ, R_DrawTranslatedColumn15_PointUV_LinearZ, R_DrawFuzzColumn15_PointUV_LinearZ,},
+            {R_DrawColumn15_LinearUV_LinearZ, R_DrawTranslatedColumn15_LinearUV_LinearZ, R_DrawFuzzColumn15_LinearUV_LinearZ,},
+            {R_DrawColumn15_RoundedUV_LinearZ, R_DrawTranslatedColumn15_RoundedUV_LinearZ, R_DrawFuzzColumn15_RoundedUV_LinearZ,},
         },
     },
     {
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn32_PointUV, R_DrawTLColumn32_PointUV, R_DrawTranslatedColumn32_PointUV, R_DrawFuzzColumn32_PointUV,},
-            {R_DrawColumn32_LinearUV, R_DrawTLColumn32_LinearUV, R_DrawTranslatedColumn32_LinearUV, R_DrawFuzzColumn32_LinearUV,},
-            {R_DrawColumn32_RoundedUV, R_DrawTLColumn32_RoundedUV, R_DrawTranslatedColumn32_RoundedUV, R_DrawFuzzColumn32_RoundedUV,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn16_PointUV, R_DrawTranslatedColumn16_PointUV, R_DrawFuzzColumn16_PointUV,},
+            {R_DrawColumn16_LinearUV, R_DrawTranslatedColumn16_LinearUV, R_DrawFuzzColumn16_LinearUV,},
+            {R_DrawColumn16_RoundedUV, R_DrawTranslatedColumn16_RoundedUV, R_DrawFuzzColumn16_RoundedUV,},
         },
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn32_PointUV_PointZ, R_DrawTLColumn32_PointUV_PointZ, R_DrawTranslatedColumn32_PointUV_PointZ, R_DrawFuzzColumn32_PointUV_PointZ,},
-            {R_DrawColumn32_LinearUV_PointZ, R_DrawTLColumn32_LinearUV_PointZ, R_DrawTranslatedColumn32_LinearUV_PointZ, R_DrawFuzzColumn32_LinearUV_PointZ,},
-            {R_DrawColumn32_RoundedUV_PointZ, R_DrawTLColumn32_RoundedUV_PointZ, R_DrawTranslatedColumn32_RoundedUV_PointZ, R_DrawFuzzColumn32_RoundedUV_PointZ,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn16_PointUV_PointZ, R_DrawTranslatedColumn16_PointUV_PointZ, R_DrawFuzzColumn16_PointUV_PointZ,},
+            {R_DrawColumn16_LinearUV_PointZ, R_DrawTranslatedColumn16_LinearUV_PointZ, R_DrawFuzzColumn16_LinearUV_PointZ,},
+            {R_DrawColumn16_RoundedUV_PointZ, R_DrawTranslatedColumn16_RoundedUV_PointZ, R_DrawFuzzColumn16_RoundedUV_PointZ,},
         },
         {
-            {NULL, NULL, NULL, NULL,},
-            {R_DrawColumn32_PointUV_LinearZ, R_DrawTLColumn32_PointUV_LinearZ, R_DrawTranslatedColumn32_PointUV_LinearZ, R_DrawFuzzColumn32_PointUV_LinearZ,},
-            {R_DrawColumn32_LinearUV_LinearZ, R_DrawTLColumn32_LinearUV_LinearZ, R_DrawTranslatedColumn32_LinearUV_LinearZ, R_DrawFuzzColumn32_LinearUV_LinearZ,},
-            {R_DrawColumn32_RoundedUV_LinearZ, R_DrawTLColumn32_RoundedUV_LinearZ, R_DrawTranslatedColumn32_RoundedUV_LinearZ, R_DrawFuzzColumn32_RoundedUV_LinearZ,},
+            {NULL, NULL, NULL,},
+            {R_DrawColumn16_PointUV_LinearZ, R_DrawTranslatedColumn16_PointUV_LinearZ, R_DrawFuzzColumn16_PointUV_LinearZ,},
+            {R_DrawColumn16_LinearUV_LinearZ, R_DrawTranslatedColumn16_LinearUV_LinearZ, R_DrawFuzzColumn16_LinearUV_LinearZ,},
+            {R_DrawColumn16_RoundedUV_LinearZ, R_DrawTranslatedColumn16_RoundedUV_LinearZ, R_DrawFuzzColumn16_RoundedUV_LinearZ,},
+        },
+    },
+    {
+        {
+            {NULL, NULL, NULL,},
+            {R_DrawColumn32_PointUV, R_DrawTranslatedColumn32_PointUV, R_DrawFuzzColumn32_PointUV,},
+            {R_DrawColumn32_LinearUV, R_DrawTranslatedColumn32_LinearUV, R_DrawFuzzColumn32_LinearUV,},
+            {R_DrawColumn32_RoundedUV, R_DrawTranslatedColumn32_RoundedUV, R_DrawFuzzColumn32_RoundedUV,},
+        },
+        {
+            {NULL, NULL, NULL,},
+            {R_DrawColumn32_PointUV_PointZ, R_DrawTranslatedColumn32_PointUV_PointZ, R_DrawFuzzColumn32_PointUV_PointZ,},
+            {R_DrawColumn32_LinearUV_PointZ, R_DrawTranslatedColumn32_LinearUV_PointZ, R_DrawFuzzColumn32_LinearUV_PointZ,},
+            {R_DrawColumn32_RoundedUV_PointZ, R_DrawTranslatedColumn32_RoundedUV_PointZ, R_DrawFuzzColumn32_RoundedUV_PointZ,},
+        },
+        {
+            {NULL, NULL, NULL,},
+            {R_DrawColumn32_PointUV_LinearZ, R_DrawTranslatedColumn32_PointUV_LinearZ, R_DrawFuzzColumn32_PointUV_LinearZ,},
+            {R_DrawColumn32_LinearUV_LinearZ, R_DrawTranslatedColumn32_LinearUV_LinearZ, R_DrawFuzzColumn32_LinearUV_LinearZ,},
+            {R_DrawColumn32_RoundedUV_LinearZ, R_DrawTranslatedColumn32_RoundedUV_LinearZ, R_DrawFuzzColumn32_RoundedUV_LinearZ,},
         },
     },
 };
