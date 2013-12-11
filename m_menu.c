@@ -786,54 +786,6 @@ static void M_DrawSetting(const setup_menu_t* s)
     }
 
 
-
-
-  if (flags & S_STRING) {
-    /* cph - cast to char* as it's really a Z_Strdup'd string (see m_misc.h) */
-    char *text = (char*)*s->var.def->location.ppsz;
-
-
-
-
-    if (setup_select && (s->m_flags & (S_HILITE|S_SELECT))) {
-      int cursor_start, char_width;
-      char c[2];
-
-      while (M_GetPixelWidth(text) >= MAXCHATWIDTH) {
-  int len = strlen(text);
-  text[--len] = 0;
-  if (chat_index > len)
-    chat_index--;
-      }
-
-
-
-
-
-      *c = text[chat_index];
-      c[1] = 0;
-      char_width = M_GetPixelWidth(c);
-      if (char_width == 1)
-  char_width = 7;
-      text[chat_index] = 0;
-      cursor_start = M_GetPixelWidth(text);
-      text[chat_index] = *c;
-
-
-
-      V_FillRect(0, ((x+cursor_start-1)*SCREENWIDTH)/320, (y*SCREENHEIGHT)/200,
-      (char_width*SCREENWIDTH)/320, 9*SCREENHEIGHT/200, PAL_WHITE);
-    }
-
-
-
-    strcpy(menu_buffer,text);
-    M_DrawMenuString(x,y,color);
-    return;
-  }
-
-
-
   if (flags & S_CHOICE) {
     if (s->var.def->type == def_int) {
       if (s->selectstrings == NULL) {
@@ -925,7 +877,7 @@ static void M_DrawInstructions(void)
 
 
   if (setup_select) {
-    switch (flags & (S_KEY | S_YESNO | S_WEAP | S_NUM | S_COLOR | S_CRITEM | S_CHAT | S_RESET | S_FILE | S_CHOICE)) {
+    switch (flags & (S_KEY | S_YESNO | S_WEAP | S_NUM | S_COLOR | S_CRITEM | S_RESET | S_CHOICE)) {
       case S_KEY:
 
 
@@ -949,12 +901,6 @@ static void M_DrawInstructions(void)
       break;
     case S_CRITEM:
       M_DrawStringCentered(160, 20, CR_SELECT, "Enter value");
-      break;
-    case S_CHAT:
-      M_DrawStringCentered(160, 20, CR_SELECT, "Type/edit chat string and Press ENTER");
-      break;
-    case S_FILE:
-      M_DrawStringCentered(160, 20, CR_SELECT, "Type/edit filename and Press ENTER");
       break;
     case S_CHOICE:
       M_DrawStringCentered(160, 20, CR_SELECT, "Press left or right to choose");
@@ -1802,23 +1748,8 @@ setup_menu_t* chat_settings[] =
 
 setup_menu_t chat_settings1[] =
 {
-  {"1",S_CHAT,m_null,CS_X,CS_Y+ 1*8, {"chatmacro1"}},
-  {"2",S_CHAT,m_null,CS_X,CS_Y+ 2*8, {"chatmacro2"}},
-  {"3",S_CHAT,m_null,CS_X,CS_Y+ 3*8, {"chatmacro3"}},
-  {"4",S_CHAT,m_null,CS_X,CS_Y+ 4*8, {"chatmacro4"}},
-  {"5",S_CHAT,m_null,CS_X,CS_Y+ 5*8, {"chatmacro5"}},
-  {"6",S_CHAT,m_null,CS_X,CS_Y+ 6*8, {"chatmacro6"}},
-  {"7",S_CHAT,m_null,CS_X,CS_Y+ 7*8, {"chatmacro7"}},
-  {"8",S_CHAT,m_null,CS_X,CS_Y+ 8*8, {"chatmacro8"}},
-  {"9",S_CHAT,m_null,CS_X,CS_Y+ 9*8, {"chatmacro9"}},
-  {"0",S_CHAT,m_null,CS_X,CS_Y+10*8, {"chatmacro0"}},
-
-
   {0,S_RESET,m_null,X_BUTTON,Y_BUTTON},
-
-
   {0,S_SKIP|S_END,m_null}
-
 };
 
 void M_ChatStrings(int choice)
@@ -2597,60 +2528,14 @@ boolean M_Responder(event_t* ev)
     }
 
 
-      if (setup_select &&
-    set_enemy_active | set_general_active | set_chat_active |
-    set_mess_active | set_status_active | set_compat_active)
-  {
-    if (ptr1->m_flags & S_STRING)
-      {
-        if (ch == key_menu_backspace)
-    {
-      if (chat_string_buffer[chat_index] == 0)
+        if (setup_select && set_enemy_active | set_general_active | set_chat_active | set_mess_active | set_status_active | set_compat_active)
         {
-          if (chat_index > 0)
-      chat_string_buffer[--chat_index] = 0;
+
+            M_SelectDone(ptr1);
+
+            return true;
+
         }
-
-      else
-        strcpy(&chat_string_buffer[chat_index],
-         &chat_string_buffer[chat_index+1]);
-    }
-        else if (ch == key_menu_left)
-    {
-      if (chat_index > 0)
-        chat_index--;
-    }
-        else if (ch == key_menu_right)
-    {
-      if (chat_string_buffer[chat_index] != 0)
-        chat_index++;
-    }
-        else if ((ch == key_menu_enter) ||
-           (ch == key_menu_escape))
-    {
-      *ptr1->var.def->location.ppsz = chat_string_buffer;
-      M_SelectDone(ptr1);
-    }
-
-        else if ((ch >= 32) && (ch <= 126))
-    if ((chat_index+1) < CHAT_STRING_BFR_SIZE)
-      {
-        if (shiftdown)
-          ch = shiftxform[ch];
-        if (chat_string_buffer[chat_index] == 0)
-          {
-      chat_string_buffer[chat_index++] = ch;
-      chat_string_buffer[chat_index] = 0;
-          }
-        else
-          chat_string_buffer[chat_index++] = ch;
-      }
-        return true;
-      }
-
-    M_SelectDone(ptr1);
-    return true;
-  }
 
       if (ch == key_menu_down)
   {
@@ -2713,28 +2598,6 @@ boolean M_Responder(event_t* ev)
         color_palette_x = *ptr1->var.def->location.pi & 15;
         color_palette_y = *ptr1->var.def->location.pi >> 4;
         colorbox_active = true;
-      }
-    else if (flags & S_STRING)
-      {
-
-
-
-
-
-
-        chat_string_buffer = malloc(CHAT_STRING_BFR_SIZE);
-        strncpy(chat_string_buffer,
-          *ptr1->var.def->location.ppsz, CHAT_STRING_BFR_SIZE);
-
-
-        chat_string_buffer[CHAT_STRING_BFR_SIZE-1] = 0;
-
-
-
-
-        free((char*)*ptr1->var.def->location.ppsz);
-        *ptr1->var.def->location.ppsz = chat_string_buffer;
-        chat_index = 0;
       }
     else if (flags & S_RESET)
       default_verify = true;
