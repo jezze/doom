@@ -13,7 +13,6 @@
 #include "g_game.h"
 #include "p_inter.h"
 #include "lprintf.h"
-#include "r_demo.h"
 #include "z_zone.h"
 
 boolean P_SetMobjState(mobj_t* mobj,statenum_t state)
@@ -742,7 +741,6 @@ void P_SpawnPlayer(int n, const mapthing_t* mthing)
     ST_Start();
     HU_Start();
     }
-    R_SmoothPlaying_Reset(p);
   }
 
 boolean P_IsDoomnumAllowed(int doomnum)

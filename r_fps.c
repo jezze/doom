@@ -2,7 +2,6 @@
 #include "r_defs.h"
 #include "r_state.h"
 #include "p_spec.h"
-#include "r_demo.h"
 #include "r_fps.h"
 
 int movement_smooth = false;
@@ -64,14 +63,14 @@ void R_InterpolateView (player_t *player, fixed_t frac)
     viewy = original_view_vars.viewy + FixedMul (frac, player->mo->y - original_view_vars.viewy);
     viewz = original_view_vars.viewz + FixedMul (frac, player->viewz - original_view_vars.viewz);
 
-    viewangle = original_view_vars.viewangle + FixedMul (frac, R_SmoothPlaying_Get(player->mo->angle) + viewangleoffset - original_view_vars.viewangle);
+    viewangle = original_view_vars.viewangle + FixedMul (frac, player->mo->angle + viewangleoffset - original_view_vars.viewangle);
   }
   else
   {
     viewx = player->mo->x;
     viewy = player->mo->y;
     viewz = player->viewz;
-    viewangle = R_SmoothPlaying_Get(player->mo->angle);
+    viewangle = player->mo->angle;
   }
 }
 

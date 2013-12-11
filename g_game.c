@@ -29,7 +29,6 @@
 #include "lprintf.h"
 #include "i_main.h"
 #include "i_system.h"
-#include "r_demo.h"
 #include "r_fps.h"
 #include "z_zone.h"
 

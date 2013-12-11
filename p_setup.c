@@ -14,7 +14,6 @@
 #include "s_sound.h"
 #include "lprintf.h"
 #include "v_video.h"
-#include "r_demo.h"
 #include "r_fps.h"
 #include "z_zone.h"
 
@@ -1240,7 +1239,6 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
   if (precache)
     R_PrecacheLevel();
 
-  R_SmoothPlaying_Reset(NULL);
 }
 
 

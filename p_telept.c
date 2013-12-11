@@ -8,7 +8,7 @@
 #include "s_sound.h"
 #include "sounds.h"
 #include "p_user.h"
-#include "r_demo.h"
+#include "r_fps.h"
 
 static mobj_t* P_TeleportDestination(line_t* line)
 {
@@ -73,7 +73,7 @@ int EV_Teleport(line_t *line, int side, mobj_t *thing)
       player->momx = player->momy = 0;
 
      if (player && player->mo == thing)
-      R_ResetAfterTeleport(player);
+      R_ResetViewInterpolation();
 
           return 1;
         }
@@ -139,7 +139,7 @@ int EV_SilentTeleport(line_t *line, int side, mobj_t *thing)
           
 
           if (player && player->mo == thing)
-            R_ResetAfterTeleport(player);
+            R_ResetViewInterpolation();
 
           return 1;
         }
@@ -197,7 +197,7 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
           return 0;
 
         if (player && player->mo == thing)
-          R_ResetAfterTeleport(player);
+          R_ResetViewInterpolation();
 
         thing->z = z + sides[l->sidenum[stepdown]].sector->floorheight;
         thing->angle += angle;
@@ -219,7 +219,7 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
           }
 
         if (player && player->mo == thing)
-          R_ResetAfterTeleport(player);
+          R_ResetViewInterpolation();
 
         return 1;
       }

@@ -14,7 +14,6 @@
 #include "i_main.h"
 #include "i_system.h"
 #include "g_game.h"
-#include "r_demo.h"
 #include "r_fps.h"
 
 #define FIELDOFVIEW 2048

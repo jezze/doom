@@ -19,7 +19,6 @@
 #include "lprintf.h"
 #include "d_main.h"
 #include "r_draw.h"
-#include "r_demo.h"
 #include "r_fps.h"
 #include "z_zone.h"
 
@@ -96,8 +95,6 @@ default_t defaults[] =
   {"demo_insurance", {&default_demo_insurance}, {2}, 0, 2, def_int, ss_none},
   {"endoom_mode", {&endoom_mode},{5},0,7, def_hex, ss_none},
   {"level_precache", {(int*)&precache}, {0}, 0, 1, def_bool, ss_none},
-  {"demo_smoothturns", {&demo_smoothturns}, {0}, 0, 1, def_bool, ss_stat},
-  {"demo_smoothturnsfactor", {&demo_smoothturnsfactor}, {6}, 1, SMOOTH_PLAYING_MAXFACTOR, def_int,ss_stat},
   {"Files", {NULL}, {0}, UL, UL, def_none,ss_none}, {"wadfile_1", {NULL, &wad_files[0]} , {0,""} , UL, UL, def_str, ss_none},
   {"wadfile_2", {NULL, &wad_files[1]}, {0,""}, UL, UL, def_str, ss_none}, {"Game settings", {NULL}, {0}, UL, UL, def_none, ss_none},
   {"default_skill", {&defaultskill}, {3}, 1, 5, def_int, ss_none},

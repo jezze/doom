@@ -4,7 +4,6 @@
 #include "p_map.h"
 #include "p_spec.h"
 #include "p_user.h"
-#include "r_demo.h"
 #include "r_fps.h"
 
 #define INVERSECOLORMAP 32
@@ -107,9 +106,6 @@ void P_MovePlayer (player_t* player)
   mo->angle += cmd->angleturn << 16;
   onground = mo->z <= mo->floorz;
 
-  if (demo_smoothturns && player == &players[displayplayer])
-    R_SmoothPlaying_Add(cmd->angleturn << 16);
-
   if ((!demo_compatibility && !mbf_features) || (cmd->forwardmove | cmd->sidemove))
     {
       if (onground || mo->flags & MF_BOUNCES)
@@ -182,7 +178,6 @@ void P_DeathThink (player_t* player)
 
   if (player->cmd.buttons & BT_USE)
     player->playerstate = PST_REBORN;
-  R_SmoothPlaying_Reset(player);
   }
 
 void P_PlayerThink (player_t* player)
@@ -195,7 +190,7 @@ void P_PlayerThink (player_t* player)
     original_view_vars.viewx = player->mo->x;
     original_view_vars.viewy = player->mo->y;
     original_view_vars.viewz = player->viewz;
-    original_view_vars.viewangle = R_SmoothPlaying_Get(player->mo->angle) + viewangleoffset;
+    original_view_vars.viewangle = player->mo->angle + viewangleoffset;
   }
 
   if (player->cheats & CF_NOCLIP)

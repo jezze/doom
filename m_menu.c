@@ -18,7 +18,6 @@
 #include "i_system.h"
 #include "i_video.h"
 #include "i_sound.h"
-#include "r_demo.h"
 #include "r_fps.h"
 
 extern patchnum_t hu_font[HU_FONTSIZE];
@@ -1548,8 +1547,6 @@ enum {
 enum {
   general_corpse,
   general_realtic,
-  general_smooth,
-  general_smoothfactor,
   general_defskill,
 };
 
@@ -1569,8 +1566,6 @@ setup_menu_t gen_settings2[] = {
     {"Miscellaneous"  ,S_SKIP|S_TITLE, m_null, G_X, G_YB2 - 12},
     {"Maximum number of player corpses", S_NUM|S_PRGWARN, m_null, G_X, G_YB2 + general_corpse*8, {"max_player_corpse"}},
     {"Game speed, percentage of normal", S_NUM|S_PRGWARN, m_null, G_X, G_YB2 + general_realtic*8, {"realtic_clock_rate"}},
-    {"Smooth Demo Playback", S_YESNO, m_null, G_X, G_YB2 + general_smooth * 8, {"demo_smoothturns"}, 0, 0, M_ChangeDemoSmoothTurns},
-    {"Smooth Demo Playback Factor", S_NUM, m_null, G_X, G_YB2 + general_smoothfactor * 8, {"demo_smoothturnsfactor"}, 0, 0, M_ChangeDemoSmoothTurns},
     {"Default skill level", S_CHOICE, m_null, G_X, G_YB2 + general_defskill * 8, {"default_skill"}, 0, 0, NULL, gen_skillstrings},
     {"<- PREV",S_SKIP|S_PREV, m_null, KB_PREV, KB_Y + 20 * 8, {gen_settings1}},
     {"NEXT ->",S_SKIP|S_NEXT,m_null,KB_NEXT,KB_Y + 20 * 8, {gen_settings3}},
@@ -1633,16 +1628,6 @@ void M_FullScreen(void)
 {
   I_UpdateVideoMode();
   V_SetPalette(0);
-}
-
-void M_ChangeDemoSmoothTurns(void)
-{
-  if (demo_smoothturns)
-    gen_settings2[12].m_flags &= ~(S_SKIP|S_SELECT);
-  else
-    gen_settings2[12].m_flags |= (S_SKIP|S_SELECT);
-
-  R_SmoothPlaying_Reset(NULL);
 }
 
 void M_General(int choice)
@@ -3387,8 +3372,6 @@ void M_Init(void)
     messageString = NULL;
     messageLastMenuActive = menuactive;
     quickSaveSlot = -1;
-
-    M_ChangeDemoSmoothTurns();
 
 }
 
