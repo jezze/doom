@@ -578,42 +578,6 @@ default_t defaults[] =
 int numdefaults;
 static const char* defaultfile;
 
-void M_SaveDefaults (void)
-  {
-  int   i;
-  FILE* f;
-
-  f = fopen (defaultfile, "w");
-  if (!f)
-    return;
-
-  fprintf(f,"# Doom config file\n");
-  fprintf(f,"# Format:\n");
-  fprintf(f,"# variable   value\n");
-
-  for (i = 0 ; i < numdefaults ; i++) {
-    if (defaults[i].type == def_none) {
-
-      fprintf(f, "\n# %s\n", defaults[i].name);
-    } else
-
-    if (!IS_STRING(defaults[i]))
-      {
-
-      if (defaults[i].type == def_hex)
-  fprintf (f,"%-25s 0x%x\n",defaults[i].name,*(defaults[i].location.pi));
-      else
-  fprintf (f,"%-25s %5i\n",defaults[i].name,*(defaults[i].location.pi));
-      }
-    else
-      {
-      fprintf (f,"%-25s \"%s\"\n",defaults[i].name,*(defaults[i].location.ppsz));
-      }
-    }
-
-  fclose (f);
-  }
-
 struct default_s *M_LookupDefault(const char *name)
 {
   int i;
@@ -623,10 +587,6 @@ struct default_s *M_LookupDefault(const char *name)
   I_Error("M_LookupDefault: %s not found",name);
   return NULL;
 }
-
-
-
-
 
 #define NUMCHATSTRINGS 10
 
@@ -641,8 +601,6 @@ void M_LoadDefaults (void)
   int   parm;
   boolean isstring;
 
-
-
   numdefaults = sizeof(defaults)/sizeof(defaults[0]);
   for (i = 0 ; i < numdefaults ; i++) {
     if (defaults[i].location.ppsz)
@@ -650,78 +608,6 @@ void M_LoadDefaults (void)
     if (defaults[i].location.pi)
       *defaults[i].location.pi = defaults[i].defaultvalue.i;
   }
-
-
-
-    {
-    const char* exedir = I_DoomExeDir();
-    defaultfile = malloc(PATH_MAX+1);
-    snprintf((char *)defaultfile, PATH_MAX, "%s%s%sboom.cfg", exedir, HasTrailingSlash(exedir) ? "" : "/", "pr");
-  }
-
-  lprintf (LO_CONFIRM, " default file: %s\n",defaultfile);
-
-
-
-  f = fopen (defaultfile, "r");
-  if (f)
-    {
-    while (!feof(f))
-      {
-      isstring = false;
-      if (fscanf (f, "%79s %[^\n]\n", def, strparm) == 2)
-        {
-
-
-
-        if (!isalnum(def[0]))
-          continue;
-
-        if (strparm[0] == '"') {
-
-
-          isstring = true;
-          len = strlen(strparm);
-          newstring = (char *) malloc(len);
-          strparm[len-1] = 0;
-          strcpy(newstring, strparm+1);
-  } else if ((strparm[0] == '0') && (strparm[1] == 'x')) {
-
-    sscanf(strparm+2, "%x", &parm);
-  } else {
-          sscanf(strparm, "%i", &parm);
-
-  }
-
-        for (i = 0 ; i < numdefaults ; i++)
-          if ((defaults[i].type != def_none) && !strcmp(def, defaults[i].name))
-            {
-
-            if (isstring != IS_STRING(defaults[i])) {
-        lprintf(LO_WARN, "M_LoadDefaults: Type mismatch reading %s\n", defaults[i].name);
-        continue;
-      }
-            if (!isstring)
-              {
-
-
-
-              if ((defaults[i].minvalue==UL || defaults[i].minvalue<=parm) &&
-                  (defaults[i].maxvalue==UL || defaults[i].maxvalue>=parm))
-                *(defaults[i].location.pi) = parm;
-              }
-            else
-              {
-              free((char*)*(defaults[i].location.ppsz));  /* phares 4/13/98 */
-              *(defaults[i].location.ppsz) = newstring;
-              }
-            break;
-            }
-        }
-      }
-
-    fclose (f);
-    }
 
   wad_files[MAXLOADFILES-1]="prboom.wad";
 }

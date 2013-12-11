@@ -51,7 +51,6 @@ int ffmap;
 char wadfile[PATH_MAX + 1];
 char mapdir[PATH_MAX + 1];
 char baseiwad[PATH_MAX + 1];
-char basesavegame[PATH_MAX + 1];
 
 const char *const standard_iwads[] = {
     "doom2.wad",
@@ -393,16 +392,7 @@ static void IdentifyVersion (void)
 {
 
     int i;
-    char *iwad;
-    char* p = getenv("DOOMSAVEDIR");
-
-    if (p != NULL)
-        if (strlen(p) > PATH_MAX - 12)
-            p = NULL;
-
-    strcpy(basesavegame,(p == NULL) ? I_DoomExeDir() : p);
-
-    iwad = FindIWADFile();
+    char *iwad = FindIWADFile();
 
     if (iwad && *iwad)
     {

@@ -58,15 +58,6 @@ static void handle_signal(int s)
 
 }
 
-static void quit(void)
-{
-
-/*
-        M_SaveDefaults();
-*/
-
-}
-
 int (*I_GetTime)(void) = gettime_error;
 
 void I_SafeExit(int rc)
@@ -116,7 +107,6 @@ void I_Init(void)
 int main(int argc, char **argv)
 {
 
-    atexit(quit);
     signal(SIGSEGV, handle_signal);
     signal(SIGTERM, handle_signal);
     signal(SIGFPE, handle_signal);

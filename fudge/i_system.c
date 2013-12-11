@@ -77,13 +77,6 @@ int I_Filelength(int handle)
 
 }
 
-const char *I_DoomExeDir(void)
-{
-
-    return 0;
-
-}
-
 boolean HasTrailingSlash(const char *dn)
 {
 

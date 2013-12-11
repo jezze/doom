@@ -16,7 +16,6 @@
 #include "r_fps.h"
 #include "i_system.h"
 
-static const char prboom_dir[] = {"/.prboom"};
 static unsigned int start_displaytime;
 static unsigned int displaytime;
 static boolean InDisplay = false;
@@ -146,33 +145,6 @@ int I_Filelength(int handle)
 
 }
 
-const char *I_DoomExeDir(void)
-{
-
-    static char *base;
-
-    if (!base)
-    {
-
-        char *home = getenv("HOME");
-        size_t len = strlen(home);
-
-        base = malloc(len + strlen(prboom_dir) + 1);
-
-        strcpy(base, home);
-
-        if (base[len - 1] == '/')
-            base[len - 1] = 0;
-
-        strcat(base, prboom_dir);
-        mkdir(base, S_IRUSR | S_IWUSR | S_IXUSR);
-
-    }
-
-    return base;
-
-}
-
 boolean HasTrailingSlash(const char *dn)
 {
 
@@ -195,7 +167,6 @@ char *I_FindFile(const char *wfname, const char *ext)
         {NULL},
         {NULL, "doom", "HOME"},
         {NULL, NULL, "HOME"},
-        {NULL, NULL, NULL, I_DoomExeDir},
         {"/usr/local/share/games/doom"},
         {"/usr/share/games/doom"},
         {"/usr/local/share/doom"},

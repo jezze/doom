@@ -9,7 +9,6 @@
 #include "m_menu.h"
 #include "m_random.h"
 #include "p_setup.h"
-#include "p_saveg.h"
 #include "p_tick.h"
 #include "p_map.h"
 #include "d_main.h"
@@ -173,8 +172,6 @@ char         savedescription[SAVEDESCLEN];
 int defaultskill;
 int    bodyqueslot, bodyquesize;
 mobj_t **bodyque = 0;
-
-static void G_DoSaveGame (boolean menu);
 
 static inline signed char fudgef(signed char b)
 {
@@ -537,12 +534,6 @@ void G_Ticker (void)
         case ga_newgame:
           G_DoNewGame ();
           break;
-        case ga_loadgame:
-          G_DoLoadGame ();
-          break;
-        case ga_savegame:
-          G_DoSaveGame (false);
-          break;
         case ga_completed:
           G_DoCompleted ();
           break;
@@ -899,63 +890,6 @@ void G_DoWorldDone (void)
 
 extern boolean setsizeneeded;
 
-static uint_64_t G_UpdateSignature(uint_64_t s, const char *name)
-{
-  int i, lump = W_CheckNumForName(name);
-  if (lump != -1 && (i = lump+10) < numlumps)
-    do
-      {
-  int size = W_LumpLength(i);
-  const byte *p = W_CacheLumpNum(i);
-  while (size--)
-    s <<= 1, s += *p++;
-  W_UnlockLumpNum(i);
-      }
-    while (--i > lump);
-  return s;
-}
-
-static uint_64_t G_Signature(void)
-{
-  static uint_64_t s = 0;
-  static boolean computed = false;
-  char name[9];
-  int episode, map;
-
-  if (!computed) {
-   computed = true;
-   if (gamemode == commercial)
-    for (map = haswolflevels ? 32 : 30; map; map--)
-      sprintf(name, "map%02d", map), s = G_UpdateSignature(s, name);
-   else
-    for (episode = gamemode==retail ? 4 :
-     gamemode==shareware ? 1 : 3; episode; episode--)
-      for (map = 9; map; map--)
-  sprintf(name, "E%dM%d", episode, map), s = G_UpdateSignature(s, name);
-  }
-  return s;
-}
-
-void G_LoadGame(int slot, boolean command)
-{
-  if (!demoplayback && !command) {
-    special_event = BT_SPECIAL | (BTS_LOADGAME & BT_SPECIALMASK) | ((slot << BTS_SAVESHIFT) & BTS_SAVEMASK);
-  } else {
-
-    gameaction = ga_loadgame;
-    savegameslot = slot;
-    demoplayback = false;
-  }
-  command_loadgame = command;
-  R_SmoothPlaying_Reset(NULL);
-}
-
-static void G_LoadGameErr(const char *msg)
-{
-  Z_Free(savebuffer);
-}
-
-
 #define VERSIONSIZE   16
 
 const char * comp_lev_str[MAX_COMPATIBILITY_LEVEL] =
@@ -980,250 +914,6 @@ static const struct {
 };
 
 static const size_t num_version_headers = sizeof(version_headers) / sizeof(version_headers[0]);
-
-void G_DoLoadGame(void)
-{
-  int  length, i;
-
-  char name[PATH_MAX+1];
-  int savegame_compatibility = -1;
-
-  G_SaveGameName(name,sizeof(name),savegameslot, demoplayback);
-
-  gameaction = ga_nothing;
-
-  length = M_ReadFile(name, &savebuffer);
-  if (length<=0)
-    I_Error("Couldn't read file %s: %s", name, "(Unknown Error)");
-  save_p = savebuffer + SAVESTRINGSIZE;
-
-
-  for (i=0; (size_t)i<num_version_headers; i++) {
-    char vcheck[VERSIONSIZE];
-
-    sprintf (vcheck, version_headers[i].ver_printf, version_headers[i].version);
-
-    if (!strncmp(save_p, vcheck, VERSIONSIZE)) {
-      savegame_compatibility = version_headers[i].comp_level;
-      i = num_version_headers;
-    }
-  }
-  if (savegame_compatibility == -1) {
-      G_LoadGameErr("Unrecognised savegame version!\nAre you sure? (y/n) ");
-      return;
-  }
-
-  save_p += VERSIONSIZE;
-
-  {
-    uint_64_t checksum = 0;
-
-    checksum = G_Signature();
-
-    if (memcmp(&checksum, save_p, sizeof checksum)) {
-        char *msg = malloc(strlen(save_p + sizeof checksum) + 128);
-        strcpy(msg,"Incompatible Savegame!!!\n");
-        if (save_p[sizeof checksum])
-          strcat(strcat(msg,"Wads expected:\n\n"), save_p + sizeof checksum);
-        strcat(msg, "\nAre you sure?");
-        G_LoadGameErr(msg);
-        free(msg);
-        return;
-    }
-    save_p += sizeof checksum;
-   }
-
-  save_p += strlen(save_p)+1;
-
-  compatibility_level = (savegame_compatibility >= prboom_4_compatibility) ? *save_p : savegame_compatibility;
-  if (savegame_compatibility < prboom_6_compatibility)
-    compatibility_level = map_old_comp_levels[compatibility_level];
-  save_p++;
-
-  gameskill = *save_p++;
-  gameepisode = *save_p++;
-  gamemap = *save_p++;
-
-  for (i=0 ; i<MAXPLAYERS ; i++)
-    playeringame[i] = *save_p++;
-  save_p += MIN_MAXPLAYERS-MAXPLAYERS;
-
-  idmusnum = *save_p++;
-  if (idmusnum==255) idmusnum=-1;
-
-  save_p = (char*)G_ReadOptions(save_p);
-
-  G_InitNew (gameskill, gameepisode, gamemap);
-
-  memcpy(&leveltime, save_p, sizeof leveltime);
-  save_p += sizeof leveltime;
-
-  if (compatibility_level >= prboom_2_compatibility) {
-    memcpy(&totalleveltimes, save_p, sizeof totalleveltimes);
-    save_p += sizeof totalleveltimes;
-  }
-  else totalleveltimes = 0;
-
-  basetic = gametic - *save_p++;
-
-  P_MapStart();
-  P_UnArchivePlayers ();
-  P_UnArchiveWorld ();
-  P_UnArchiveThinkers ();
-  P_UnArchiveSpecials ();
-  P_UnArchiveRNG ();
-  P_UnArchiveMap ();
-  P_MapEnd();
-  R_SmoothPlaying_Reset(NULL);
-
-  if (*save_p != 0xe6)
-    I_Error ("G_DoLoadGame: Bad savegame");
-
-  Z_Free (savebuffer);
-
-  if (setsizeneeded)
-    R_ExecuteSetViewSize ();
-
-  R_FillBackScreen ();
-
-  if (!command_loadgame)
-    singledemo = false;  /* Clear singledemo flag if loading from menu */
-}
-
-void G_SaveGame(int slot, char *description)
-{
-  strcpy(savedescription, description);
-  if (demoplayback) {
-    savegameslot = slot;
-    G_DoSaveGame(true);
-  }
-
-  special_event = BT_SPECIAL | (BTS_SAVEGAME & BT_SPECIALMASK) |
-    ((slot << BTS_SAVESHIFT) & BTS_SAVEMASK);
-}
-
-void (CheckSaveGame)(size_t size, const char* file, int line)
-{
-  size_t pos = save_p - savebuffer;
-
-  size += 1024;
-  if (pos+size > savegamesize)
-    save_p = (savebuffer = realloc(savebuffer,
-           savegamesize += (size+1023) & ~1023)) + pos;
-}
-
-void G_SaveGameName(char *name, size_t size, int slot, boolean demoplayback)
-{
-  const char* sgn = demoplayback ? "demosav" : "savegame";
-  snprintf (name, size, "%s/%s%d.dsg", basesavegame, sgn, slot);
-}
-
-static void G_DoSaveGame (boolean menu)
-{
-  char name[PATH_MAX+1];
-  char name2[VERSIONSIZE];
-  char *description;
-  int  length, i;
-
-  gameaction = ga_nothing;
-
-
-  G_SaveGameName(name,sizeof(name),savegameslot, demoplayback && !menu);
-
-  description = savedescription;
-
-  save_p = savebuffer = malloc(savegamesize);
-
-  CheckSaveGame(SAVESTRINGSIZE+VERSIONSIZE+sizeof(uint_64_t));
-  memcpy (save_p, description, SAVESTRINGSIZE);
-  save_p += SAVESTRINGSIZE;
-  memset (name2,0,sizeof(name2));
-
-
-  for (i=0; (size_t)i<num_version_headers; i++)
-    if (version_headers[i].comp_level == best_compatibility) {
-
-      sprintf (name2,version_headers[i].ver_printf,version_headers[i].version);
-      memcpy (save_p, name2, VERSIONSIZE);
-      i = num_version_headers+1;
-    }
-
-  save_p += VERSIONSIZE;
-
-  { /* killough 3/16/98, 12/98: store lump name checksum */
-    uint_64_t checksum = G_Signature();
-    memcpy(save_p, &checksum, sizeof checksum);
-    save_p += sizeof checksum;
-  }
-
-
-  {
-
-    size_t i;
-    for (i = 0; i<numwadfiles; i++)
-      {
-        const char *const w = wadfiles[i].name;
-        CheckSaveGame(strlen(w)+2);
-        strcpy(save_p, w);
-        save_p += strlen(save_p);
-        *save_p++ = '\n';
-      }
-    *save_p++ = 0;
-  }
-
-  CheckSaveGame(GAME_OPTION_SIZE+MIN_MAXPLAYERS+14);
-
-  *save_p++ = compatibility_level;
-  *save_p++ = gameskill;
-  *save_p++ = gameepisode;
-  *save_p++ = gamemap;
-
-  for (i=0 ; i<MAXPLAYERS ; i++)
-    *save_p++ = playeringame[i];
-
-  for (;i<MIN_MAXPLAYERS;i++)
-    *save_p++ = 0;
-
-  *save_p++ = idmusnum;
-
-  save_p = G_WriteOptions(save_p);
-
-  /* cph - FIXME - endianness? */
-  /* killough 11/98: save entire word */
-  memcpy(save_p, &leveltime, sizeof leveltime);
-  save_p += sizeof leveltime;
-
-  /* cph - total episode time */
-  if (compatibility_level >= prboom_2_compatibility) {
-    memcpy(save_p, &totalleveltimes, sizeof totalleveltimes);
-    save_p += sizeof totalleveltimes;
-  }
-  else totalleveltimes = 0;
-
-  *save_p++ = (gametic-basetic) & 255;
-
-  P_ArchivePlayers();
-  P_ThinkerToIndex();
-  P_ArchiveWorld();
-  P_ArchiveThinkers();
-  P_IndexToThinker();
-  P_ArchiveSpecials();
-  P_ArchiveRNG();
-  P_ArchiveMap();
-
-  *save_p++ = 0xe6;
-
-  length = save_p - savebuffer;
-
-  doom_printf( "%s", M_WriteFile(name, savebuffer, length)
-         ? GGSAVED /* Ty - externalised */
-         : "Game save failed!");
-
-  free(savebuffer);
-  savebuffer = save_p = NULL;
-
-  savedescription[0] = 0;
-}
 
 static skill_t d_skill;
 static int     d_episode;

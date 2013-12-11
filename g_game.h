@@ -11,16 +11,12 @@
 boolean G_Responder(event_t *ev);
 void G_InitNew(skill_t skill, int episode, int map);
 void G_DeferedInitNew(skill_t skill, int episode, int map);
-void G_LoadGame(int slot, boolean is_command);
-void G_DoLoadGame(void);
-void G_SaveGame(int slot, char *description);
 void G_ExitLevel(void);
 void G_SecretExitLevel(void);
 void G_WorldDone(void);
 void G_EndGame(void);
 void G_Ticker(void);
 void G_ReloadDefaults(void);
-void G_SaveGameName(char *, size_t, int, boolean);
 void G_SetFastParms(int);
 void G_DoNewGame(void);
 void G_DoReborn(int playernum);

@@ -41,8 +41,6 @@ boolean messageNeedsInput;
 
 void (*messageRoutine)(int response);
 
-#define SAVESTRINGSIZE  24
-
 static void M_UpdateCurrent(default_t* def)
 {
   if (def->current) {
@@ -54,20 +52,12 @@ int warning_about_changes, print_warning_about_changes;
 
 #define M_DrawBackground V_DrawBackground
 
-int saveStringEnter;
-int saveSlot;
-int saveCharIndex;
-
-char saveOldString[SAVESTRINGSIZE];
-
 boolean inhelpscreens;
 
 boolean menuactive;
 
 #define SKULLXOFF  -32
 #define LINEHEIGHT  16
-
-char savegamestrings[10][SAVESTRINGSIZE];
 
 typedef struct
 {
@@ -106,8 +96,6 @@ extern int numdefaults;
 void M_NewGame(int choice);
 void M_Episode(int choice);
 void M_ChooseSkill(int choice);
-void M_LoadGame(int choice);
-void M_SaveGame(int choice);
 void M_Options(int choice);
 void M_QuitDOOM(int choice);
 void M_ChangeMessages(int choice);
@@ -121,20 +109,12 @@ void M_Mouse(int choice, int *sens);
 void M_MouseVert(int choice);
 void M_MouseHoriz(int choice);
 void M_DrawMouse(void);
-void M_LoadSelect(int choice);
-void M_SaveSelect(int choice);
-void M_ReadSaveStrings(void);
-void M_QuickSave(void);
-void M_QuickLoad(void);
 void M_DrawMainMenu(void);
 void M_DrawNewGame(void);
 void M_DrawEpisode(void);
 void M_DrawOptions(void);
 void M_DrawSound(void);
-void M_DrawLoad(void);
-void M_DrawSave(void);
 void M_DrawSetup(void);
-void M_DrawSaveLoadBorder(int x,int y);
 void M_SetupNextMenu(menu_t *menudef);
 void M_DrawThermo(int x,int y,int width,int dot);
 void M_DrawEmptyCell(menu_t *menu,int item);
@@ -177,8 +157,6 @@ enum
 {
 
     newgame = 0,
-    loadgame,
-    savegame,
     options,
     quitdoom,
     main_end
@@ -188,8 +166,6 @@ enum
 menuitem_t MainMenu[] = {
     {1, "M_NGAME", M_NewGame},
     {1, "M_OPTION", M_Options},
-    {1, "M_LOADG", M_LoadGame},
-    {1, "M_SAVEG", M_SaveGame},
     {1, "M_QUITG", M_QuitDOOM}
 };
 
@@ -306,204 +282,6 @@ void M_ChooseSkill(int choice)
     G_DeferedInitNew(choice,epi+1,1);
     M_ClearMenus ();
 
-}
-
-enum
-{
-    load1,
-    load2,
-    load3,
-    load4,
-    load5,
-    load6,
-    load7,
-    load8,
-    load_end
-
-} load_e;
-
-menuitem_t LoadMenue[] = {
-    {1, "", M_LoadSelect},
-    {1, "", M_LoadSelect},
-    {1, "", M_LoadSelect},
-    {1, "", M_LoadSelect},
-    {1, "", M_LoadSelect},
-    {1, "", M_LoadSelect},
-    {1, "", M_LoadSelect},
-    {1, "", M_LoadSelect}
-};
-
-menu_t LoadDef =
-{
-  load_end,
-  &MainDef,
-  LoadMenue,
-  M_DrawLoad,
-  80,34,
-  0
-};
-
-#define LOADGRAPHIC_Y 8
-
-void M_DrawLoad(void)
-{
-  int i;
-
-
-
-  V_DrawNamePatch(72 ,LOADGRAPHIC_Y, 0, "M_LOADG", CR_DEFAULT, VPT_STRETCH);
-  for (i = 0 ; i < load_end ; i++) {
-    M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
-    M_WriteText(LoadDef.x,LoadDef.y+LINEHEIGHT*i,savegamestrings[i]);
-  }
-}
-
-
-
-
-
-void M_DrawSaveLoadBorder(int x,int y)
-{
-  int i;
-
-  V_DrawNamePatch(x-8, y+7, 0, "M_LSLEFT", CR_DEFAULT, VPT_STRETCH);
-
-  for (i = 0 ; i < 24 ; i++)
-    {
-      V_DrawNamePatch(x, y+7, 0, "M_LSCNTR", CR_DEFAULT, VPT_STRETCH);
-      x += 8;
-    }
-
-  V_DrawNamePatch(x, y+7, 0, "M_LSRGHT", CR_DEFAULT, VPT_STRETCH);
-}
-
-void M_LoadSelect(int choice)
-{
-
-  G_LoadGame(choice, false);
-  M_ClearMenus ();
-
-}
-
-void M_LoadGame (int choice)
-{
-
-  M_SetupNextMenu(&LoadDef);
-  M_ReadSaveStrings();
-}
-
-menuitem_t SaveMenu[] = {
-    {1, "", M_SaveSelect},
-    {1, "", M_SaveSelect},
-    {1, "", M_SaveSelect},
-    {1, "", M_SaveSelect},
-    {1, "", M_SaveSelect},
-    {1, "", M_SaveSelect},
-    {1, "", M_SaveSelect},
-    {1, "", M_SaveSelect}
-};
-
-menu_t SaveDef =
-{
-  load_end,
-  &MainDef,
-  SaveMenu,
-  M_DrawSave,
-  80,34,
-  0
-};
-
-void M_ReadSaveStrings(void)
-{
-  int i;
-
-  for (i = 0 ; i < load_end ; i++) {
-    char name[PATH_MAX+1];
-    FILE *fp;
-
-    /* killough 3/22/98
-     * cph - add not-demoplayback parameter */
-    G_SaveGameName(name,sizeof(name),i,false);
-    fp = fopen(name,"rb");
-    if (!fp) {
-      strcpy(&savegamestrings[i][0],EMPTYSTRING);
-      LoadMenue[i].status = 0;
-      continue;
-    }
-    fread(&savegamestrings[i], SAVESTRINGSIZE, 1, fp);
-    fclose(fp);
-    LoadMenue[i].status = 1;
-  }
-}
-
-
-
-
-void M_DrawSave(void)
-{
-  int i;
-
-
-
-  V_DrawNamePatch(72, LOADGRAPHIC_Y, 0, "M_SAVEG", CR_DEFAULT, VPT_STRETCH);
-  for (i = 0 ; i < load_end ; i++)
-    {
-    M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
-    M_WriteText(LoadDef.x,LoadDef.y+LINEHEIGHT*i,savegamestrings[i]);
-    }
-
-  if (saveStringEnter)
-    {
-    i = M_StringWidth(savegamestrings[saveSlot]);
-    M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"_");
-    }
-}
-
-
-
-
-static void M_DoSave(int slot)
-{
-  G_SaveGame (slot,savegamestrings[slot]);
-  M_ClearMenus ();
-
-
-  if (quickSaveSlot == -2)
-    quickSaveSlot = slot;
-}
-
-
-
-
-void M_SaveSelect(int choice)
-{
-
-  saveStringEnter = 1;
-
-  saveSlot = choice;
-  strcpy(saveOldString,savegamestrings[choice]);
-  if (!strcmp(savegamestrings[choice],EMPTYSTRING))
-    savegamestrings[choice][0] = 0;
-  saveCharIndex = strlen(savegamestrings[choice]);
-}
-
-
-
-
-void M_SaveGame (int choice)
-{
-
-  if (!usergame && (!demoplayback))
-    {
-    M_StartMessage(SAVEDEAD,NULL,false);
-    return;
-    }
-
-  if (gamestate != GS_LEVEL)
-    return;
-
-  M_SetupNextMenu(&SaveDef);
-  M_ReadSaveStrings();
 }
 
 enum
@@ -711,56 +489,6 @@ void M_Mouse(int choice, int *sens)
         ++*sens;
       break;
     }
-}
-
-char tempstring[80];
-
-static void M_QuickSaveResponse(int ch)
-{
-  if (ch == 'y')  {
-    M_DoSave(quickSaveSlot);
-    S_StartSound(NULL,sfx_swtchx);
-  }
-}
-
-void M_QuickSave(void)
-{
-  if (!usergame && (!demoplayback)) {
-    S_StartSound(NULL,sfx_oof);
-    return;
-  }
-
-  if (gamestate != GS_LEVEL)
-    return;
-
-  if (quickSaveSlot < 0) {
-    M_StartControlPanel();
-    M_ReadSaveStrings();
-    M_SetupNextMenu(&SaveDef);
-    quickSaveSlot = -2;
-    return;
-  }
-  sprintf(tempstring,QSPROMPT,savegamestrings[quickSaveSlot]);
-  M_StartMessage(tempstring,M_QuickSaveResponse,true);
-}
-
-static void M_QuickLoadResponse(int ch)
-{
-  if (ch == 'y') {
-    M_LoadSelect(quickSaveSlot);
-    S_StartSound(NULL,sfx_swtchx);
-  }
-}
-
-void M_QuickLoad(void)
-{
-
-  if (quickSaveSlot < 0) {
-    M_StartMessage(QSAVESPOT,NULL,false);
-    return;
-  }
-  sprintf(tempstring,QLPROMPT,savegamestrings[quickSaveSlot]);
-  M_StartMessage(tempstring,M_QuickLoadResponse,true);
 }
 
 void M_ChangeMessages(int choice)
@@ -1379,10 +1107,6 @@ setup_menu_t keys_settings2[] =
   {"SMALLER VIEW",S_KEY       ,m_scrn,KB_X,KB_Y+10*8,{&key_zoomout}},
   {"SCREENSHOT"  ,S_KEY       ,m_scrn,KB_X,KB_Y+11*8,{&key_screenshot}},
   {"GAME"        ,S_SKIP|S_TITLE,m_null,KB_X,KB_Y+12*8},
-  {"SAVE"        ,S_KEY       ,m_scrn,KB_X,KB_Y+13*8,{&key_savegame}},
-  {"LOAD"        ,S_KEY       ,m_scrn,KB_X,KB_Y+14*8,{&key_loadgame}},
-  {"QUICKSAVE"   ,S_KEY       ,m_scrn,KB_X,KB_Y+15*8,{&key_quicksave}},
-  {"QUICKLOAD"   ,S_KEY       ,m_scrn,KB_X,KB_Y+16*8,{&key_quickload}},
   {"END GAME"    ,S_KEY       ,m_scrn,KB_X,KB_Y+17*8,{&key_endgame}},
   {"QUIT"        ,S_KEY       ,m_scrn,KB_X,KB_Y+18*8,{&key_quit}},
   {"<- PREV", S_SKIP|S_PREV,m_null,KB_PREV,KB_Y+20*8, {keys_settings1}},
@@ -2501,11 +2225,7 @@ setup_menu_t helpstrings[] =
   {"180 TURN"    ,S_SKIP|S_KEY,m_null,KT_X3,KT_Y3+10*8,{&key_reverse}},
   {"USE"         ,S_SKIP|S_KEY,m_null,KT_X3,KT_Y3+11*8,{&key_use},&mousebforward},
   {"GAME"        ,S_SKIP|S_TITLE,m_null,KT_X2,KT_Y1},
-  {"SAVE"        ,S_SKIP|S_KEY,m_null,KT_X2,KT_Y1+ 1*8,{&key_savegame}},
-  {"LOAD"        ,S_SKIP|S_KEY,m_null,KT_X2,KT_Y1+ 2*8,{&key_loadgame}},
-  {"QUICKSAVE"   ,S_SKIP|S_KEY,m_null,KT_X2,KT_Y1+ 3*8,{&key_quicksave}},
   {"END GAME"    ,S_SKIP|S_KEY,m_null,KT_X2,KT_Y1+ 4*8,{&key_endgame}},
-  {"QUICKLOAD"   ,S_SKIP|S_KEY,m_null,KT_X2,KT_Y1+ 5*8,{&key_quickload}},
   {"QUIT"        ,S_SKIP|S_KEY,m_null,KT_X2,KT_Y1+ 6*8,{&key_quit}},
   {0,S_SKIP|S_END,m_null}
 };
@@ -2652,58 +2372,6 @@ boolean M_Responder(event_t* ev)
 
     if (ch == -1)
         return false;
-
-    if (saveStringEnter)
-    {
-
-        if (ch == key_menu_backspace)
-        {
-
-            if (saveCharIndex > 0)
-            {
-
-                saveCharIndex--;
-                savegamestrings[saveSlot][saveCharIndex] = 0;
-
-            }
-        }
-
-        else if (ch == key_menu_escape)
-        {
-
-            saveStringEnter = 0;
-            strcpy(&savegamestrings[saveSlot][0],saveOldString);
-
-        }
-
-        else if (ch == key_menu_enter)
-        {
-
-            saveStringEnter = 0;
-
-            if (savegamestrings[saveSlot][0])
-                M_DoSave(saveSlot);
-
-        }
-
-        else
-        {
-
-            ch = toupper(ch);
-
-            if (ch >= 32 && ch <= 127 && saveCharIndex < SAVESTRINGSIZE - 1 && M_StringWidth(savegamestrings[saveSlot]) < (SAVESTRINGSIZE - 2) * 8)
-            {
-            
-                savegamestrings[saveSlot][saveCharIndex++] = ch;
-                savegamestrings[saveSlot][saveCharIndex] = 0;
-
-            }
-
-        }
-
-        return true;
-
-    }
 
     if (messageToPrint)
     {
