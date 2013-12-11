@@ -66,7 +66,6 @@ int             displayplayer;
 int             gametic;
 int             basetic;       /* killough 9/29/98: for demo sync */
 int             totalkills, totallive, totalitems, totalsecret;
-boolean         demorecording;
 boolean         demoplayback;
 int             demover;
 boolean         singledemo;

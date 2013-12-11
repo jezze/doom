@@ -654,7 +654,7 @@ void P_RemoveMobj (mobj_t* mobj)
   S_StopSound (mobj);
 
   if ((compatibility_level >= lxdoom_1_compatibility) ||
-      (!demorecording && !demoplayback)) {
+      (!demoplayback)) {
     P_SetTarget(&mobj->target,    NULL);
     P_SetTarget(&mobj->tracer,    NULL);
     P_SetTarget(&mobj->lastenemy, NULL);

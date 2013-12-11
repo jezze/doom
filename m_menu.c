@@ -43,18 +43,10 @@ void (*messageRoutine)(int response);
 
 #define SAVESTRINGSIZE  24
 
-static int allow_changes(void)
-{
- return !(demoplayback || demorecording);
-}
-
 static void M_UpdateCurrent(default_t* def)
 {
   if (def->current) {
-    if (allow_changes())
-  *def->current = *def->location.pi;
-    else if (*def->current != *def->location.pi)
-  warn_about_changes(S_LEVWARN);
+    *def->current = *def->location.pi;
   }
 }
 
@@ -395,14 +387,6 @@ void M_LoadSelect(int choice)
 
 void M_LoadGame (int choice)
 {
-
-  if (demorecording && (compatibility_level < prboom_2_compatibility))
-    {
-    M_StartMessage("you can't load a game\n"
-       "while recording an old demo!\n\n"PRESSKEY,
-       NULL, false);
-    return;
-    }
 
   M_SetupNextMenu(&LoadDef);
   M_ReadSaveStrings();
@@ -770,14 +754,6 @@ static void M_QuickLoadResponse(int ch)
 
 void M_QuickLoad(void)
 {
-
-
-  if (demorecording) {
-    M_StartMessage("you can't quickload\n"
-       "while recording a demo!\n\n"PRESSKEY,
-       NULL, false);
-    return;
-  }
 
   if (quickSaveSlot < 0) {
     M_StartMessage(QSAVESPOT,NULL,false);
@@ -1964,11 +1940,6 @@ setup_menu_t gen_settings3[] = {
 
   {0,S_SKIP|S_END,m_null}
 };
-
-void M_Trans(void)
-{
-    R_InitTranMap(0);
-}
 
 void M_FullScreen(void)
 {

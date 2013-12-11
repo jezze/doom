@@ -74,7 +74,6 @@ void M_Ticker(void);
 void M_Drawer(void);
 void M_Init(void);
 void M_StartControlPanel(void);
-void M_Trans(void);
 void M_ResetMenu(void);
 void M_DrawCredits(void);
 boolean M_Responder(event_t *ev);

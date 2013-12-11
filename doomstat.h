@@ -83,7 +83,6 @@ extern int basetic;
 extern int leveltime;
 extern boolean usergame;
 extern boolean demoplayback;
-extern boolean demorecording;
 extern int demover;
 extern boolean singledemo;
 extern boolean timingdemo;
