@@ -80,7 +80,6 @@ extern int realtic_clock_rate;
 extern int screenblocks;
 extern int showMessages;
 int         mus_pause_opt;
-extern const char* chat_macros[];
 int endoom_mode;
 extern const char* S_music_files[];
 int map_point_coordinates;
@@ -282,28 +281,6 @@ default_t defaults[] =
 
   {"key_screenshot",  {&key_screenshot},      {'*'}            ,
    0,MAX_KEY,def_key,ss_keys},
-
-  {"Chat macros",{NULL},{0},UL,UL,def_none,ss_none},
-  {"chatmacro0", {0,&chat_macros[0]}, {0,HUSTR_CHATMACRO0},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro1", {0,&chat_macros[1]}, {0,HUSTR_CHATMACRO1},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro2", {0,&chat_macros[2]}, {0,HUSTR_CHATMACRO2},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro3", {0,&chat_macros[3]}, {0,HUSTR_CHATMACRO3},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro4", {0,&chat_macros[4]}, {0,HUSTR_CHATMACRO4},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro5", {0,&chat_macros[5]}, {0,HUSTR_CHATMACRO5},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro6", {0,&chat_macros[6]}, {0,HUSTR_CHATMACRO6},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro7", {0,&chat_macros[7]}, {0,HUSTR_CHATMACRO7},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro8", {0,&chat_macros[8]}, {0,HUSTR_CHATMACRO8},UL,UL,
-   def_str,ss_chat},
-  {"chatmacro9", {0,&chat_macros[9]}, {0,HUSTR_CHATMACRO9},UL,UL,
-   def_str,ss_chat},
 
   {"Heads-up display settings",{NULL},{0},UL,UL,def_none,ss_none},
 

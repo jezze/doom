@@ -227,22 +227,6 @@ const char *const mapnamest[] =
 #define key_alt KEYD_RALT
 #define key_shift KEYD_RSHIFT
 
-const char* chat_macros[] =
-
-
-{
-  HUSTR_CHATMACRO0,
-  HUSTR_CHATMACRO1,
-  HUSTR_CHATMACRO2,
-  HUSTR_CHATMACRO3,
-  HUSTR_CHATMACRO4,
-  HUSTR_CHATMACRO5,
-  HUSTR_CHATMACRO6,
-  HUSTR_CHATMACRO7,
-  HUSTR_CHATMACRO8,
-  HUSTR_CHATMACRO9
-};
-
 const char* player_names[] =
 
 
@@ -1191,19 +1175,6 @@ static char chatchars[QUEUESIZE];
 static int  head = 0;
 static int  tail = 0;
 
-static void HU_queueChatChar(char c)
-{
-  if (((head + 1) & (QUEUESIZE-1)) == tail)
-  {
-    plr->message = HUSTR_MSGU;
-  }
-  else
-  {
-    chatchars[head] = c;
-    head = (head + 1) & (QUEUESIZE-1);
-  }
-}
-
 char HU_dequeueChatChar(void)
 {
   char c;
@@ -1224,7 +1195,6 @@ boolean HU_Responder(event_t *ev)
 {
 
   static char   lastmessage[HU_MAXLINELENGTH+1];
-  const char*   macromessage;
   boolean   eatkey = false;
   static boolean  shiftdown = false;
   static boolean  altdown = false;
@@ -1274,52 +1244,6 @@ boolean HU_Responder(event_t *ev)
       eatkey = true;
     }
 
-  }
-  else if (!message_list)
-  {
-    c = ev->data1;
-
-    if (altdown)
-    {
-      c = c - '0';
-      if (c > 9)
-        return false;
-      macromessage = chat_macros[c];
-
-
-        HU_queueChatChar((char)key_enter);
-
-
-      while (*macromessage)
-        HU_queueChatChar(*macromessage++);
-      HU_queueChatChar((char)key_enter);
-
-
-      chat_on = false;
-      strcpy(lastmessage, chat_macros[c]);
-      plr->message = lastmessage;
-      eatkey = true;
-    }
-    else
-    {
-      if (shiftdown || (c >= 'a' && c <= 'z'))
-        c = shiftxform[c];
-      eatkey = HUlib_keyInIText(&w_chat, c);
-      if (eatkey)
-        HU_queueChatChar(c);
-
-      if (c == key_enter)
-      {
-        chat_on = false;
-        if (w_chat.l.len)
-        {
-          strcpy(lastmessage, w_chat.l.l);
-          plr->message = lastmessage;
-        }
-      }
-      else if (c == key_escape)
-        chat_on = false;
-    }
   }
   return eatkey;
 }

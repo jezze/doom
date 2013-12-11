@@ -28,7 +28,6 @@ int mouseSensitivity_vert;
 int showMessages;
 int hide_setup=1;
 int screenblocks;
-int screenSize;
 int quickSaveSlot;
 int messageToPrint;
 static const char* messageString;
@@ -84,7 +83,6 @@ extern int mousebforward;
 extern int mousebbackward;
 int mapcolor_me;
 extern int map_point_coordinates;
-extern char* chat_macros[];
 extern const char* shiftxform;
 extern default_t defaults[];
 extern int numdefaults;
@@ -2171,27 +2169,19 @@ boolean M_Responder(event_t* ev)
             if (chat_on)
                 return false;
 
-            if (screenSize < 8)
+            hud_displayed = 1;
+            hud_active = (hud_active + 1) % 3;
+
+            if (!hud_active)
             {
 
-            }
+                hud_distributed = !hud_distributed;
+                HU_MoveHud();
 
-            else
-            {
-
-                hud_displayed = 1;
-                hud_active = (hud_active + 1) % 3;
-
-                if (!hud_active)
-                {
-
-                    hud_distributed = !hud_distributed;
-                    HU_MoveHud();
-
-                }
             }
 
             return true;
+
         }
 
         if (ch == key_escape)
@@ -3061,7 +3051,6 @@ void M_Init(void)
     itemOn = currentMenu->lastOn;
     whichSkull = 0;
     skullAnimCounter = 10;
-    screenSize = screenblocks - 3;
     messageToPrint = 0;
     messageString = NULL;
     messageLastMenuActive = menuactive;
