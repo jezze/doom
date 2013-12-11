@@ -223,7 +223,7 @@ static void D_DoomLoop(void)
 
 }
 
-void D_AddFile(const char *file, wad_source_t source)
+static void D_AddFile(const char *file, wad_source_t source)
 {
 
     char *gwa_filename = NULL;

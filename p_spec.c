@@ -37,8 +37,8 @@ typedef struct
 
 #define MAXANIMS 32
 
-static anim_t*  lastanim;
-static anim_t*  anims;
+static anim_t *lastanim;
+static anim_t *anims;
 static size_t maxanims;
 static void P_SpawnScrollers(void);
 static void P_SpawnFriction(void);
