@@ -41,7 +41,6 @@ void F_StartFinale (void)
 
     gameaction = ga_nothing;
     gamestate = GS_FINALE;
-    automapmode &= ~am_active;
     acceleratestage = midstage = 0;
 
     switch (gamemode)

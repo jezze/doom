@@ -747,45 +747,7 @@ void HU_Drawer(void)
 
   plr = &players[displayplayer];
 
-  if (automapmode & am_active)
-  {
-
-    HUlib_drawTextLine(&w_title, false);
-
-    if (map_point_coordinates)
-    {
-      sprintf(hud_coordstrx,"X: %-5d", (plr->mo->x)>>FRACBITS);
-      HUlib_clearTextLine(&w_coordx);
-      s = hud_coordstrx;
-      while (*s)
-        HUlib_addCharToTextLine(&w_coordx, *(s++));
-      HUlib_drawTextLine(&w_coordx, false);
-
-
-
-      sprintf(hud_coordstry,"Y: %-5d", (plr->mo->y)>>FRACBITS);
-      HUlib_clearTextLine(&w_coordy);
-      s = hud_coordstry;
-      while (*s)
-        HUlib_addCharToTextLine(&w_coordy, *(s++));
-      HUlib_drawTextLine(&w_coordy, false);
-
-      sprintf(hud_coordstrz,"Z: %-5d", (plr->mo->z)>>FRACBITS);
-      HUlib_clearTextLine(&w_coordz);
-      s = hud_coordstrz;
-      while (*s)
-        HUlib_addCharToTextLine(&w_coordz, *(s++));
-      HUlib_drawTextLine(&w_coordz, false);
-    }
-  }
-
-  if
-  (
-    hud_active>0 &&
-    hud_displayed &&
-    viewheight==SCREENHEIGHT &&
-    !(automapmode & am_active)
-  )
+  if (hud_active>0 && hud_displayed && viewheight==SCREENHEIGHT)
   {
     doit = !(gametic&1);
     if (doit)

@@ -5,7 +5,6 @@
 #include "doomstat.h"
 #include "g_game.h"
 #include "m_menu.h"
-#include "am_map.h"
 #include "w_wad.h"
 #include "i_system.h"
 #include "i_sound.h"
@@ -310,66 +309,6 @@ default_t defaults[] =
    def_str,ss_chat},
   {"chatmacro9", {0,&chat_macros[9]}, {0,HUSTR_CHATMACRO9},UL,UL,
    def_str,ss_chat},
-
-  {"Automap settings",{NULL},{0},UL,UL,def_none,ss_none},
-
-
-  {"mapcolor_back", {&mapcolor_back}, {247},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_grid", {&mapcolor_grid}, {104},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_wall", {&mapcolor_wall}, {23},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_fchg", {&mapcolor_fchg}, {55},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_cchg", {&mapcolor_cchg}, {215},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_clsd", {&mapcolor_clsd}, {208},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_rkey", {&mapcolor_rkey}, {175},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_bkey", {&mapcolor_bkey}, {204},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_ykey", {&mapcolor_ykey}, {231},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_rdor", {&mapcolor_rdor}, {175},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_bdor", {&mapcolor_bdor}, {204},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_ydor", {&mapcolor_ydor}, {231},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_tele", {&mapcolor_tele}, {119},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_secr", {&mapcolor_secr}, {252},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_exit", {&mapcolor_exit}, {0},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_unsn", {&mapcolor_unsn}, {104},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_flat", {&mapcolor_flat}, {88},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_sprt", {&mapcolor_sprt}, {112},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_item", {&mapcolor_item}, {231},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_hair", {&mapcolor_hair}, {208},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_sngl", {&mapcolor_sngl}, {208},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_me",   {&mapcolor_me}, {112},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_enemy",   {&mapcolor_enemy}, {177},0,255,
-   def_colour,ss_auto},
-  {"mapcolor_frnd",   {&mapcolor_frnd}, {112},0,255,
-   def_colour,ss_auto},
-
-  {"map_secret_after", {&map_secret_after}, {0},0,1,
-   def_bool,ss_auto},
-  {"map_point_coord", {&map_point_coordinates}, {0},0,1,
-   def_bool,ss_auto},
-
-  {"automapmode", {(int*)&automapmode}, {0}, 0, 31,
-   def_hex,ss_none},
 
   {"Heads-up display settings",{NULL},{0},UL,UL,def_none,ss_none},
 

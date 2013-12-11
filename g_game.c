@@ -16,7 +16,6 @@
 #include "wi_stuff.h"
 #include "hu_stuff.h"
 #include "st_stuff.h"
-#include "am_map.h"
 #include "w_wad.h"
 #include "r_main.h"
 #include "r_draw.h"
@@ -465,7 +464,7 @@ boolean G_Responder (event_t* ev)
     return true;
   }
 
-      return !(paused & 2) && !(automapmode & am_active) && ((ev->type == ev_keydown) || (ev->type == ev_mouse && ev->data1)) ? M_StartControlPanel(), true : false;
+      return !(paused & 2) && ((ev->type == ev_keydown) || (ev->type == ev_mouse && ev->data1)) ? M_StartControlPanel(), true : false;
     }
 
   if (gamestate == GS_FINALE && F_Responder(ev))
@@ -507,12 +506,6 @@ void G_Ticker (void)
   int i;
   static gamestate_t prevgamestate;
 
-
-  if (!demoplayback && mapcolor_plyr[consoleplayer] != mapcolor_me) {
-
-    int net_cl = LONG(mapcolor_me);
-    G_ChangedPlayerColour(consoleplayer, mapcolor_me);
-  }
   P_MapStart();
 
   for (i=0 ; i<MAXPLAYERS ; i++)
@@ -631,7 +624,6 @@ void G_Ticker (void)
     case GS_LEVEL:
       P_Ticker ();
       ST_Ticker ();
-      AM_Ticker ();
       HU_Ticker ();
       break;
 
@@ -753,9 +745,6 @@ void G_DoCompleted (void)
     if (playeringame[i])
       G_PlayerFinishLevel(i);
 
-  if (automapmode & am_active)
-    AM_Stop();
-
   if (gamemode != commercial)
     switch(gamemap)
       {
@@ -844,7 +833,6 @@ void G_DoCompleted (void)
   wminfo.totaltimes = (totalleveltimes += (leveltime - leveltime%35));
 
   gamestate = GS_INTERMISSION;
-  automapmode &= ~am_active;
 
   WI_Start (&wminfo);
 }
@@ -883,7 +871,6 @@ void G_DoWorldDone (void)
   gamemap = wminfo.next+1;
   G_DoLoadLevel();
   gameaction = ga_nothing;
-  AM_ClearMarks();
 }
 
 #define MIN_MAXPLAYERS 32
@@ -1133,15 +1120,11 @@ void G_InitNew(skill_t skill, int episode, int map)
 
   usergame = true;
   paused = false;
-  automapmode &= ~am_active;
   gameepisode = episode;
   gamemap = map;
   gameskill = skill;
 
   totalleveltimes = 0;
-
-
-  AM_ClearMarks();
 
   G_DoLoadLevel ();
 }
@@ -1149,126 +1132,6 @@ void G_InitNew(skill_t skill, int episode, int map)
 #define DEMOMARKER    0x80
 
 extern int forceOldBsp;
-
-byte *G_WriteOptions(byte *demo_p)
-{
-  byte *target = demo_p + GAME_OPTION_SIZE;
-
-  *demo_p++ = monsters_remember;
-
-  *demo_p++ = variable_friction;
-
-  *demo_p++ = weapon_recoil;
-
-  *demo_p++ = allow_pushers;
-
-  *demo_p++ = 0;
-
-  *demo_p++ = player_bobbing;
-
-
-  *demo_p++ = respawnparm;
-  *demo_p++ = fastparm;
-  *demo_p++ = nomonsters;
-  *demo_p++ = demo_insurance;
-  *demo_p++ = (byte)((rngseed >> 24) & 0xff);
-  *demo_p++ = (byte)((rngseed >> 16) & 0xff);
-  *demo_p++ = (byte)((rngseed >>  8) & 0xff);
-  *demo_p++ = (byte)( rngseed        & 0xff);
-  *demo_p++ = monster_infighting;
-  *demo_p++ = 0;
-  *demo_p++ = 0;
-  *demo_p++ = 0;
-  *demo_p++ = (distfriend >> 8) & 0xff;
-  *demo_p++ =  distfriend       & 0xff;
-  *demo_p++ = monster_backing;
-  *demo_p++ = monster_avoid_hazards;
-  *demo_p++ = monster_friction;
-  *demo_p++ = help_friends;
-  *demo_p++ = 0;
-  *demo_p++ = 0;
-
-  {
-    int i;
-    for (i=0; i < COMP_TOTAL; i++)
-      *demo_p++ = comp[i] != 0;
-  }
-
-  *demo_p++ = (compatibility_level >= prboom_2_compatibility) && forceOldBsp;
-
-  while (demo_p < target)
-    *demo_p++ = 0;
-
-  if (demo_p != target)
-    I_Error("G_WriteOptions: GAME_OPTION_SIZE is too small");
-
-  return target;
-}
-
-const byte *G_ReadOptions(const byte *demo_p)
-{
-  const byte *target = demo_p + GAME_OPTION_SIZE;
-
-  monsters_remember = *demo_p++;
-  variable_friction = *demo_p;
-  demo_p++;
-  weapon_recoil = *demo_p;
-  demo_p++;
-  allow_pushers = *demo_p;
-  demo_p++;
-  demo_p++;
-  player_bobbing = *demo_p;
-  demo_p++;
-  respawnparm = *demo_p++;
-  fastparm = *demo_p++;
-  nomonsters = *demo_p++;
-  demo_insurance = *demo_p++;
-  rngseed  = *demo_p++ & 0xff;
-  rngseed <<= 8;
-  rngseed += *demo_p++ & 0xff;
-  rngseed <<= 8;
-  rngseed += *demo_p++ & 0xff;
-  rngseed <<= 8;
-  rngseed += *demo_p++ & 0xff;
-
-
-  if (mbf_features)
-    {
-      monster_infighting = *demo_p++;
-
-      demo_p++;
-
-      demo_p += 2;
-
-      distfriend = *demo_p++ << 8;
-      distfriend+= *demo_p++;
-
-      monster_backing = *demo_p++;
-
-      monster_avoid_hazards = *demo_p++;
-
-      monster_friction = *demo_p++;
-
-      help_friends = *demo_p++;
-
-      demo_p++;
-      demo_p++;
-
-      {
-  int i;
-  for (i=0; i < COMP_TOTAL; i++)
-    comp[i] = *demo_p++;
-      }
-
-      forceOldBsp = *demo_p++;
-    }
-  else
-    {
-    }
-
-  G_Compatibility();
-  return target;
-}
 
 #define MAX_MESSAGE_SIZE 1024
 

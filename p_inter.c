@@ -2,7 +2,6 @@
 #include "d_event.h"
 #include "d_englsh.h"
 #include "m_random.h"
-#include "am_map.h"
 #include "r_main.h"
 #include "s_sound.h"
 #include "sounds.h"
@@ -548,8 +547,6 @@ static void P_KillMobj(mobj_t *source, mobj_t *target)
       target->player->playerstate = PST_DEAD;
       P_DropWeapon (target->player);
 
-      if (target->player == &players[consoleplayer] && (automapmode & am_active))
-        AM_Stop();
     }
 
   if (target->health < -target->info->spawnhealth && target->info->xdeathstate)

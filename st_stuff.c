@@ -6,7 +6,6 @@
 #include "st_stuff.h"
 #include "st_lib.h"
 #include "r_main.h"
-#include "am_map.h"
 #include "m_cheat.h"
 #include "s_sound.h"
 #include "sounds.h"
@@ -166,21 +165,6 @@ static void ST_refreshBackground(void)
 boolean ST_Responder(event_t *ev)
 {
 
-  if (ev->type == ev_keyup && (ev->data1 & 0xffff0000) == AM_MSGHEADER)
-    {
-      switch(ev->data1)
-        {
-        case AM_MSGENTERED:
-          st_gamestate = AutomapState;
-          st_firsttime = true;
-          break;
-
-        case AM_MSGEXITED:
-          st_gamestate = FirstPersonState;
-          break;
-        }
-    }
-  else
     if (ev->type == ev_keydown)
       return M_FindCheats(ev->data1);
   return false;

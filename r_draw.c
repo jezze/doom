@@ -6,7 +6,6 @@
 #include "v_video.h"
 #include "st_stuff.h"
 #include "g_game.h"
-#include "am_map.h"
 #include "lprintf.h"
 #include "z_zone.h"
 
@@ -415,33 +414,6 @@ void R_InitTranslationTables (void)
     for (i = 0; i < MAXTRANS; i++)
         transtocolour[i] = 255;
 
-    for (i = 0; i < MAXPLAYERS; i++)
-    {
-
-        byte wantcolour = mapcolor_plyr[i];
-        playernumtotrans[i] = 0;
-
-        if (wantcolour != 0x70)
-        {
-
-            for (j = 0; j < MAXTRANS; j++)
-            {
-
-                if (transtocolour[j] == 255)
-                {
-
-                    transtocolour[j] = wantcolour;
-                    playernumtotrans[i] = j + 1;
-
-                    break;
-                }
-
-            }
-
-        }
-
-    }
-
     for (i = 0; i < 256; i++)
     {
 
@@ -712,7 +684,7 @@ void R_DrawViewBorder(void)
 
     int top, side, i;
 
-    if ((SCREENHEIGHT != viewheight) || ((automapmode & am_active) && ! (automapmode & am_overlay)))
+    if (SCREENHEIGHT != viewheight)
     {
 
         side = (SCREENWIDTH - ST_SCALED_WIDTH) / 2;

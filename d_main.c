@@ -22,14 +22,12 @@
 #include "hu_stuff.h"
 #include "wi_stuff.h"
 #include "st_stuff.h"
-#include "am_map.h"
 #include "p_setup.h"
 #include "r_draw.h"
 #include "r_main.h"
 #include "r_fps.h"
 #include "d_main.h"
 #include "lprintf.h"
-#include "am_map.h"
 
 boolean clnomonsters;
 boolean clrespawnparm;
@@ -70,7 +68,7 @@ void D_PostEvent(event_t *ev)
     if (gametic < 3)
         return;
 
-    M_Responder(ev) || (gamestate == GS_LEVEL && (HU_Responder(ev) || ST_Responder(ev) || AM_Responder(ev))) || G_Responder(ev);
+    M_Responder(ev) || (gamestate == GS_LEVEL && (HU_Responder(ev) || ST_Responder(ev))) || G_Responder(ev);
 
 }
 
@@ -138,8 +136,8 @@ void D_Display (void)
 
         }
 
-        viewactive = (!(automapmode & am_active) || (automapmode & am_overlay)) && !inhelpscreens;
-        isborder = viewactive ? (viewheight != SCREENHEIGHT) : (!inhelpscreens && (automapmode & am_active));
+        viewactive = 1;
+        isborder = viewheight != SCREENHEIGHT;
 
         if (oldgamestate != GS_LEVEL)
         {
@@ -164,10 +162,7 @@ void D_Display (void)
         if (viewactive)
             R_RenderPlayerView(&players[displayplayer]);
 
-        if (automapmode & am_active)
-            AM_Drawer();
-
-        ST_Drawer((viewheight != SCREENHEIGHT) || ((automapmode & am_active) && !(automapmode & am_overlay)), redrawborderstuff);
+        ST_Drawer(isborder, redrawborderstuff);
         R_DrawViewBorder();
         HU_Drawer();
 

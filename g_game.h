@@ -23,8 +23,6 @@ void G_DoReborn(int playernum);
 void G_DoCompleted(void);
 void G_DoWorldDone(void);
 void G_Compatibility(void);
-const byte *G_ReadOptions(const byte *demo_p);
-byte *G_WriteOptions(byte *demo_p);
 void G_PlayerReborn(int player);
 void G_RestartLevel(void);
 void G_DoVictory(void);

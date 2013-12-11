@@ -41,17 +41,6 @@ enum
 
 };
 
-enum automapmode_e
-{
-
-    am_active = 1,
-    am_overlay= 2,
-    am_rotate = 4,
-    am_follow = 8,
-    am_grid = 16
-
-};
-
 extern boolean nomonsters;
 extern boolean respawnparm;
 extern boolean fastparm;

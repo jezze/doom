@@ -150,7 +150,7 @@ void HUlib_eraseTextLine(hu_textline_t* l)
     int lh;
     int y;
 
-    if (!(automapmode & am_active) && viewwindowx && l->needsupdate)
+    if (viewwindowx && l->needsupdate)
     {
 
         lh = l->f[0].height + 1;
@@ -412,7 +412,7 @@ static void HUlib_eraseMBg(hu_mtext_t* m)
     int lh;
     int y;
 
-    if (!(automapmode & am_active) && viewwindowx)
+    if (viewwindowx)
     {
 
         lh = m->l[0].f[0].height + 1;
