@@ -19,9 +19,6 @@ typedef enum
 #endif
 
 extern int lprintf(OutputLevels pri, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
-extern int cons_output_mask;
-extern int cons_error_mask;
-
 void I_Error(const char *error, ...) __attribute__((format(printf,1,2)));
 
 #endif

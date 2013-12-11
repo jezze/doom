@@ -7,8 +7,8 @@
 
 #define MAX_MESSAGE_SIZE                2048
 
-int cons_error_mask = -1 - LO_INFO;
-int cons_output_mask = -1;
+static int cons_error_mask = -1 - LO_INFO;
+static int cons_output_mask = -1;
 
 int lprintf(OutputLevels pri, const char *s, ...)
 {

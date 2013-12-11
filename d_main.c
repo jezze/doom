@@ -44,8 +44,6 @@ int startepisode;
 int startmap;
 
 char wadfile[PATH_MAX + 1];
-char mapdir[PATH_MAX + 1];
-char baseiwad[PATH_MAX + 1];
 
 const char *const standard_iwads[] = {
     "doom2.wad",
