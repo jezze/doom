@@ -63,15 +63,26 @@ void M_NewGame(int choice);
 void M_Episode(int choice);
 void M_ChooseSkill(int choice);
 void M_QuitDOOM(int choice);
-void M_StartGame(int choice);
 void M_DrawMainMenu(void);
 void M_DrawNewGame(void);
 void M_DrawEpisode(void);
-void M_SetupNextMenu(menu_t *menudef);
-void M_ClearMenus (void);
-void M_Setup(int choice);
 
 menu_t NewDef;
+
+static void M_ClearMenus(void)
+{
+
+    menuactive = 0;
+
+}
+
+static void M_SetupNextMenu(menu_t *menudef)
+{
+
+    currentMenu = menudef;
+    itemOn = currentMenu->lastOn;
+
+}
 
 enum
 {
@@ -211,49 +222,21 @@ void M_QuitDOOM(int choice)
 
 static boolean shiftdown = false;
 
-boolean M_Responder(event_t* ev)
+boolean M_Responder(event_t *ev)
 {
 
-    int ch = -1;
     int i;
 
-    if (ev->type == ev_keydown)
-    {
-
-        ch = ev->data1;
-
-        if (ch == KEYD_RSHIFT)
-            shiftdown = true;
-
-    }
-
-    else if (ev->type == ev_keyup)
-    {
-
-        if (ev->data1 == KEYD_RSHIFT)
-            shiftdown = false;
-
-    }
-
-    if (ch == -1)
+    if (ev->type != ev_keydown)
         return false;
 
     if (!menuactive)
     {
 
-        if (ch == key_autorun)
+        if (ev->data1 == key_escape)
         {
 
-            autorun = !autorun;
-
-            return true;
-
-        }
-
-        if (ch == key_escape)
-        {
-
-            M_StartControlPanel ();
+            M_StartControlPanel();
             S_StartSound(NULL, sfx_swtchn);
 
             return true;
@@ -264,7 +247,7 @@ boolean M_Responder(event_t* ev)
 
     }
 
-    if (ch == key_menu_down)
+    if (ev->data1 == key_menu_down)
     {
 
         do
@@ -283,7 +266,7 @@ boolean M_Responder(event_t* ev)
 
     }
 
-    if (ch == key_menu_up)
+    if (ev->data1 == key_menu_up)
     {
 
         do
@@ -302,39 +285,7 @@ boolean M_Responder(event_t* ev)
 
     }
 
-    if (ch == key_menu_left)
-    {
-
-        if (currentMenu->menuitems[itemOn].routine && currentMenu->menuitems[itemOn].status == 2)
-        {
-
-            S_StartSound(NULL, sfx_stnmov);
-
-            currentMenu->menuitems[itemOn].routine(0);
-
-        }
-
-        return true;
-
-    }
-
-    if (ch == key_menu_right)
-    {
-
-        if (currentMenu->menuitems[itemOn].routine && currentMenu->menuitems[itemOn].status == 2)
-        {
-
-            S_StartSound(NULL, sfx_stnmov);
-
-            currentMenu->menuitems[itemOn].routine(1);
-
-        }
-
-        return true;
-
-    }
-
-    if (ch == key_menu_enter)
+    if (ev->data1 == key_menu_enter)
     {
 
         if (currentMenu->menuitems[itemOn].routine && currentMenu->menuitems[itemOn].status)
@@ -364,7 +315,7 @@ boolean M_Responder(event_t* ev)
 
     }
 
-    if (ch == key_menu_escape)
+    if (ev->data1 == key_menu_escape)
     {
 
         currentMenu->lastOn = itemOn;
@@ -376,7 +327,7 @@ boolean M_Responder(event_t* ev)
 
     }
 
-    if (ch == key_menu_backspace)
+    if (ev->data1 == key_menu_backspace)
     {
 
         currentMenu->lastOn = itemOn;
@@ -440,21 +391,6 @@ void M_Drawer(void)
         V_DrawNamePatch(x + SKULLXOFF, currentMenu->y - 5 + itemOn * LINEHEIGHT, 0, skullName[whichSkull], CR_DEFAULT, VPT_STRETCH);
 
     }
-
-}
-
-void M_ClearMenus(void)
-{
-
-    menuactive = 0;
-
-}
-
-void M_SetupNextMenu(menu_t *menudef)
-{
-
-    currentMenu = menudef;
-    itemOn = currentMenu->lastOn;
 
 }
 
