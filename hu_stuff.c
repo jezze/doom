@@ -272,7 +272,6 @@ static boolean    message_list;
 boolean           message_dontfuckwithme;
 static boolean    message_nottobefuckedwith;
 static int        message_counter;
-extern int        showMessages;
 extern boolean    automapactive;
 static boolean    headsupactive = false;
 
@@ -1124,11 +1123,7 @@ void HU_Ticker(void)
     bscounter = 8;
   }
 
-  if (showMessages || message_dontfuckwithme)
-  {
-
-    if ((plr->message && !message_nottobefuckedwith)
-        || (plr->message && message_dontfuckwithme))
+    if ((plr->message && !message_nottobefuckedwith) || (plr->message && message_dontfuckwithme))
     {
 
       HUlib_addMessageToSText(&w_message, 0, plr->message);
@@ -1146,7 +1141,6 @@ void HU_Ticker(void)
 
       message_dontfuckwithme = 0;
     }
-  }
 
 }
 

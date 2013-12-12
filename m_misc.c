@@ -73,7 +73,6 @@ extern int viewwidth;
 extern int viewheight;
 extern int realtic_clock_rate;
 extern int screenblocks;
-extern int showMessages;
 int mus_pause_opt;
 int endoom_mode;
 extern const char* S_music_files[];
@@ -102,7 +101,6 @@ struct setting defaults[] =
   {"sts_always_red", {&sts_always_red}, {1}, 0, 1, def_bool,ss_stat},
   {"sts_pct_always_gray", {&sts_pct_always_gray}, {0}, 0, 1, def_bool,ss_stat},
   {"sts_traditional_keys", {&sts_traditional_keys}, {0}, 0, 1, def_bool,ss_stat},
-  {"show_messages", {&showMessages}, {1}, 0, 1, def_bool,ss_none},
   {"autorun", {&autorun}, {0}, 0, 1, def_bool,ss_none},
   {"comp_zombie", {&default_comp[comp_zombie]}, {0}, 0, 1, def_bool, ss_comp, &comp[comp_zombie]},
   {"comp_infcheat", {&default_comp[comp_infcheat]}, {0}, 0, 1, def_bool, ss_comp, &comp[comp_infcheat]},

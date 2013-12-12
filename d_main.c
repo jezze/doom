@@ -68,7 +68,6 @@ void D_PostEvent(event_t *ev)
 }
 
 extern boolean setsizeneeded;
-extern int showMessages;
 
 void D_Display (void)
 {
