@@ -22,55 +22,50 @@
 #include "r_fps.h"
 #include "z_zone.h"
 
-static inline void I_BeginRead(void) {}
-static inline void I_EndRead(void) {}
+#define MAX_KEY                         65536
+#define MAX_MOUSEB                      2
+#define UL                              (-123456789)
 
-boolean M_WriteFile(char const *name, void *source, int length)
+struct setting
 {
-  FILE *fp;
 
-  errno = 0;
-
-  if (!(fp = fopen(name, "wb")))
-    return 0;
-
-  I_BeginRead();
-  length = fwrite(source, 1, length, fp) == (size_t)length;
-  fclose(fp);
-  I_EndRead();
-
-  if (!length)
-    remove(name);
-
-  return length;
-}
-
-int M_ReadFile(char const *name, byte **buffer)
-{
-  FILE *fp;
-
-  if ((fp = fopen(name, "rb")))
+    const char *name;
+    struct
     {
-      size_t length;
 
-      I_BeginRead();
-      fseek(fp, 0, SEEK_END);
-      length = ftell(fp);
-      fseek(fp, 0, SEEK_SET);
-      *buffer = Z_Malloc(length, PU_STATIC, 0);
-      if (fread(*buffer, 1, length, fp) == length)
-        {
-          fclose(fp);
-          I_EndRead();
-          return length;
-        }
-      fclose(fp);
-    }
+        int *pi;
+        const char **ppsz;
 
-  return -1;
-}
+    } location;
+    struct
+    {
 
-boolean    precache = true; /* if true, load all graphics at start */
+        int i;
+        const char* psz;
+
+    } defaultvalue;
+    int minvalue;
+    int maxvalue;
+    enum
+    {
+
+        def_none,
+        def_str,
+        def_int,
+        def_hex,
+        def_bool = def_int,
+        def_key = def_hex,
+        def_mouseb = def_int,
+        def_colour = def_hex
+
+    } type;
+    int setupscreen;
+    int *current;
+    struct setup_menu_s *setup_menu;
+
+};
+
+boolean precache = true;
 extern int mousebfire;
 extern int mousebstrafe;
 extern int mousebforward;
@@ -79,11 +74,11 @@ extern int viewheight;
 extern int realtic_clock_rate;
 extern int screenblocks;
 extern int showMessages;
-int         mus_pause_opt;
+int mus_pause_opt;
 int endoom_mode;
 extern const char* S_music_files[];
 
-default_t defaults[] =
+struct setting defaults[] =
 {
   {"default_compatibility_level", {(int*)&default_compatibility_level}, {-1}, -1, MAX_COMPATIBILITY_LEVEL - 1, def_int,ss_none},
   {"realtic_clock_rate", {&realtic_clock_rate}, {100}, 0, UL, def_int, ss_none},
@@ -401,39 +396,24 @@ default_t defaults[] =
    def_str,ss_none},
 };
 
-int numdefaults;
 
-struct default_s *M_LookupDefault(const char *name)
+void M_LoadDefaults(void)
 {
-  int i;
-  for (i = 0 ; i < numdefaults ; i++)
-    if ((defaults[i].type != def_none) && !strcmp(name, defaults[i].name))
-      return &defaults[i];
-  I_Error("M_LookupDefault: %s not found",name);
-  return NULL;
-}
 
-#define NUMCHATSTRINGS 10
+    int i;
 
-void M_LoadDefaults (void)
-{
-  int   i;
-  int   len;
-  FILE* f;
-  char  def[80];
-  char  strparm[100];
-  char* newstring = NULL;
-  int   parm;
-  boolean isstring;
+    for (i = 0; i < (sizeof(defaults) / sizeof(defaults[0])); i++)
+    {
 
-  numdefaults = sizeof(defaults)/sizeof(defaults[0]);
-  for (i = 0 ; i < numdefaults ; i++) {
-    if (defaults[i].location.ppsz)
-      *defaults[i].location.ppsz = strdup(defaults[i].defaultvalue.psz);
-    if (defaults[i].location.pi)
-      *defaults[i].location.pi = defaults[i].defaultvalue.i;
-  }
+        if (defaults[i].location.ppsz)
+            *defaults[i].location.ppsz = strdup(defaults[i].defaultvalue.psz);
 
-  wad_files[MAXLOADFILES-1]="prboom.wad";
+        if (defaults[i].location.pi)
+            *defaults[i].location.pi = defaults[i].defaultvalue.i;
+
+    }
+
+    wad_files[MAXLOADFILES - 1] = "prboom.wad";
+
 }
 
