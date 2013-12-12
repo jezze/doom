@@ -92,7 +92,7 @@ void P_InitPicAnims (void)
                   animdefs[i].startname,
                   animdefs[i].endname);
 
-    lastanim->speed = LONG(animdefs[i].speed);
+    lastanim->speed = animdefs[i].speed;
     lastanim++;
   }
   W_UnlockLumpNum(lump);

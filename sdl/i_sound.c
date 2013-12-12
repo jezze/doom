@@ -5,7 +5,6 @@
 #include <SDL_byteorder.h>
 #include <SDL_version.h>
 #include "z_zone.h"
-#include "m_swap.h"
 #include "i_sound.h"
 #include "m_misc.h"
 #include "w_wad.h"

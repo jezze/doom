@@ -276,8 +276,8 @@ static void CheckIWAD(const char *iwadname,GameMode_t *gmode,boolean *hassec)
                 size_t length;
                 filelump_t *fileinfo;
 
-                header.numlumps = LONG(header.numlumps);
-                header.infotableofs = LONG(header.infotableofs);
+                header.numlumps = header.numlumps;
+                header.infotableofs = header.infotableofs;
                 length = header.numlumps;
                 fileinfo = malloc(length * sizeof(filelump_t));
 

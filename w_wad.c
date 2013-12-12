@@ -76,7 +76,7 @@ static void W_AddFile(wadfile_info_t *wadfile)
     {
       fileinfo = &singleinfo;
       singleinfo.filepos = 0;
-      singleinfo.size = LONG(I_Filelength(wadfile->handle));
+      singleinfo.size = I_Filelength(wadfile->handle);
       ExtractFileBase(wadfile->name, singleinfo.name);
       numlumps++;
     }
@@ -86,8 +86,8 @@ static void W_AddFile(wadfile_info_t *wadfile)
       if (strncmp(header.identification,"IWAD",4) &&
           strncmp(header.identification,"PWAD",4))
         I_Error("W_AddFile: Wad file %s doesn't have IWAD or PWAD id", wadfile->name);
-      header.numlumps = LONG(header.numlumps);
-      header.infotableofs = LONG(header.infotableofs);
+      header.numlumps = header.numlumps;
+      header.infotableofs = header.infotableofs;
       length = header.numlumps*sizeof(filelump_t);
       fileinfo2free = fileinfo = malloc(length);
       lseek(wadfile->handle, header.infotableofs, SEEK_SET);
@@ -101,8 +101,8 @@ static void W_AddFile(wadfile_info_t *wadfile)
     for (i=startlump ; (int)i<numlumps ; i++,lump_p++, fileinfo++)
       {
         lump_p->wadfile = wadfile;
-        lump_p->position = LONG(fileinfo->filepos);
-        lump_p->size = LONG(fileinfo->size);
+        lump_p->position = fileinfo->filepos;
+        lump_p->size = fileinfo->size;
         lump_p->li_namespace = ns_global;
         strncpy (lump_p->name, fileinfo->name, 8);
     lump_p->source = wadfile->src;

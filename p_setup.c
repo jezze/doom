@@ -150,8 +150,8 @@ static void P_LoadVertexes (int lump)
 
   for (i=0; i<numvertexes; i++)
     {
-      vertexes[i].x = SHORT(data[i].x)<<FRACBITS;
-      vertexes[i].y = SHORT(data[i].y)<<FRACBITS;
+      vertexes[i].x = data[i].x<<FRACBITS;
+      vertexes[i].y = data[i].y<<FRACBITS;
     }
 
   W_UnlockLumpNum(lump);
@@ -193,8 +193,8 @@ static void P_LoadVertexes2(int lump, int gllump)
 
       for (i = firstglvertex; i < numvertexes; i++)
       {
-        vertexes[i].x = SHORT(ml->x)<<FRACBITS;
-        vertexes[i].y = SHORT(ml->y)<<FRACBITS;
+        vertexes[i].x = ml->x<<FRACBITS;
+        vertexes[i].y = ml->y<<FRACBITS;
         ml++;
       }
     }
@@ -205,8 +205,8 @@ static void P_LoadVertexes2(int lump, int gllump)
 
   for (i=0; i < firstglvertex; i++)
   {
-    vertexes[i].x = SHORT(ml->x)<<FRACBITS;
-    vertexes[i].y = SHORT(ml->y)<<FRACBITS;
+    vertexes[i].x = ml->x<<FRACBITS;
+    vertexes[i].y = ml->y<<FRACBITS;
     ml++;
   }
   W_UnlockLumpNum(lump);
@@ -260,19 +260,19 @@ static void P_LoadSegs (int lump)
 
       li->iSegID = i;
 
-      v1 = (unsigned short)SHORT(ml->v1);
-      v2 = (unsigned short)SHORT(ml->v2);
+      v1 = (unsigned short)ml->v1;
+      v2 = (unsigned short)ml->v2;
       li->v1 = &vertexes[v1];
       li->v2 = &vertexes[v2];
 
       li->miniseg = false;
       li->length  = GetDistance(li->v2->x - li->v1->x, li->v2->y - li->v1->y);
-      li->angle = (SHORT(ml->angle))<<16;
-      li->offset =(SHORT(ml->offset))<<16;
-      linedef = (unsigned short)SHORT(ml->linedef);
+      li->angle = (ml->angle)<<16;
+      li->offset =(ml->offset)<<16;
+      linedef = (unsigned short)ml->linedef;
       ldef = &lines[linedef];
       li->linedef = ldef;
-      side = SHORT(ml->side);
+      side = ml->side;
       li->sidedef = &sides[ldef->sidenum[side]];
 
       if (ldef->sidenum[side] != NO_INDEX)
@@ -307,8 +307,8 @@ static void P_LoadGLSegs(int lump)
 
   for(i = 0; i < numsegs; i++)
   {
-    segs[i].v1 = &vertexes[checkGLVertex(SHORT(ml->v1))];
-    segs[i].v2 = &vertexes[checkGLVertex(SHORT(ml->v2))];
+    segs[i].v1 = &vertexes[checkGLVertex(ml->v1)];
+    segs[i].v2 = &vertexes[checkGLVertex(ml->v2)];
     segs[i].iSegID  = i;
 
     if(ml->linedef != (unsigned short)-1)
@@ -361,8 +361,8 @@ static void P_LoadSubsectors (int lump)
 
   for (i=0; i<numsubsectors; i++)
   {
-    subsectors[i].numlines  = (unsigned short)SHORT(data[i].numsegs );
-    subsectors[i].firstline = (unsigned short)SHORT(data[i].firstseg);
+    subsectors[i].numlines  = (unsigned short)data[i].numsegs;
+    subsectors[i].firstline = (unsigned short)data[i].firstseg;
   }
 
   W_UnlockLumpNum(lump);
@@ -383,14 +383,14 @@ static void P_LoadSectors (int lump)
       const mapsector_t *ms = (const mapsector_t *) data + i;
 
       ss->iSectorID=i;
-      ss->floorheight = SHORT(ms->floorheight)<<FRACBITS;
-      ss->ceilingheight = SHORT(ms->ceilingheight)<<FRACBITS;
+      ss->floorheight = ms->floorheight<<FRACBITS;
+      ss->ceilingheight = ms->ceilingheight<<FRACBITS;
       ss->floorpic = R_FlatNumForName(ms->floorpic);
       ss->ceilingpic = R_FlatNumForName(ms->ceilingpic);
-      ss->lightlevel = SHORT(ms->lightlevel);
-      ss->special = SHORT(ms->special);
-      ss->oldspecial = SHORT(ms->special);
-      ss->tag = SHORT(ms->tag);
+      ss->lightlevel = ms->lightlevel;
+      ss->special = ms->special;
+      ss->oldspecial = ms->special;
+      ss->tag = ms->tag;
       ss->thinglist = NULL;
       ss->touching_thinglist = NULL;
       ss->nextsec = -1;
@@ -434,17 +434,17 @@ static void P_LoadNodes (int lump)
       const mapnode_t *mn = (const mapnode_t *) data + i;
       int j;
 
-      no->x = SHORT(mn->x)<<FRACBITS;
-      no->y = SHORT(mn->y)<<FRACBITS;
-      no->dx = SHORT(mn->dx)<<FRACBITS;
-      no->dy = SHORT(mn->dy)<<FRACBITS;
+      no->x = mn->x<<FRACBITS;
+      no->y = mn->y<<FRACBITS;
+      no->dx = mn->dx<<FRACBITS;
+      no->dy = mn->dy<<FRACBITS;
 
       for (j=0 ; j<2 ; j++)
         {
           int k;
-          no->children[j] = SHORT(mn->children[j]);
+          no->children[j] = mn->children[j];
           for (k=0 ; k<4 ; k++)
-            no->bbox[j][k] = SHORT(mn->bbox[j][k])<<FRACBITS;
+            no->bbox[j][k] = mn->bbox[j][k]<<FRACBITS;
         }
     }
 
@@ -463,11 +463,11 @@ static void P_LoadThings (int lump)
     {
       mapthing_t mt = data[i];
 
-      mt.x = SHORT(mt.x);
-      mt.y = SHORT(mt.y);
-      mt.angle = SHORT(mt.angle);
-      mt.type = SHORT(mt.type);
-      mt.options = SHORT(mt.options);
+      mt.x = mt.x;
+      mt.y = mt.y;
+      mt.angle = mt.angle;
+      mt.type = mt.type;
+      mt.options = mt.options;
 
       if (!P_IsDoomnumAllowed(mt.type))
         continue;
@@ -494,11 +494,11 @@ static void P_LoadLineDefs (int lump)
       line_t *ld = lines+i;
       vertex_t *v1, *v2;
 
-      ld->flags = (unsigned short)SHORT(mld->flags);
-      ld->special = SHORT(mld->special);
-      ld->tag = SHORT(mld->tag);
-      v1 = ld->v1 = &vertexes[(unsigned short)SHORT(mld->v1)];
-      v2 = ld->v2 = &vertexes[(unsigned short)SHORT(mld->v2)];
+      ld->flags = (unsigned short)mld->flags;
+      ld->special = mld->special;
+      ld->tag = mld->tag;
+      v1 = ld->v1 = &vertexes[(unsigned short)mld->v1];
+      v2 = ld->v2 = &vertexes[(unsigned short)mld->v2];
       ld->dx = v2->x - v1->x;
       ld->dy = v2->y - v1->y;
 
@@ -532,8 +532,8 @@ static void P_LoadLineDefs (int lump)
       ld->soundorg.y = ld->bbox[BOXTOP] / 2 + ld->bbox[BOXBOTTOM] / 2;
 
       ld->iLineID=i;
-      ld->sidenum[0] = SHORT(mld->sidenum[0]);
-      ld->sidenum[1] = SHORT(mld->sidenum[1]);
+      ld->sidenum[0] = mld->sidenum[0];
+      ld->sidenum[1] = mld->sidenum[1];
 
       { 
         int j;
@@ -609,11 +609,11 @@ static void P_LoadSideDefs2(int lump)
       register side_t *sd = sides + i;
       register sector_t *sec;
 
-      sd->textureoffset = SHORT(msd->textureoffset)<<FRACBITS;
-      sd->rowoffset = SHORT(msd->rowoffset)<<FRACBITS;
+      sd->textureoffset = msd->textureoffset<<FRACBITS;
+      sd->rowoffset = msd->rowoffset<<FRACBITS;
 
       { /* cph 2006/09/30 - catch out-of-range sector numbers; use sector 0 instead */
-        unsigned short sector_num = SHORT(msd->sector);
+        unsigned short sector_num = msd->sector;
         if (sector_num >= numsectors) {
           lprintf(LO_WARN,"P_LoadSideDefs2: sidedef %i has out-of-range sector num %u\n", i, sector_num);
           sector_num = 0;
@@ -906,14 +906,14 @@ static void P_LoadBlockMap (int lump)
       const short *wadblockmaplump = W_CacheLumpNum(lump);
       blockmaplump = Z_Malloc(sizeof(*blockmaplump) * count, PU_LEVEL, 0);
 
-      blockmaplump[0] = SHORT(wadblockmaplump[0]);
-      blockmaplump[1] = SHORT(wadblockmaplump[1]);
-      blockmaplump[2] = (long)(SHORT(wadblockmaplump[2])) & 0xffff;
-      blockmaplump[3] = (long)(SHORT(wadblockmaplump[3])) & 0xffff;
+      blockmaplump[0] = wadblockmaplump[0];
+      blockmaplump[1] = wadblockmaplump[1];
+      blockmaplump[2] = (long)(wadblockmaplump[2]) & 0xffff;
+      blockmaplump[3] = (long)(wadblockmaplump[3]) & 0xffff;
 
       for (i=4 ; i<count ; i++)
         {
-          short t = SHORT(wadblockmaplump[i]);
+          short t = wadblockmaplump[i];
           blockmaplump[i] = t == -1 ? -1l : (long) t & 0xffff;
         }
 

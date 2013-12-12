@@ -93,8 +93,8 @@ static int getPatchIsNotTileable(const patch_t *patch) {
   int cornerCount = 0;
   int hasAHole = 0;
 
-  for (x=0; x<SHORT(patch->width); x++) {
-    column = (const column_t *)((const byte *)patch + LONG(patch->columnofs[x]));
+  for (x=0; x<patch->width; x++) {
+    column = (const column_t *)((const byte *)patch + patch->columnofs[x]);
     if (!x) lastColumnDelta = column->topdelta;
     else if (lastColumnDelta != column->topdelta) hasAHole = 1;
 
@@ -102,9 +102,9 @@ static int getPatchIsNotTileable(const patch_t *patch) {
     while (column->topdelta != 0xff) {
 
       if (x == 0 && column->topdelta == 0) cornerCount++;
-      else if (x == 0 && column->topdelta + column->length >= SHORT(patch->height)) cornerCount++;
-      else if (x == SHORT(patch->width)-1 && column->topdelta == 0) cornerCount++;
-      else if (x == SHORT(patch->width)-1 && column->topdelta + column->length >= SHORT(patch->height)) cornerCount++;
+      else if (x == 0 && column->topdelta + column->length >= patch->height) cornerCount++;
+      else if (x == patch->width-1 && column->topdelta == 0) cornerCount++;
+      else if (x == patch->width-1 && column->topdelta + column->length >= patch->height) cornerCount++;
 
       if (numPosts++) hasAHole = 1;
       column = (const column_t *)((const byte *)column + column->length + 4);
@@ -153,11 +153,11 @@ static void createPatch(int id) {
 
   patch = &patches[id];
 
-  patch->width = SHORT(oldPatch->width);
+  patch->width = oldPatch->width;
   patch->widthmask = 0;
-  patch->height = SHORT(oldPatch->height);
-  patch->leftoffset = SHORT(oldPatch->leftoffset);
-  patch->topoffset = SHORT(oldPatch->topoffset);
+  patch->height = oldPatch->height;
+  patch->leftoffset = oldPatch->leftoffset;
+  patch->topoffset = oldPatch->topoffset;
   patch->isNotTileable = getPatchIsNotTileable(oldPatch);
 
 
@@ -169,7 +169,7 @@ static void createPatch(int id) {
   numPostsTotal = 0;
 
   for (x=0; x<patch->width; x++) {
-    oldColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[x]));
+    oldColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[x]);
     numPostsInColumn[x] = 0;
     while (oldColumn->topdelta != 0xff) {
       numPostsInColumn[x]++;
@@ -199,14 +199,14 @@ static void createPatch(int id) {
   numPostsUsedSoFar = 0;
   for (x=0; x<patch->width; x++) {
 
-    oldColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[x]));
+    oldColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[x]);
 
     if (patch->isNotTileable) {
 
       if (x == 0) oldPrevColumn = 0;
-      else oldPrevColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[x-1]));
+      else oldPrevColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[x-1]);
       if (x == patch->width-1) oldNextColumn = 0;
-      else oldNextColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[x+1]));
+      else oldNextColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[x+1]);
     }
     else {
 
@@ -214,8 +214,8 @@ static void createPatch(int id) {
       int nextColumnIndex = x+1;
       while (prevColumnIndex < 0) prevColumnIndex += patch->width;
       while (nextColumnIndex >= patch->width) nextColumnIndex -= patch->width;
-      oldPrevColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[prevColumnIndex]));
-      oldNextColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[nextColumnIndex]));
+      oldPrevColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[prevColumnIndex]);
+      oldNextColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[nextColumnIndex]);
     }
 
 
@@ -373,7 +373,7 @@ static void createTextureCompositePatch(int id) {
     patchNum = texpatch->patch;
     oldPatch = (const patch_t*)W_CacheLumpNum(patchNum);
 
-    for (x=0; x<SHORT(oldPatch->width); x++) {
+    for (x=0; x<oldPatch->width; x++) {
       int tx = texpatch->originx + x;
 
       if (tx < 0)
@@ -383,7 +383,7 @@ static void createTextureCompositePatch(int id) {
 
       countsInColumn[tx].patches++;
 
-      oldColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[x]));
+      oldColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[x]);
       while (oldColumn->topdelta != 0xff) {
         countsInColumn[tx].posts++;
         numPostsTotal++;
@@ -427,7 +427,7 @@ static void createTextureCompositePatch(int id) {
     patchNum = texpatch->patch;
     oldPatch = (const patch_t*)W_CacheLumpNum(patchNum);
 
-    for (x=0; x<SHORT(oldPatch->width); x++) {
+    for (x=0; x<oldPatch->width; x++) {
       int tx = texpatch->originx + x;
 
       if (tx < 0)
@@ -435,16 +435,16 @@ static void createTextureCompositePatch(int id) {
       if (tx >= composite_patch->width)
         break;
 
-      oldColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[x]));
+      oldColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[x]);
 
       {
 
         int prevColumnIndex = x-1;
         int nextColumnIndex = x+1;
-        while (prevColumnIndex < 0) prevColumnIndex += SHORT(oldPatch->width);
-        while (nextColumnIndex >= SHORT(oldPatch->width)) nextColumnIndex -= SHORT(oldPatch->width);
-        oldPrevColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[prevColumnIndex]));
-        oldNextColumn = (const column_t *)((const byte *)oldPatch + LONG(oldPatch->columnofs[nextColumnIndex]));
+        while (prevColumnIndex < 0) prevColumnIndex += oldPatch->width;
+        while (nextColumnIndex >= oldPatch->width) nextColumnIndex -= oldPatch->width;
+        oldPrevColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[prevColumnIndex]);
+        oldNextColumn = (const column_t *)((const byte *)oldPatch + oldPatch->columnofs[nextColumnIndex]);
       }
 
       while (oldColumn->topdelta != 0xff) {

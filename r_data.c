@@ -74,7 +74,7 @@ static void R_InitTextures (void)
 
   name[8] = 0;
   names = W_CacheLumpNum(names_lump = W_GetNumForName("PNAMES"));
-  nummappatches = LONG(*((const int *)names));
+  nummappatches = *((const int *)names);
   name_p = names+4;
   patchlookup = malloc(nummappatches*sizeof(*patchlookup));
 
@@ -92,14 +92,14 @@ static void R_InitTextures (void)
   W_UnlockLumpNum(names_lump);
 
   maptex = maptex1 = W_CacheLumpNum(maptex_lump[0] = W_GetNumForName("TEXTURE1"));
-  numtextures1 = LONG(*maptex);
+  numtextures1 = *maptex;
   maxoff = W_LumpLength(maptex_lump[0]);
   directory = maptex+1;
 
   if (W_CheckNumForName("TEXTURE2") != -1)
     {
       maptex2 = W_CacheLumpNum(maptex_lump[1] = W_GetNumForName("TEXTURE2"));
-      numtextures2 = LONG(*maptex2);
+      numtextures2 = *maptex2;
       maxoff2 = W_LumpLength(maptex_lump[1]);
     }
   else
@@ -123,7 +123,7 @@ static void R_InitTextures (void)
           directory = maptex+1;
         }
 
-      offset = LONG(*directory);
+      offset = *directory;
 
       if (offset > maxoff)
         I_Error("R_InitTextures: Bad texture directory");
@@ -132,12 +132,12 @@ static void R_InitTextures (void)
 
       texture = textures[i] =
         Z_Malloc(sizeof(texture_t) +
-                 sizeof(texpatch_t)*(SHORT(mtexture->patchcount)-1),
+                 sizeof(texpatch_t)*(mtexture->patchcount -1),
                  PU_STATIC, 0);
 
-      texture->width = SHORT(mtexture->width);
-      texture->height = SHORT(mtexture->height);
-      texture->patchcount = SHORT(mtexture->patchcount);
+      texture->width = mtexture->width;
+      texture->height = mtexture->height;
+      texture->patchcount = mtexture->patchcount;
 
       {
         int j;
@@ -150,14 +150,14 @@ static void R_InitTextures (void)
 
       for (j=0 ; j<texture->patchcount ; j++, mpatch++, patch++)
         {
-          patch->originx = SHORT(mpatch->originx);
-          patch->originy = SHORT(mpatch->originy);
-          patch->patch = patchlookup[SHORT(mpatch->patch)];
+          patch->originx = mpatch->originx;
+          patch->originy = mpatch->originy;
+          patch->patch = patchlookup[mpatch->patch];
           if (patch->patch == -1)
             {
 
               lprintf(LO_ERROR,"\nR_InitTextures: Missing patch %d in texture %.8s",
-                     SHORT(mpatch->patch), texture->name);
+                     mpatch->patch), texture->name;
               ++errors;
             }
         }

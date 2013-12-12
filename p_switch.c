@@ -28,11 +28,11 @@ void P_InitSwitchList(void)
     if (index+1 >= max_numswitches)
       switchlist = realloc(switchlist, sizeof *switchlist *
           (max_numswitches = max_numswitches ? max_numswitches*2 : 8));
-    if (SHORT(alphSwitchList[i].episode) <= episode)
+    if (alphSwitchList[i].episode <= episode)
     {
       int texture1, texture2;
 
-      if (!SHORT(alphSwitchList[i].episode))
+      if (!alphSwitchList[i].episode)
         break;
 
       texture1 = R_CheckTextureNumForName(alphSwitchList[i].name1);

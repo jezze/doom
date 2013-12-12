@@ -11,8 +11,6 @@
 #include <ctype.h>
 #include <limits.h>
 
-#include "m_swap.h"
-
 #define BASE_WIDTH 320
 #define INV_ASPECT_RATIO 0.625
 
