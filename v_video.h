@@ -85,8 +85,7 @@ video_mode_t V_GetMode(void);
 int V_GetModePixelDepth(video_mode_t mode);
 int V_GetNumPixelBits(void);
 int V_GetPixelDepth(void);
-void V_InitColorTranslation(void);
-void V_Init (void);
+void V_Init(void);
 
 typedef void (*V_CopyRect_f)(int srcx, int srcy, int srcscrn, int width, int height, int destx, int desty, int destscrn, enum patch_translation_e flags);
 extern V_CopyRect_f V_CopyRect;

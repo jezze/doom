@@ -499,7 +499,6 @@ static void D_DoomMainSetup(void)
 
     lprintf(LO_INFO,"W_Init: Init WADfiles.\n");
     W_Init();
-    V_InitColorTranslation();
     lprintf(LO_INFO,"M_Init: Init miscellaneous info.\n");
     M_Init();
     lprintf(LO_INFO,"R_Init: Init DOOM refresh daemon - ");

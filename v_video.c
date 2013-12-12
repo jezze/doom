@@ -13,33 +13,6 @@ screeninfo_t screens[NUM_SCREENS];
 const byte *colrngs[CR_LIMIT];
 int usegamma;
 
-typedef struct {
-  const char *name;
-  const byte **map;
-} crdef_t;
-
-static const crdef_t crdefs[] = {
-  {"CRBRICK",  &colrngs[CR_BRICK ]},
-  {"CRTAN",    &colrngs[CR_TAN   ]},
-  {"CRGRAY",   &colrngs[CR_GRAY  ]},
-  {"CRGREEN",  &colrngs[CR_GREEN ]},
-  {"CRBROWN",  &colrngs[CR_BROWN ]},
-  {"CRGOLD",   &colrngs[CR_GOLD  ]},
-  {"CRRED",    &colrngs[CR_RED   ]},
-  {"CRBLUE",   &colrngs[CR_BLUE  ]},
-  {"CRORANGE", &colrngs[CR_ORANGE]},
-  {"CRYELLOW", &colrngs[CR_YELLOW]},
-  {"CRBLUE2",  &colrngs[CR_BLUE2]},
-  {NULL}
-};
-
-void V_InitColorTranslation(void)
-{
-  register const crdef_t *p;
-  for (p=crdefs; p->name; p++)
-    *p->map = W_CacheLumpName(p->name);
-}
-
 static void FUNC_V_CopyRect(int srcx, int srcy, int srcscrn, int width, int height, int destx, int desty, int destscrn, enum patch_translation_e flags)
 {
   byte *src;
