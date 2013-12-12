@@ -250,24 +250,6 @@ boolean M_Responder(event_t* ev)
 
         }
 
-        if (ch == key_hud)
-        {
-
-            hud_displayed = 1;
-            hud_active = (hud_active + 1) % 3;
-
-            if (!hud_active)
-            {
-
-                hud_distributed = !hud_distributed;
-                HU_MoveHud();
-
-            }
-
-            return true;
-
-        }
-
         if (ch == key_escape)
         {
 
