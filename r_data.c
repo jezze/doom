@@ -220,23 +220,14 @@ static void R_InitSpriteLumps(void)
 static void R_InitColormaps(void)
 {
   int i;
-  firstcolormaplump = W_GetNumForName("C_START");
-  lastcolormaplump  = W_GetNumForName("C_END");
-  numcolormaps = lastcolormaplump - firstcolormaplump;
+  numcolormaps = 1;
   colormaps = Z_Malloc(sizeof(*colormaps) * numcolormaps, PU_STATIC, 0);
   colormaps[0] = (const lighttable_t *)W_CacheLumpName("COLORMAP");
-  for (i=1; i<numcolormaps; i++)
-    colormaps[i] = (const lighttable_t *)W_CacheLumpNum(i+firstcolormaplump);
-
 }
 
 int R_ColormapNumForName(const char *name)
 {
-  register int i = 0;
-  if (strncasecmp(name,"COLORMAP",8))
-    if ((i = (W_CheckNumForName)(name, ns_colormaps)) != -1)
-      i -= firstcolormaplump;
-  return i;
+  return 0;
 }
 
 static inline int between(int l,int u,int x)
