@@ -114,7 +114,7 @@ static boolean st_armson;
 static patchnum_t tallnum[10];
 static patchnum_t tallpercent;
 static patchnum_t shortnum[10];
-static patchnum_t keys[NUMCARDS+3];
+static patchnum_t keys[NUMCARDS];
 static patchnum_t faces[ST_NUMFACES];
 static patchnum_t faceback;
 static patchnum_t stbarbg;
@@ -375,12 +375,7 @@ static void ST_updateWidgets(void)
   w_ready.data = plyr->readyweapon;
 
   for (i=0;i<3;i++)
-    {
-      keyboxes[i] = plyr->cards[i] ? i : -1;
-
-      if (plyr->cards[i+3])
-        keyboxes[i] = keyboxes[i]==-1 || sts_traditional_keys ? i+3 : i+6;
-    }
+      keyboxes[i] = plyr->cards[i + 3] ? i + 3 : plyr->cards[i] ? i : -1;
 
   ST_updateFaceWidget();
 
@@ -544,7 +539,7 @@ static void ST_loadGraphics(boolean doload)
   R_SetPatchNum(&tallpercent,"STTPRCNT");
 
 
-  for (i=0;i<NUMCARDS+3;i++)
+  for (i=0;i<NUMCARDS;i++)
     {
       sprintf(namebuf, "STKEYS%d", i);
       R_SetPatchNum(&keys[i], namebuf);
