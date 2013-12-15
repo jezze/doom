@@ -233,8 +233,6 @@ struct setting defaults[] =
    def_int,ss_stat},
   {"ammo_yellow",   {&ammo_yellow}  , {50},0,100,
    def_int,ss_stat},
-  {"hud_active",    {&hud_active}, {2},0,2,
-   def_int,ss_none},
   {"hud_displayed", {&hud_displayed},  {0},0,1,
    def_bool,ss_none},
   {"hud_nosecrets", {&hud_nosecrets},  {0},0,1,

@@ -22,7 +22,6 @@ extern int hud_list_bgon;
 extern int hud_msg_lines;
 extern int hud_distributed;
 extern int hud_displayed;
-extern int hud_active;
 extern int hud_nosecrets;
 
 void HU_Init(void);

@@ -9,11 +9,9 @@
 #include "g_game.h"
 #include "r_main.h"
 
-int hud_active;
 int hud_displayed;
 int hud_nosecrets;
 int hud_distributed;
-int hud_graph_keys=1;
 
 const char *const mapnames[] =
 {
@@ -237,8 +235,9 @@ const char* player_names[] =
   HUSTR_PLRRED
 };
 
-
-int plyrcoltran[MAXPLAYERS]={CR_GREEN,CR_GRAY,CR_BROWN,CR_RED};
+int plyrcoltran[MAXPLAYERS] = {
+    CR_GREEN,CR_GRAY,CR_BROWN,CR_RED
+};
 
 char chat_char;
 static player_t*  plr;
@@ -275,7 +274,6 @@ static int        message_counter;
 extern boolean    automapactive;
 static boolean    headsupactive = false;
 
-
 int hudcolor_titl;
 int hudcolor_xyco;
 
@@ -285,7 +283,6 @@ int hud_msg_lines;
 
 int hudcolor_list;
 int hud_list_bgon;
-
 
 static char hud_coordstrx[32];
 static char hud_coordstry[32];
@@ -298,57 +295,12 @@ static char hud_keysstr[80];
 static char hud_gkeysstr[80];
 static char hud_monsecstr[80];
 
-const char* shiftxform;
-
-const char english_shiftxform[] =
-{
-  0,
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-  11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-  31,
-  ' ', '!', '"', '#', '$', '%', '&',
-  '"',
-  '(', ')', '*', '+',
-  '<',
-  '_',
-  '>',
-  '?',
-  ')',
-  '!',
-  '@',
-  '#',
-  '$',
-  '%',
-  '^',
-  '&',
-  '*',
-  '(',
-  ':',
-  ':',
-  '<',
-  '+',
-  '>', '?', '@',
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-  'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-  '[',
-  '!',
-  ']',
-  '"', '_',
-  '\'',
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-  'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-  '{', '|', '}', '~', 127
-};
-
 void HU_Init(void)
 {
 
   int   i;
   int   j;
   char  buffer[9];
-
-  shiftxform = english_shiftxform;
 
   j = HU_FONTSTART;
   for (i=0;i<HU_FONTSIZE;i++,j++)
@@ -527,8 +479,7 @@ void HU_Start(void)
     &message_list
   );
 
-
-  if (gamestate == GS_LEVEL) /* cph - stop SEGV here when not in level */
+  if (gamestate == GS_LEVEL)
   switch (gamemode)
   {
     case shareware:
@@ -681,7 +632,7 @@ void HU_Drawer(void)
 
   plr = &players[displayplayer];
 
-  if (hud_active>0 && hud_displayed && viewheight==SCREENHEIGHT)
+  if (hud_displayed && viewheight==SCREENHEIGHT)
   {
     doit = !(gametic&1);
     if (doit)
@@ -911,14 +862,12 @@ void HU_Drawer(void)
 
     HUlib_drawTextLine(&w_weapon, false);
 
-    if (doit && hud_active>1)
+    if (doit)
     {
       int k;
 
       hud_keysstr[4] = '\0';
 
-      if (hud_graph_keys)
-      {
         i=0;
         hud_gkeysstr[i] = '\0';
 
@@ -933,69 +882,8 @@ void HU_Drawer(void)
           hud_gkeysstr[i++] = ' ';
         }
         hud_gkeysstr[i]='\0';
-      }
-      else
-      {
-        i=4;
-        hud_keysstr[i] = '\0';
-
-        {
-
-          for (k=0;k<6;k++)
-          {
-
-            if (!plr->cards[k])
-              continue;
-
-
-            hud_keysstr[i++] = '\x1b';
-            switch(k)
-            {
-              case 0:
-                hud_keysstr[i++] = '0'+CR_BLUE;
-                hud_keysstr[i++] = 'B';
-                hud_keysstr[i++] = 'C';
-                hud_keysstr[i++] = ' ';
-                break;
-              case 1:
-                hud_keysstr[i++] = '0'+CR_GOLD;
-                hud_keysstr[i++] = 'Y';
-                hud_keysstr[i++] = 'C';
-                hud_keysstr[i++] = ' ';
-                break;
-              case 2:
-                hud_keysstr[i++] = '0'+CR_RED;
-                hud_keysstr[i++] = 'R';
-                hud_keysstr[i++] = 'C';
-                hud_keysstr[i++] = ' ';
-                break;
-              case 3:
-                hud_keysstr[i++] = '0'+CR_BLUE;
-                hud_keysstr[i++] = 'B';
-                hud_keysstr[i++] = 'S';
-                hud_keysstr[i++] = ' ';
-                break;
-            case 4:
-                hud_keysstr[i++] = '0'+CR_GOLD;
-                hud_keysstr[i++] = 'Y';
-                hud_keysstr[i++] = 'S';
-                hud_keysstr[i++] = ' ';
-                break;
-              case 5:
-                hud_keysstr[i++] = '0'+CR_RED;
-                hud_keysstr[i++] = 'R';
-                hud_keysstr[i++] = 'S';
-                hud_keysstr[i++] = ' ';
-                break;
-            }
-            hud_keysstr[i]='\0';
-          }
-        }
-      }
     }
 
-    if (hud_active>1)
-    {
       HUlib_clearTextLine(&w_keys);
       HUlib_clearTextLine(&w_gkeys);
 
@@ -1010,11 +898,10 @@ void HU_Drawer(void)
           HUlib_addCharToTextLine(&w_gkeys, *(s++));
 
         HUlib_drawTextLine(&w_gkeys, false);
-    }
 
     if (!hud_nosecrets)
     {
-      if (hud_active>1 && doit)
+      if (doit)
       {
 
         HUlib_clearTextLine(&w_monsec);
@@ -1034,8 +921,7 @@ void HU_Drawer(void)
           HUlib_addCharToTextLine(&w_monsec, *(s++));
       }
 
-      if (hud_active>1)
-        HUlib_drawTextLine(&w_monsec, false);
+      HUlib_drawTextLine(&w_monsec, false);
     }
   }
 
