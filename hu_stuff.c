@@ -209,10 +209,10 @@ const char *const mapnamest[] =
 #define key_shift KEYD_RSHIFT
 
 const char* player_names[] = {
-  HUSTR_PLRGREEN,
-  HUSTR_PLRINDIGO,
-  HUSTR_PLRBROWN,
-  HUSTR_PLRRED
+    HUSTR_PLRGREEN,
+    HUSTR_PLRINDIGO,
+    HUSTR_PLRBROWN,
+    HUSTR_PLRRED
 };
 
 int plyrcoltran[MAXPLAYERS] = {
@@ -227,43 +227,37 @@ patchnum_t hu_font2[HU_FONTSIZE];
 patchnum_t hu_fontk[HU_FONTSIZE];
 patchnum_t hu_msgbg[9];
 
-static hu_textline_t  w_title;
-static hu_stext_t     w_message;
-static hu_itext_t     w_chat;
-static hu_itext_t     w_inputbuffer[MAXPLAYERS];
-static hu_textline_t  w_coordx;
-static hu_textline_t  w_coordy;
-static hu_textline_t  w_coordz;
-static hu_textline_t  w_ammo;
-static hu_textline_t  w_health;
-static hu_textline_t  w_armor;
-static hu_textline_t  w_weapon;
-static hu_textline_t  w_keys;
-static hu_textline_t  w_gkeys;
-static hu_textline_t  w_monsec;
-static hu_mtext_t     w_rtext;
-
-static boolean    always_off = false;
-static char       chat_dest[MAXPLAYERS];
-boolean           chat_on;
-static boolean    message_on;
-static boolean    message_list;
-boolean           message_dontfuckwithme;
-static boolean    message_nottobefuckedwith;
-static int        message_counter;
-extern boolean    automapactive;
-static boolean    headsupactive = false;
-
+static hu_textline_t w_title;
+static hu_stext_t w_message;
+static hu_itext_t w_chat;
+static hu_itext_t w_inputbuffer[MAXPLAYERS];
+static hu_textline_t w_coordx;
+static hu_textline_t w_coordy;
+static hu_textline_t w_coordz;
+static hu_textline_t w_ammo;
+static hu_textline_t w_health;
+static hu_textline_t w_armor;
+static hu_textline_t w_weapon;
+static hu_textline_t w_keys;
+static hu_textline_t w_gkeys;
+static hu_textline_t w_monsec;
+static hu_mtext_t w_rtext;
+static boolean always_off = false;
+static char chat_dest[MAXPLAYERS];
+boolean chat_on;
+static boolean message_on;
+static boolean message_list;
+boolean message_dontfuckwithme;
+static boolean message_nottobefuckedwith;
+static int message_counter;
+static boolean headsupactive = false;
 int hudcolor_titl;
 int hudcolor_xyco;
-
 int hudcolor_mesg;
 int hudcolor_chat;
 int hud_msg_lines;
-
 int hudcolor_list;
 int hud_list_bgon;
-
 static char hud_coordstrx[32];
 static char hud_coordstry[32];
 static char hud_coordstrz[32];
@@ -278,628 +272,587 @@ static char hud_monsecstr[80];
 void HU_Init(void)
 {
 
-  int   i;
-  int   j;
-  char  buffer[9];
+    int i;
+    int j = HU_FONTSTART;
+    char buffer[9];
 
-  j = HU_FONTSTART;
-  for (i=0;i<HU_FONTSIZE;i++,j++)
-  {
-    if ('0'<=j && j<='9')
+    for (i = 0; i < HU_FONTSIZE; i++, j++)
     {
-      sprintf(buffer, "STCFN%.3d",j);
-      R_SetPatchNum(&hu_font[i], buffer);
-    }
-    else if ('A'<=j && j<='Z')
-    {
-      sprintf(buffer, "STCFN%.3d",j);
-      R_SetPatchNum(&hu_font[i], buffer);
-    }
-    else if (j=='-')
-    {
-      R_SetPatchNum(&hu_font[i], "STCFN045");
-    }
-    else if (j=='/')
-    {
-      R_SetPatchNum(&hu_font[i], "STCFN047");
-    }
-    else if (j==':')
-    {
-      R_SetPatchNum(&hu_font[i], "STCFN058");
-    }
-    else if (j=='[')
-    {
-      R_SetPatchNum(&hu_font[i], "STCFN091");
-    }
-    else if (j==']')
-    {
-      R_SetPatchNum(&hu_font[i], "STCFN093");
-    }
-    else
-      hu_font[i] = hu_font[0];
-  }
 
-  for (i=0; i<NUMCARDS; i++) {
-    sprintf(buffer, "STKEYS%d", i);
-    R_SetPatchNum(&hu_fontk[i], buffer);
-  }
+        if ('0' <= j && j <= '9')
+        {
+
+            sprintf(buffer, "STCFN%.3d", j);
+            R_SetPatchNum(&hu_font[i], buffer);
+
+        }
+
+        else if ('A' <= j && j <= 'Z')
+        {
+
+            sprintf(buffer, "STCFN%.3d",j);
+            R_SetPatchNum(&hu_font[i], buffer);
+
+        }
+
+        else if (j == '-')
+        {
+
+            R_SetPatchNum(&hu_font[i], "STCFN045");
+
+        }
+
+        else if (j == '/')
+        {
+
+            R_SetPatchNum(&hu_font[i], "STCFN047");
+
+        }
+
+        else if (j == ':')
+        {
+
+            R_SetPatchNum(&hu_font[i], "STCFN058");
+
+        }
+
+        else if (j == '[')
+        {
+
+            R_SetPatchNum(&hu_font[i], "STCFN091");
+
+        }
+
+        else if (j == ']')
+        {
+
+            R_SetPatchNum(&hu_font[i], "STCFN093");
+
+        }
+
+        else
+        {
+
+            hu_font[i] = hu_font[0];
+
+        }
+
+    }
+
+    for (i = 0; i < NUMCARDS; i++)
+    {
+
+        sprintf(buffer, "STKEYS%d", i);
+        R_SetPatchNum(&hu_fontk[i], buffer);
+
+    }
+
 }
 
 static void HU_Stop(void)
 {
-  headsupactive = false;
+
+    headsupactive = false;
+
 }
 
 void HU_Start(void)
 {
 
-  int   i;
-  const char* s; /* cph - const */
+    int i;
+    const char *s;
 
-  if (headsupactive)
-    HU_Stop();
+    if (headsupactive)
+        HU_Stop();
 
-  plr = &players[displayplayer];
-  message_on = false;
-  message_dontfuckwithme = false;
-  message_nottobefuckedwith = false;
-  chat_on = false;
+    plr = &players[displayplayer];
+    message_on = false;
+    message_dontfuckwithme = false;
+    message_nottobefuckedwith = false;
+    chat_on = false;
 
+    HUlib_initSText(&w_message, HU_MSGX, HU_MSGY, HU_MSGHEIGHT, hu_font, HU_FONTSTART, hudcolor_mesg, &message_on);
+    HUlib_initTextLine(&w_title, HU_TITLEX, HU_TITLEY, hu_font, HU_FONTSTART, hudcolor_titl);
+    HUlib_initTextLine(&w_health, HU_HEALTHX, HU_HEALTHY, hu_font2, HU_FONTSTART, CR_GREEN);
+    HUlib_initTextLine(&w_armor, HU_ARMORX, HU_ARMORY, hu_font2, HU_FONTSTART, CR_GREEN);
+    HUlib_initTextLine(&w_ammo, HU_AMMOX, HU_AMMOY, hu_font2, HU_FONTSTART, CR_GOLD);
+    HUlib_initTextLine(&w_weapon, HU_WEAPX, HU_WEAPY, hu_font2, HU_FONTSTART, CR_GRAY);
+    HUlib_initTextLine(&w_keys, HU_KEYSX, HU_KEYSY, hu_font2, HU_FONTSTART, CR_GRAY);
+    HUlib_initTextLine(&w_gkeys, HU_KEYSGX, HU_KEYSY, hu_fontk, HU_FONTSTART, CR_RED);
+    HUlib_initTextLine(&w_monsec, HU_MONSECX, HU_MONSECY, hu_font2, HU_FONTSTART, CR_GRAY);
 
+    if (hud_msg_lines > HU_MAXMESSAGES)
+        hud_msg_lines = HU_MAXMESSAGES;
 
-  HUlib_initSText
-  (
-    &w_message,
-    HU_MSGX,
-    HU_MSGY,
-    HU_MSGHEIGHT,
-    hu_font,
-    HU_FONTSTART,
-    hudcolor_mesg,
-    &message_on
-  );
+    message_list = hud_msg_lines > 1;
 
-  HUlib_initTextLine
-  (
-    &w_title,
-    HU_TITLEX,
-    HU_TITLEY,
-    hu_font,
-    HU_FONTSTART,
-    hudcolor_titl
-  );
+    HUlib_initMText(&w_rtext, 0, 0, 320, (hud_msg_lines + 2) * HU_REFRESHSPACING, hu_font, HU_FONTSTART, hudcolor_list, hu_msgbg, &message_list);
 
-  HUlib_initTextLine
-  (
-    &w_health,
-    HU_HEALTHX,
-    HU_HEALTHY,
-    hu_font2,
-    HU_FONTSTART,
-    CR_GREEN
-  );
+    if (gamestate == GS_LEVEL)
+    {
 
-  HUlib_initTextLine
-  (
-    &w_armor,
-    HU_ARMORX,
-    HU_ARMORY,
-    hu_font2,
-    HU_FONTSTART,
-    CR_GREEN
-  );
+        switch (gamemode)
+        {
 
-  HUlib_initTextLine
-  (
-    &w_ammo,
-    HU_AMMOX,
-    HU_AMMOY,
-    hu_font2,
-    HU_FONTSTART,
-    CR_GOLD
-  );
+        case shareware:
+        case registered:
+        case retail:
+            s = HU_TITLE;
 
-  HUlib_initTextLine
-  (
-    &w_weapon,
-    HU_WEAPX,
-    HU_WEAPY,
-    hu_font2,
-    HU_FONTSTART,
-    CR_GRAY
-  );
+            break;
 
-  HUlib_initTextLine
-  (
-    &w_keys,
-    HU_KEYSX,
-    HU_KEYSY,
-    hu_font2,
-    HU_FONTSTART,
-    CR_GRAY
-  );
+        case commercial:
+        default:
+            s = (gamemission == pack_tnt) ? HU_TITLET : (gamemission == pack_plut) ? HU_TITLEP : HU_TITLE2;
 
-  HUlib_initTextLine
-  (
-    &w_gkeys,
-    HU_KEYSGX,
-    HU_KEYSY,
-    hu_fontk,
-    HU_FONTSTART,
-    CR_RED
-  );
+            break;
 
-  HUlib_initTextLine
-  (
-    &w_monsec,
-    HU_MONSECX,
-    HU_MONSECY,
-    hu_font2,
-    HU_FONTSTART,
-    CR_GRAY
-  );
+        }
 
-  if (hud_msg_lines>HU_MAXMESSAGES)
-    hud_msg_lines=HU_MAXMESSAGES;
+    }
 
-  message_list = hud_msg_lines > 1;
+    else
+    {
 
-  HUlib_initMText
-  (
-    &w_rtext,
-    0,
-    0,
-    320,
+        s = "";
 
-    (hud_msg_lines+2)*HU_REFRESHSPACING,
-    hu_font,
-    HU_FONTSTART,
-    hudcolor_list,
-    hu_msgbg,
-    &message_list
-  );
+    }
 
-  if (gamestate == GS_LEVEL)
-  switch (gamemode)
-  {
-    case shareware:
-    case registered:
-    case retail:
-      s = HU_TITLE;
-      break;
+    while (*s)
+        HUlib_addCharToTextLine(&w_title, *(s++));
 
-    case commercial:
-    default:
-      s = (gamemission==pack_tnt)  ? HU_TITLET :
-          (gamemission==pack_plut) ? HU_TITLEP : HU_TITLE2;
-      break;
-  } else s = "";
-  while (*s)
-    HUlib_addCharToTextLine(&w_title, *(s++));
+    HUlib_initTextLine(&w_coordx, HU_COORDX, HU_COORDX_Y, hu_font, HU_FONTSTART, hudcolor_xyco);
+    HUlib_initTextLine(&w_coordy, HU_COORDX, HU_COORDY_Y, hu_font, HU_FONTSTART, hudcolor_xyco);
+    HUlib_initTextLine(&w_coordz, HU_COORDX, HU_COORDZ_Y, hu_font, HU_FONTSTART, hudcolor_xyco);
+    strcpy(hud_ammostr,"AMM ");
 
+    s = hud_ammostr;
 
+    while (*s)
+        HUlib_addCharToTextLine(&w_ammo, *(s++));
 
+    strcpy(hud_healthstr,"HEL ");
 
-  HUlib_initTextLine
-  (
-    &w_coordx,
-    HU_COORDX,
-    HU_COORDX_Y,
-    hu_font,
-    HU_FONTSTART,
-    hudcolor_xyco
-  );
-  HUlib_initTextLine
-  (
-    &w_coordy,
-    HU_COORDX,
-    HU_COORDY_Y,
-    hu_font,
-    HU_FONTSTART,
-    hudcolor_xyco
-  );
-  HUlib_initTextLine
-  (
-    &w_coordz,
-    HU_COORDX,
-    HU_COORDZ_Y,
-    hu_font,
-    HU_FONTSTART,
-    hudcolor_xyco
-  );
+    s = hud_healthstr;
 
-  strcpy(hud_ammostr,"AMM ");
-  s = hud_ammostr;
-  while (*s)
-    HUlib_addCharToTextLine(&w_ammo, *(s++));
+    while (*s)
+        HUlib_addCharToTextLine(&w_health, *(s++));
 
+    strcpy(hud_armorstr,"ARM ");
 
-  strcpy(hud_healthstr,"HEL ");
-  s = hud_healthstr;
-  while (*s)
-    HUlib_addCharToTextLine(&w_health, *(s++));
+    s = hud_armorstr;
 
+    while (*s)
+        HUlib_addCharToTextLine(&w_armor, *(s++));
 
-  strcpy(hud_armorstr,"ARM ");
-  s = hud_armorstr;
-  while (*s)
-    HUlib_addCharToTextLine(&w_armor, *(s++));
+    strcpy(hud_weapstr,"WEA ");
 
+    s = hud_weapstr;
 
-  strcpy(hud_weapstr,"WEA ");
-  s = hud_weapstr;
-  while (*s)
-    HUlib_addCharToTextLine(&w_weapon, *(s++));
+    while (*s)
+        HUlib_addCharToTextLine(&w_weapon, *(s++));
 
+    strcpy(hud_keysstr,"KEY ");
 
-  strcpy(hud_keysstr,"KEY ");
-  s = hud_keysstr;
-  while (*s)
-    HUlib_addCharToTextLine(&w_keys, *(s++));
+    s = hud_keysstr;
 
+    while (*s)
+        HUlib_addCharToTextLine(&w_keys, *(s++));
 
-  strcpy(hud_gkeysstr," ");
-  s = hud_gkeysstr;
-  while (*s)
-    HUlib_addCharToTextLine(&w_gkeys, *(s++));
+    strcpy(hud_gkeysstr," ");
 
+    s = hud_gkeysstr;
 
-  strcpy(hud_monsecstr,"STS ");
-  s = hud_monsecstr;
-  while (*s)
-    HUlib_addCharToTextLine(&w_monsec, *(s++));
+    while (*s)
+        HUlib_addCharToTextLine(&w_gkeys, *(s++));
 
+    strcpy(hud_monsecstr,"STS ");
 
-  HUlib_initIText
-  (
-    &w_chat,
-    HU_INPUTX,
-    HU_INPUTY,
-    hu_font,
-    HU_FONTSTART,
-    hudcolor_chat,
-    &chat_on
-  );
+    s = hud_monsecstr;
 
+    while (*s)
+        HUlib_addCharToTextLine(&w_monsec, *(s++));
 
-  for (i=0 ; i<MAXPLAYERS ; i++)
-    HUlib_initIText
-    (
-      &w_inputbuffer[i],
-      0,
-      0,
-      0,
-      0,
-      hudcolor_chat,
-      &always_off
-    );
+    HUlib_initIText(&w_chat, HU_INPUTX, HU_INPUTY, hu_font, HU_FONTSTART, hudcolor_chat, &chat_on);
 
-  headsupactive = true;
+    for (i = 0; i < MAXPLAYERS; i++)
+        HUlib_initIText(&w_inputbuffer[i], 0, 0, 0, 0, hudcolor_chat, &always_off);
+
+    headsupactive = true;
+
 }
 
 void HU_Drawer(void)
 {
-  char *s;
-  player_t *plr;
-  char ammostr[80];
-  char healthstr[80];
-  char armorstr[80];
-  int i,doit;
 
-  plr = &players[displayplayer];
+    char *s;
+    player_t *plr;
+    char ammostr[80];
+    char healthstr[80];
+    char armorstr[80];
+    int i, doit;
 
-  if (viewheight==SCREENHEIGHT)
-  {
-    doit = !(gametic&1);
-    if (doit)
+    plr = &players[displayplayer];
+
+    if (viewheight == SCREENHEIGHT)
     {
-      HUlib_clearTextLine(&w_ammo);
-      strcpy(hud_ammostr,"AMM ");
-      if (weaponinfo[plr->readyweapon].ammo == am_noammo)
-      {
-        strcat(hud_ammostr,"\x7f\x7f\x7f\x7f\x7f\x7f\x7f N/A");
-        w_ammo.cm = CR_GRAY;
-      }
-      else
-      {
-        int ammo = plr->ammo[weaponinfo[plr->readyweapon].ammo];
-        int fullammo = plr->maxammo[weaponinfo[plr->readyweapon].ammo];
-        int ammopct = (100*ammo)/fullammo;
-        int ammobars = ammopct/4;
 
-        sprintf(ammostr,"%d/%d",ammo,fullammo);
+        doit = !(gametic & 1);
 
-        for (i=4;i<4+ammobars/4;)
-          hud_ammostr[i++] = 123;
-
-        switch(ammobars%4)
-        {
-          case 0:
-            break;
-          case 1:
-            hud_ammostr[i++] = 126;
-            break;
-          case 2:
-            hud_ammostr[i++] = 125;
-            break;
-          case 3:
-            hud_ammostr[i++] = 124;
-            break;
-        }
-
-        while(i<4+7)
-          hud_ammostr[i++] = 127;
-        hud_ammostr[i] = '\0';
-        strcat(hud_ammostr,ammostr);
-
-
-        if (ammopct<ammo_red)
-          w_ammo.cm = CR_RED;
-        else if (ammopct<ammo_yellow)
-          w_ammo.cm = CR_GOLD;
-        else
-          w_ammo.cm = CR_GREEN;
-      }
-
-      s = hud_ammostr;
-      while (*s)
-        HUlib_addCharToTextLine(&w_ammo, *(s++));
-    }
-
-    HUlib_drawTextLine(&w_ammo, false);
-
-    if (doit)
-    {
-      int health = plr->health;
-      int healthbars = health>100? 25 : health/4;
-
-      HUlib_clearTextLine(&w_health);
-
-      sprintf(healthstr,"%3d",health);
-
-      for (i=4;i<4+healthbars/4;)
-        hud_healthstr[i++] = 123;
-
-      switch(healthbars%4)
-      {
-        case 0:
-          break;
-        case 1:
-          hud_healthstr[i++] = 126;
-          break;
-        case 2:
-          hud_healthstr[i++] = 125;
-          break;
-        case 3:
-          hud_healthstr[i++] = 124;
-          break;
-      }
-
-      while(i<4+7)
-        hud_healthstr[i++] = 127;
-      hud_healthstr[i] = '\0';
-      strcat(hud_healthstr,healthstr);
-
-
-      if (health<health_red)
-        w_health.cm = CR_RED;
-      else if (health<health_yellow)
-        w_health.cm = CR_GOLD;
-      else if (health<=health_green)
-        w_health.cm = CR_GREEN;
-      else
-        w_health.cm = CR_BLUE;
-
-
-      s = hud_healthstr;
-      while (*s)
-        HUlib_addCharToTextLine(&w_health, *(s++));
-    }
-
-    HUlib_drawTextLine(&w_health, false);
-
-
-    if (doit)
-    {
-      int armor = plr->armorpoints;
-      int armorbars = armor>100? 25 : armor/4;
-
-
-      HUlib_clearTextLine(&w_armor);
-
-      sprintf(armorstr,"%3d",armor);
-
-
-      for (i=4;i<4+armorbars/4;)
-        hud_armorstr[i++] = 123;
-
-      switch(armorbars%4)
-      {
-        case 0:
-          break;
-        case 1:
-          hud_armorstr[i++] = 126;
-          break;
-        case 2:
-          hud_armorstr[i++] = 125;
-          break;
-        case 3:
-          hud_armorstr[i++] = 124;
-          break;
-      }
-
-      while(i<4+7)
-        hud_armorstr[i++] = 127;
-      hud_armorstr[i] = '\0';
-      strcat(hud_armorstr,armorstr);
-
-
-      if (armor<armor_red)
-        w_armor.cm = CR_RED;
-      else if (armor<armor_yellow)
-        w_armor.cm = CR_GOLD;
-      else if (armor<=armor_green)
-        w_armor.cm = CR_GREEN;
-      else
-        w_armor.cm = CR_BLUE;
-
-
-      s = hud_armorstr;
-      while (*s)
-        HUlib_addCharToTextLine(&w_armor, *(s++));
-    }
-
-    HUlib_drawTextLine(&w_armor, false);
-
-
-    if (doit)
-    {
-      int w;
-      int ammo,fullammo,ammopct;
-
-
-      HUlib_clearTextLine(&w_weapon);
-      i=4; hud_weapstr[i] = '\0';
-
-
-      for (w=0;w<=wp_supershotgun;w++)
-      {
-        int ok=1;
-
-        switch (gamemode)
-        {
-          case shareware:
-            if (w>=wp_plasma && w!=wp_chainsaw)
-              ok=0;
-            break;
-          case retail:
-          case registered:
-            if (w>=wp_supershotgun)
-              ok=0;
-            break;
-          default:
-          case commercial:
-            break;
-        }
-        if (!ok) continue;
-
-        ammo = plr->ammo[weaponinfo[w].ammo];
-        fullammo = plr->maxammo[weaponinfo[w].ammo];
-        ammopct=0;
-
-
-        if (!plr->weaponowned[w])
-          continue;
-
-        ammopct = fullammo? (100*ammo)/fullammo : 100;
-
-
-        hud_weapstr[i++] = '\x1b';
-        if (weaponinfo[w].ammo==am_noammo)
-          hud_weapstr[i++] = plr->powers[pw_strength]? '0'+CR_GREEN : '0'+CR_GRAY;
-        else if (ammopct<ammo_red)
-          hud_weapstr[i++] = '0'+CR_RED;
-        else if (ammopct<ammo_yellow)
-          hud_weapstr[i++] = '0'+CR_GOLD;
-        else
-          hud_weapstr[i++] = '0'+CR_GREEN;
-        hud_weapstr[i++] = '0'+w+1;
-        hud_weapstr[i++] = ' ';
-        hud_weapstr[i] = '\0';
-      }
-
-
-      s = hud_weapstr;
-      while (*s)
-        HUlib_addCharToTextLine(&w_weapon, *(s++));
-    }
-
-    HUlib_drawTextLine(&w_weapon, false);
-
-    if (doit)
-    {
-      int k;
-
-      hud_keysstr[4] = '\0';
-
-        i=0;
-        hud_gkeysstr[i] = '\0';
-
-        for (k=0;k<6;k++)
+        if (doit)
         {
 
-          if (!plr->cards[k])
-            continue;
+            HUlib_clearTextLine(&w_ammo);
+            strcpy(hud_ammostr,"AMM ");
 
-          hud_gkeysstr[i++] = '!'+k;
-          hud_gkeysstr[i++] = ' ';
-          hud_gkeysstr[i++] = ' ';
+            if (weaponinfo[plr->readyweapon].ammo == am_noammo)
+            {
+
+                strcat(hud_ammostr,"\x7f\x7f\x7f\x7f\x7f\x7f\x7f N/A");
+                w_ammo.cm = CR_GRAY;
+
+            }
+
+            else
+            {
+
+                int ammo = plr->ammo[weaponinfo[plr->readyweapon].ammo];
+                int fullammo = plr->maxammo[weaponinfo[plr->readyweapon].ammo];
+                int ammopct = (100*ammo) / fullammo;
+                int ammobars = ammopct / 4;
+
+                sprintf(ammostr,"%d/%d",ammo,fullammo);
+
+                for (i = 4; i < 4 + ammobars / 4;)
+                    hud_ammostr[i++] = 123;
+
+                switch (ammobars % 4)
+                {
+
+                case 0:
+                    break;
+
+                case 1:
+                    hud_ammostr[i++] = 126;
+
+                    break;
+
+                case 2:
+                    hud_ammostr[i++] = 125;
+
+                    break;
+
+                case 3:
+                    hud_ammostr[i++] = 124;
+
+                    break;
+
+                }
+
+                while (i < 4 + 7)
+                    hud_ammostr[i++] = 127;
+
+                hud_ammostr[i] = '\0';
+
+                strcat(hud_ammostr, ammostr);
+
+                if (ammopct < ammo_red)
+                    w_ammo.cm = CR_RED;
+                else if (ammopct < ammo_yellow)
+                    w_ammo.cm = CR_GOLD;
+                else
+                    w_ammo.cm = CR_GREEN;
+
+            }
+
+            s = hud_ammostr;
+
+            while (*s)
+                HUlib_addCharToTextLine(&w_ammo, *(s++));
+
         }
-        hud_gkeysstr[i]='\0';
-    }
 
-      HUlib_clearTextLine(&w_keys);
-      HUlib_clearTextLine(&w_gkeys);
+        HUlib_drawTextLine(&w_ammo, false);
 
+        if (doit)
+        {
 
-      s = hud_keysstr;
-      while (*s)
-        HUlib_addCharToTextLine(&w_keys, *(s++));
-      HUlib_drawTextLine(&w_keys, false);
+            int health = plr->health;
+            int healthbars = health > 100 ? 25 : health / 4;
+
+            HUlib_clearTextLine(&w_health);
+            sprintf(healthstr, "%3d", health);
+
+            for (i = 4; i < 4 + healthbars / 4;)
+                hud_healthstr[i++] = 123;
+
+            switch(healthbars % 4)
+            {
+
+            case 0:
+                break;
+
+            case 1:
+                hud_healthstr[i++] = 126;
+
+                break;
+
+            case 2:
+                hud_healthstr[i++] = 125;
+
+                break;
+
+            case 3:
+                hud_healthstr[i++] = 124;
+
+                break;
+
+            }
+
+            while (i < 4 + 7)
+                hud_healthstr[i++] = 127;
+
+            hud_healthstr[i] = '\0';
+
+            strcat(hud_healthstr, healthstr);
+
+            if (health<health_red)
+                w_health.cm = CR_RED;
+            else if (health<health_yellow)
+                w_health.cm = CR_GOLD;
+            else if (health<=health_green)
+                w_health.cm = CR_GREEN;
+            else
+                w_health.cm = CR_BLUE;
+
+            s = hud_healthstr;
+
+            while (*s)
+                HUlib_addCharToTextLine(&w_health, *(s++));
+
+        }
+
+        HUlib_drawTextLine(&w_health, false);
+
+        if (doit)
+        {
+
+            int armor = plr->armorpoints;
+            int armorbars = armor >100 ? 25 : armor / 4;
+
+            HUlib_clearTextLine(&w_armor);
+            sprintf(armorstr,"%3d",armor);
+
+            for (i = 4; i < 4 + armorbars / 4;)
+                hud_armorstr[i++] = 123;
+
+            switch (armorbars % 4)
+            {
+
+            case 0:
+                break;
+
+            case 1:
+                hud_armorstr[i++] = 126;
+
+                break;
+
+            case 2:
+                hud_armorstr[i++] = 125;
+
+                break;
+
+            case 3:
+                hud_armorstr[i++] = 124;
+
+                break;
+
+            }
+
+            while (i < 4 + 7)
+                hud_armorstr[i++] = 127;
+
+            hud_armorstr[i] = '\0';
+
+            strcat(hud_armorstr,armorstr);
+
+            if (armor < armor_red)
+                w_armor.cm = CR_RED;
+            else if (armor < armor_yellow)
+                w_armor.cm = CR_GOLD;
+            else if (armor <= armor_green)
+                w_armor.cm = CR_GREEN;
+            else
+                w_armor.cm = CR_BLUE;
+
+            s = hud_armorstr;
+
+            while (*s)
+                HUlib_addCharToTextLine(&w_armor, *(s++));
+
+        }
+
+        HUlib_drawTextLine(&w_armor, false);
+
+        if (doit)
+        {
+
+            int w;
+            int ammo, fullammo, ammopct;
+
+            HUlib_clearTextLine(&w_weapon);
+            i = 4;
+            hud_weapstr[i] = '\0';
+
+            for (w = 0; w <= wp_supershotgun; w++)
+            {
+
+                int ok = 1;
+
+                switch (gamemode)
+                {
+
+                case shareware:
+                    if (w >= wp_plasma && w != wp_chainsaw)
+                        ok = 0;
+
+                    break;
+
+                case retail:
+                case registered:
+                    if (w >= wp_supershotgun)
+                        ok = 0;
+
+                    break;
+
+                default:
+                case commercial:
+                    break;
+
+                }
+
+                if (!ok)
+                    continue;
+
+                ammo = plr->ammo[weaponinfo[w].ammo];
+                fullammo = plr->maxammo[weaponinfo[w].ammo];
+                ammopct = 0;
+
+                if (!plr->weaponowned[w])
+                    continue;
+
+                ammopct = fullammo ? (100 * ammo) / fullammo : 100;
+                hud_weapstr[i++] = '\x1b';
+
+                if (weaponinfo[w].ammo == am_noammo)
+                    hud_weapstr[i++] = plr->powers[pw_strength] ? '0' + CR_GREEN : '0' + CR_GRAY;
+                else if (ammopct < ammo_red)
+                    hud_weapstr[i++] = '0' + CR_RED;
+                else if (ammopct<ammo_yellow)
+                    hud_weapstr[i++] = '0' + CR_GOLD;
+                else
+                    hud_weapstr[i++] = '0' + CR_GREEN;
+
+                hud_weapstr[i++] = '0' + w + 1;
+                hud_weapstr[i++] = ' ';
+                hud_weapstr[i] = '\0';
+
+            }
+
+            s = hud_weapstr;
+
+            while (*s)
+                HUlib_addCharToTextLine(&w_weapon, *(s++));
+
+        }
+
+        HUlib_drawTextLine(&w_weapon, false);
+
+        if (doit)
+        {
+
+            int k;
+
+            hud_keysstr[4] = '\0';
+            i = 0;
+            hud_gkeysstr[i] = '\0';
+
+            for (k = 0; k < 6; k++)
+            {
+
+                if (!plr->cards[k])
+                    continue;
+
+                hud_gkeysstr[i++] = '!' + k;
+                hud_gkeysstr[i++] = ' ';
+                hud_gkeysstr[i++] = ' ';
+
+            }
+
+            hud_gkeysstr[i]='\0';
+
+        }
+
+        HUlib_clearTextLine(&w_keys);
+        HUlib_clearTextLine(&w_gkeys);
+
+        s = hud_keysstr;
+
+        while (*s)
+            HUlib_addCharToTextLine(&w_keys, *(s++));
+
+        HUlib_drawTextLine(&w_keys, false);
 
         s = hud_gkeysstr;
+
         while (*s)
-          HUlib_addCharToTextLine(&w_gkeys, *(s++));
+            HUlib_addCharToTextLine(&w_gkeys, *(s++));
 
         HUlib_drawTextLine(&w_gkeys, false);
 
-      if (doit)
-      {
+        if (doit)
+        {
 
-        HUlib_clearTextLine(&w_monsec);
-        sprintf(hud_monsecstr, "STS \x1b\x36K \x1b\x33%d \x1b\x36M \x1b\x33%d \x1b\x37I \x1b\x33%d/%d \x1b\x35S \x1b\x33%d/%d", plr->killcount,totallive, plr->itemcount,totalitems, plr->secretcount,totalsecret);
+            HUlib_clearTextLine(&w_monsec);
+            sprintf(hud_monsecstr, "STS \x1b\x36K \x1b\x33%d \x1b\x36M \x1b\x33%d \x1b\x37I \x1b\x33%d/%d \x1b\x35S \x1b\x33%d/%d", plr->killcount, totallive, plr->itemcount, totalitems, plr->secretcount, totalsecret);
 
-        s = hud_monsecstr;
-        while (*s)
-          HUlib_addCharToTextLine(&w_monsec, *(s++));
-      }
+            s = hud_monsecstr;
 
-      HUlib_drawTextLine(&w_monsec, false);
-  }
+            while (*s)
+                HUlib_addCharToTextLine(&w_monsec, *(s++));
 
+        }
 
-  HU_Erase();
+        HUlib_drawTextLine(&w_monsec, false);
 
+    }
 
+    HU_Erase();
 
-  if (hud_msg_lines<=1)
-    message_list = false;
+    if (hud_msg_lines <= 1)
+        message_list = false;
 
+    if (!message_list)
+        HUlib_drawSText(&w_message);
 
-  if (!message_list)
-    HUlib_drawSText(&w_message);
+    if (hud_msg_lines > 1 && message_list)
+        HUlib_drawMText(&w_rtext);
 
+    HUlib_drawIText(&w_chat);
 
-  if (hud_msg_lines>1 && message_list)
-    HUlib_drawMText(&w_rtext);
-
-
-  HUlib_drawIText(&w_chat);
 }
 
 void HU_Erase(void)
 {
 
-  if (!message_list)
-    HUlib_eraseSText(&w_message);
-  else
-    HUlib_eraseMText(&w_rtext);
+    if (!message_list)
+        HUlib_eraseSText(&w_message);
+    else
+        HUlib_eraseMText(&w_rtext);
 
+    HUlib_eraseIText(&w_chat);
+    HUlib_eraseTextLine(&w_title);
 
-  HUlib_eraseIText(&w_chat);
-
-
-  HUlib_eraseTextLine(&w_title);
 }
 
 static boolean bsdown;
@@ -907,37 +860,39 @@ static int bscounter;
 
 void HU_Ticker(void)
 {
-  int i, rc;
-  char c;
 
+    int i, rc;
+    char c;
 
-  if (message_counter && !--message_counter)
-  {
-    message_on = false;
-    message_nottobefuckedwith = false;
-  }
-  if (bsdown && bscounter++ > 9) {
-    HUlib_keyInIText(&w_chat, (unsigned char)key_backspace);
-    bscounter = 8;
-  }
+    if (message_counter && !--message_counter)
+    {
+
+        message_on = false;
+        message_nottobefuckedwith = false;
+
+    }
+
+    if (bsdown && bscounter++ > 9)
+    {
+
+        HUlib_keyInIText(&w_chat, (unsigned char)key_backspace);
+
+        bscounter = 8;
+
+    }
 
     if ((plr->message && !message_nottobefuckedwith) || (plr->message && message_dontfuckwithme))
     {
 
-      HUlib_addMessageToSText(&w_message, 0, plr->message);
+        HUlib_addMessageToSText(&w_message, 0, plr->message);
+        HUlib_addMessageToMText(&w_rtext, 0, plr->message);
 
-      HUlib_addMessageToMText(&w_rtext, 0, plr->message);
+        plr->message = 0;
+        message_on = true;
+        message_counter = HU_MSGTIMEOUT;
+        message_nottobefuckedwith = message_dontfuckwithme;
+        message_dontfuckwithme = 0;
 
-
-      plr->message = 0;
-
-      message_on = true;
-
-      message_counter = HU_MSGTIMEOUT;
-
-      message_nottobefuckedwith = message_dontfuckwithme;
-
-      message_dontfuckwithme = 0;
     }
 
 }
@@ -945,78 +900,111 @@ void HU_Ticker(void)
 #define QUEUESIZE   128
 
 static char chatchars[QUEUESIZE];
-static int  head = 0;
-static int  tail = 0;
+static int head = 0;
+static int tail = 0;
 
 char HU_dequeueChatChar(void)
 {
-  char c;
 
-  if (head != tail)
-  {
-    c = chatchars[tail];
-    tail = (tail + 1) & (QUEUESIZE-1);
-  }
-  else
-  {
-    c = 0;
-  }
-  return c;
+    char c;
+
+    if (head != tail)
+    {
+
+        c = chatchars[tail];
+        tail = (tail + 1) & (QUEUESIZE - 1);
+
+    }
+
+    else
+    {
+
+        c = 0;
+
+    }
+
+    return c;
+
 }
 
 boolean HU_Responder(event_t *ev)
 {
 
-  static char   lastmessage[HU_MAXLINELENGTH+1];
-  boolean   eatkey = false;
-  static boolean  shiftdown = false;
-  static boolean  altdown = false;
-  unsigned char   c;
-  int     i;
-  int     numplayers;
+    static char lastmessage[HU_MAXLINELENGTH + 1];
+    boolean eatkey = false;
+    static boolean shiftdown = false;
+    static boolean altdown = false;
+    unsigned char c;
+    int i;
+    int numplayers;
 
-  static int    num_nobrainers = 0;
+    static int num_nobrainers = 0;
 
-  numplayers = 0;
-  for (i=0 ; i<MAXPLAYERS ; i++)
-    numplayers += playeringame[i];
+    numplayers = 0;
 
-  if (ev->data1 == key_shift)
-  {
-    shiftdown = ev->type == ev_keydown;
-    return false;
-  }
-  else if (ev->data1 == key_alt)
-  {
-    altdown = ev->type == ev_keydown;
-    return false;
-  }
-  else if (ev->data1 == key_backspace)
-  {
-    bsdown = ev->type == ev_keydown;
-    bscounter = 0;
-  }
+    for (i = 0; i < MAXPLAYERS; i++)
+        numplayers += playeringame[i];
 
-  if (ev->type != ev_keydown)
-    return false;
-
-  if (!chat_on)
-  {
-    if (ev->data1 == key_enter)
+    if (ev->data1 == key_shift)
     {
-      if (hud_msg_lines>1)
-      {
-        if (message_list) HU_Erase();
-        message_list = !message_list;
-      }
-      if (!message_list)
-      {
-        message_on = true;
-        message_counter = HU_MSGTIMEOUT;
-      }
-      eatkey = true;
+
+        shiftdown = ev->type == ev_keydown;
+
+        return false;
+
     }
 
-  }
-  return eatkey;
+    else if (ev->data1 == key_alt)
+    {
+
+        altdown = ev->type == ev_keydown;
+
+        return false;
+
+    }
+
+    else if (ev->data1 == key_backspace)
+    {
+
+        bsdown = ev->type == ev_keydown;
+        bscounter = 0;
+
+    }
+
+    if (ev->type != ev_keydown)
+        return false;
+
+    if (!chat_on)
+    {
+
+        if (ev->data1 == key_enter)
+        {
+
+            if (hud_msg_lines>1)
+            {
+
+                if (message_list)
+                    HU_Erase();
+
+                message_list = !message_list;
+
+            }
+
+            if (!message_list)
+            {
+
+                message_on = true;
+                message_counter = HU_MSGTIMEOUT;
+
+            }
+
+            eatkey = true;
+
+        }
+
+    }
+
+    return eatkey;
+
 }
+
