@@ -20,9 +20,6 @@ extern int hudcolor_chat;
 extern int hudcolor_list;
 extern int hud_list_bgon;
 extern int hud_msg_lines;
-extern int hud_distributed;
-extern int hud_displayed;
-extern int hud_nosecrets;
 
 void HU_Init(void);
 void HU_Start(void);
@@ -31,6 +28,5 @@ void HU_Ticker(void);
 void HU_Drawer(void);
 char HU_dequeueChatChar(void);
 void HU_Erase(void);
-void HU_MoveHud(void);
 
 #endif

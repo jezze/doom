@@ -9,10 +9,6 @@
 #include "g_game.h"
 #include "r_main.h"
 
-int hud_displayed;
-int hud_nosecrets;
-int hud_distributed;
-
 const char *const mapnames[] =
 {
   HUSTR_E1M1,
@@ -205,19 +201,6 @@ const char *const mapnamest[] =
 #define HU_HUDY_LR (200-2*HU_GAPY-1)
 #define HU_HUDX_UR (320-96)
 #define HU_HUDY_UR 2
-#define HU_MONSECX_D (HU_HUDX_LL)
-#define HU_MONSECY_D (HU_HUDY_LL+0*HU_GAPY)
-#define HU_KEYSX_D   (HU_HUDX_LL)
-#define HU_KEYSGX_D  (HU_HUDX_LL+4*hu_font2['A'-HU_FONTSTART].width)
-#define HU_KEYSY_D   (HU_HUDY_LL+1*HU_GAPY)
-#define HU_WEAPX_D   (HU_HUDX_LR)
-#define HU_WEAPY_D   (HU_HUDY_LR+0*HU_GAPY)
-#define HU_AMMOX_D   (HU_HUDX_LR)
-#define HU_AMMOY_D   (HU_HUDY_LR+1*HU_GAPY)
-#define HU_HEALTHX_D (HU_HUDX_UR)
-#define HU_HEALTHY_D (HU_HUDY_UR+0*HU_GAPY)
-#define HU_ARMORX_D  (HU_HUDX_UR)
-#define HU_ARMORY_D  (HU_HUDY_UR+1*HU_GAPY)
 #define HU_INPUTX HU_MSGX
 #define HU_INPUTY (HU_MSGY + HU_MSGHEIGHT*(hu_font[0].height) +1)
 #define HU_INPUTWIDTH 64
@@ -225,10 +208,7 @@ const char *const mapnamest[] =
 #define key_alt KEYD_RALT
 #define key_shift KEYD_RSHIFT
 
-const char* player_names[] =
-
-
-{
+const char* player_names[] = {
   HUSTR_PLRGREEN,
   HUSTR_PLRINDIGO,
   HUSTR_PLRBROWN,
@@ -392,8 +372,8 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_health,
-    hud_distributed? HU_HEALTHX_D : HU_HEALTHX,
-    hud_distributed? HU_HEALTHY_D : HU_HEALTHY,
+    HU_HEALTHX,
+    HU_HEALTHY,
     hu_font2,
     HU_FONTSTART,
     CR_GREEN
@@ -402,8 +382,8 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_armor,
-    hud_distributed? HU_ARMORX_D : HU_ARMORX,
-    hud_distributed? HU_ARMORY_D : HU_ARMORY,
+    HU_ARMORX,
+    HU_ARMORY,
     hu_font2,
     HU_FONTSTART,
     CR_GREEN
@@ -412,8 +392,8 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_ammo,
-    hud_distributed? HU_AMMOX_D : HU_AMMOX,
-    hud_distributed? HU_AMMOY_D : HU_AMMOY,
+    HU_AMMOX,
+    HU_AMMOY,
     hu_font2,
     HU_FONTSTART,
     CR_GOLD
@@ -422,8 +402,8 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_weapon,
-    hud_distributed? HU_WEAPX_D : HU_WEAPX,
-    hud_distributed? HU_WEAPY_D : HU_WEAPY,
+    HU_WEAPX,
+    HU_WEAPY,
     hu_font2,
     HU_FONTSTART,
     CR_GRAY
@@ -432,8 +412,8 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_keys,
-    hud_distributed? HU_KEYSX_D : HU_KEYSX,
-    hud_distributed? HU_KEYSY_D : HU_KEYSY,
+    HU_KEYSX,
+    HU_KEYSY,
     hu_font2,
     HU_FONTSTART,
     CR_GRAY
@@ -442,8 +422,8 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_gkeys,
-    hud_distributed? HU_KEYSGX_D : HU_KEYSGX,
-    hud_distributed? HU_KEYSY_D : HU_KEYSY,
+    HU_KEYSGX,
+    HU_KEYSY,
     hu_fontk,
     HU_FONTSTART,
     CR_RED
@@ -452,8 +432,8 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_monsec,
-    hud_distributed? HU_MONSECX_D : HU_MONSECX,
-    hud_distributed? HU_MONSECY_D : HU_MONSECY,
+    HU_MONSECX,
+    HU_MONSECY,
     hu_font2,
     HU_FONTSTART,
     CR_GRAY
@@ -597,30 +577,6 @@ void HU_Start(void)
   headsupactive = true;
 }
 
-void HU_MoveHud(void)
-{
-  static int ohud_distributed=-1;
-
-  if (hud_distributed!=ohud_distributed)
-  {
-    w_ammo.x =    hud_distributed? HU_AMMOX_D   : HU_AMMOX;
-    w_ammo.y =    hud_distributed? HU_AMMOY_D   : HU_AMMOY;
-    w_weapon.x =  hud_distributed? HU_WEAPX_D   : HU_WEAPX;
-    w_weapon.y =  hud_distributed? HU_WEAPY_D   : HU_WEAPY;
-    w_keys.x =    hud_distributed? HU_KEYSX_D   : HU_KEYSX;
-    w_keys.y =    hud_distributed? HU_KEYSY_D   : HU_KEYSY;
-    w_gkeys.x =   hud_distributed? HU_KEYSGX_D  : HU_KEYSGX;
-    w_gkeys.y =   hud_distributed? HU_KEYSY_D   : HU_KEYSY;
-    w_monsec.x =  hud_distributed? HU_MONSECX_D : HU_MONSECX;
-    w_monsec.y =  hud_distributed? HU_MONSECY_D : HU_MONSECY;
-    w_health.x =  hud_distributed? HU_HEALTHX_D : HU_HEALTHX;
-    w_health.y =  hud_distributed? HU_HEALTHY_D : HU_HEALTHY;
-    w_armor.x =   hud_distributed? HU_ARMORX_D  : HU_ARMORX;
-    w_armor.y =   hud_distributed? HU_ARMORY_D  : HU_ARMORY;
-  }
-  ohud_distributed = hud_distributed;
-}
-
 void HU_Drawer(void)
 {
   char *s;
@@ -632,13 +588,11 @@ void HU_Drawer(void)
 
   plr = &players[displayplayer];
 
-  if (hud_displayed && viewheight==SCREENHEIGHT)
+  if (viewheight==SCREENHEIGHT)
   {
     doit = !(gametic&1);
     if (doit)
     {
-      HU_MoveHud();
-
       HUlib_clearTextLine(&w_ammo);
       strcpy(hud_ammostr,"AMM ");
       if (weaponinfo[plr->readyweapon].ammo == am_noammo)
@@ -899,22 +853,11 @@ void HU_Drawer(void)
 
         HUlib_drawTextLine(&w_gkeys, false);
 
-    if (!hud_nosecrets)
-    {
       if (doit)
       {
 
         HUlib_clearTextLine(&w_monsec);
-
-
-        sprintf
-        (
-          hud_monsecstr,
-          "STS \x1b\x36K \x1b\x33%d \x1b\x36M \x1b\x33%d \x1b\x37I \x1b\x33%d/%d \x1b\x35S \x1b\x33%d/%d",
-          plr->killcount,totallive,
-          plr->itemcount,totalitems,
-          plr->secretcount,totalsecret
-        );
+        sprintf(hud_monsecstr, "STS \x1b\x36K \x1b\x33%d \x1b\x36M \x1b\x33%d \x1b\x37I \x1b\x33%d/%d \x1b\x35S \x1b\x33%d/%d", plr->killcount,totallive, plr->itemcount,totalitems, plr->secretcount,totalsecret);
 
         s = hud_monsecstr;
         while (*s)
@@ -922,7 +865,6 @@ void HU_Drawer(void)
       }
 
       HUlib_drawTextLine(&w_monsec, false);
-    }
   }
 
 
