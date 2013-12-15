@@ -298,7 +298,7 @@ void I_FinishUpdate(void)
         for (; h > 0; h--)
         {
 
-            memcpy(dest, src, SCREENWIDTH * V_GetPixelDepth());
+            memcpy(dest, src, SCREENWIDTH);
 
             dest += screen->pitch;
             src += screens[0].byte_pitch;
@@ -355,9 +355,9 @@ void I_CalculateRes(unsigned int width, unsigned int height)
     SCREENHEIGHT = height;
 
     if (!(SCREENWIDTH % 1024))
-        SCREENPITCH = SCREENWIDTH * V_GetPixelDepth() + 32;
+        SCREENPITCH = SCREENWIDTH + 32;
     else
-        SCREENPITCH = SCREENWIDTH * V_GetPixelDepth();
+        SCREENPITCH = SCREENWIDTH;
 
 }
 
@@ -374,16 +374,12 @@ void I_SetRes(void)
         screens[i].width = SCREENWIDTH;
         screens[i].height = SCREENHEIGHT;
         screens[i].byte_pitch = SCREENPITCH;
-        screens[i].short_pitch = SCREENPITCH / V_GetModePixelDepth(VID_MODE16);
-        screens[i].int_pitch = SCREENPITCH / V_GetModePixelDepth(VID_MODE32);
 
     }
 
     screens[4].width = SCREENWIDTH;
     screens[4].height = (ST_SCALED_HEIGHT + 1);
     screens[4].byte_pitch = SCREENPITCH;
-    screens[4].short_pitch = SCREENPITCH / V_GetModePixelDepth(VID_MODE16);
-    screens[4].int_pitch = SCREENPITCH / V_GetModePixelDepth(VID_MODE32);
 
     lprintf(LO_INFO,"I_SetRes: Using resolution %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
 
@@ -413,12 +409,11 @@ void I_UpdateVideoMode(void)
 
     lprintf(LO_INFO, "I_UpdateVideoMode: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
 
-    V_InitMode(VID_MODE8);
-    V_DestroyUnusedTrueColorPalettes();
+    V_InitMode();
     V_FreeScreens();
     I_SetRes();
 
-    screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, V_GetNumPixelBits(), SDL_DOUBLEBUF | SDL_HWPALETTE | SDL_FULLSCREEN);
+    screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_DOUBLEBUF | SDL_HWPALETTE | SDL_FULLSCREEN);
 
     if (screen == NULL)
         I_Error("Couldn't set %dx%d video mode [%s]", SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
@@ -433,8 +428,6 @@ void I_UpdateVideoMode(void)
         screens[0].not_on_heap = true;
         screens[0].data = (unsigned char *)(screen->pixels);
         screens[0].byte_pitch = screen->pitch;
-        screens[0].short_pitch = screen->pitch / V_GetModePixelDepth(VID_MODE16);
-        screens[0].int_pitch = screen->pitch / V_GetModePixelDepth(VID_MODE32);
     }
 
     else

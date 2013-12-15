@@ -1,20 +1,6 @@
-#if (R_DRAWSPAN_PIPELINE_BITS == 8)
 #define SCREENTYPE byte
 #define TOPLEFT byte_topleft
 #define PITCH byte_pitch
-#elif (R_DRAWSPAN_PIPELINE_BITS == 15)
-#define SCREENTYPE unsigned short
-#define TOPLEFT short_topleft
-#define PITCH short_pitch
-#elif (R_DRAWSPAN_PIPELINE_BITS == 16)
-#define SCREENTYPE unsigned short
-#define TOPLEFT short_topleft
-#define PITCH short_pitch
-#elif (R_DRAWSPAN_PIPELINE_BITS == 32)
-#define SCREENTYPE unsigned int
-#define TOPLEFT int_topleft
-#define PITCH int_pitch
-#endif
 
 #if (R_DRAWSPAN_PIPELINE & RDC_DITHERZ)  
 #define GETDEPTHMAP(col) dither_colormaps[filter_getDitheredPixelLevel(x1, y, fracz)][(col)]
@@ -22,19 +8,8 @@
 #define GETDEPTHMAP(col) colormap[(col)]
 #endif
 
-#if (R_DRAWSPAN_PIPELINE_BITS == 8)
 #define GETCOL_POINT(col) GETDEPTHMAP(col)
 #define GETCOL_LINEAR(col) GETDEPTHMAP(col)
-#elif (R_DRAWSPAN_PIPELINE_BITS == 15)
-#define GETCOL_POINT(col) VID_PAL15(GETDEPTHMAP(col), VID_COLORWEIGHTMASK)
-#define GETCOL_LINEAR(col) filter_getFilteredForSpan15(GETDEPTHMAP, xfrac, yfrac)
-#elif (R_DRAWSPAN_PIPELINE_BITS == 16)
-#define GETCOL_POINT(col) VID_PAL16(GETDEPTHMAP(col), VID_COLORWEIGHTMASK)
-#define GETCOL_LINEAR(col) filter_getFilteredForSpan16(GETDEPTHMAP, xfrac, yfrac)
-#elif (R_DRAWSPAN_PIPELINE_BITS == 32)
-#define GETCOL_POINT(col) VID_PAL32(GETDEPTHMAP(col), VID_COLORWEIGHTMASK)
-#define GETCOL_LINEAR(col) filter_getFilteredForSpan32(GETDEPTHMAP, xfrac, yfrac)
-#endif
 
 #if (R_DRAWSPAN_PIPELINE & RDC_BILINEAR)
 #define GETCOL(col) GETCOL_LINEAR(col)
@@ -78,23 +53,6 @@ static void R_DRAWSPAN_FUNCNAME(draw_span_vars_t *dsvars)
         while (count)
         {
 
-#if ((R_DRAWSPAN_PIPELINE_BITS != 8) && (R_DRAWSPAN_PIPELINE & RDC_BILINEAR))
-            *dest++ = GETCOL(0);
-            xfrac += xstep;
-            yfrac += ystep;
-            count--;
-#if (R_DRAWSPAN_PIPELINE & RDC_DITHERZ)
-            x1--;
-#endif
-#elif (R_DRAWSPAN_PIPELINE & RDC_ROUNDED)
-            *dest++ = GETCOL(filter_getRoundedForSpan(xfrac, yfrac));
-            xfrac += xstep;
-            yfrac += ystep;
-            count--;
-#if (R_DRAWSPAN_PIPELINE & RDC_DITHERZ)
-            x1--;
-#endif
-#else
 #if (R_DRAWSPAN_PIPELINE & RDC_BILINEAR)
             const fixed_t xtemp = ((xfrac >> 16) + (filter_getDitheredPixelLevel(x1, y, ((xfrac>>8)&0xff)))) & 63;
             const fixed_t ytemp = ((yfrac >> 10) + 64*(filter_getDitheredPixelLevel(x1, y, ((yfrac>>8)&0xff)))) & 4032;
@@ -112,13 +70,11 @@ static void R_DRAWSPAN_FUNCNAME(draw_span_vars_t *dsvars)
             x1--;
 #endif
 
-#endif
         }
 
     }
 
 }
-
 #undef GETDEPTHMAP
 #undef GETCOL_LINEAR
 #undef GETCOL_POINT
@@ -126,7 +82,5 @@ static void R_DRAWSPAN_FUNCNAME(draw_span_vars_t *dsvars)
 #undef PITCH
 #undef TOPLEFT
 #undef SCREENTYPE
-
-#undef R_DRAWSPAN_PIPELINE_BITS
 #undef R_DRAWSPAN_PIPELINE
 #undef R_DRAWSPAN_FUNCNAME

@@ -441,11 +441,6 @@ static void ST_doPaletteStuff(void)
 
   if (palette != st_palette) {
     V_SetPalette(st_palette = palette);
-
-
-
-    if (V_GetMode() == VID_MODE15 || V_GetMode() == VID_MODE16 || V_GetMode() == VID_MODE32)
-      st_firsttime = true;
   }
 }
 

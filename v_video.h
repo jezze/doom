@@ -58,9 +58,6 @@ typedef enum
 {
 
     VID_MODE8,
-    VID_MODE15,
-    VID_MODE16,
-    VID_MODE32,
     VID_MODEMAX
 
 } video_mode_t;
@@ -72,19 +69,7 @@ extern int usegamma;
 #define VID_COLORWEIGHTMASK (VID_NUMCOLORWEIGHTS-1)
 #define VID_COLORWEIGHTBITS 6
 
-extern unsigned short *V_Palette15;
-extern unsigned short *V_Palette16;
-extern unsigned int *V_Palette32;
-
-#define VID_PAL15(color, weight) V_Palette15[ (color)*VID_NUMCOLORWEIGHTS + (weight) ]
-#define VID_PAL16(color, weight) V_Palette16[ (color)*VID_NUMCOLORWEIGHTS + (weight) ]
-#define VID_PAL32(color, weight) V_Palette32[ (color)*VID_NUMCOLORWEIGHTS + (weight) ]
-
-void V_InitMode(video_mode_t mode);
-video_mode_t V_GetMode(void);
-int V_GetModePixelDepth(video_mode_t mode);
-int V_GetNumPixelBits(void);
-int V_GetPixelDepth(void);
+void V_InitMode();
 void V_Init(void);
 
 typedef void (*V_CopyRect_f)(int srcx, int srcy, int srcscrn, int width, int height, int destx, int desty, int destscrn, enum patch_translation_e flags);
@@ -102,13 +87,9 @@ extern V_DrawNumPatch_f V_DrawNumPatch;
 
 typedef void (*V_DrawBackground_f)(const char* flatname, int scrn);
 extern V_DrawBackground_f V_DrawBackground;
-
-void V_DestroyUnusedTrueColorPalettes(void);
 void V_SetPalette(int pal);
-
 typedef void (*V_PlotPixel_f)(int,int,int,byte);
 extern V_PlotPixel_f V_PlotPixel;
-
 typedef void (*V_DrawLine_f)(fline_t* fl, int color);
 extern V_DrawLine_f V_DrawLine;
 void V_AllocScreen(screeninfo_t *scrn);

@@ -1,46 +1,15 @@
-#if (R_DRAWCOLUMN_PIPELINE_BITS == 8)
 #define SCREENTYPE byte
 #define TOPLEFT byte_topleft
 #define PITCH byte_pitch
 #define TEMPBUF byte_tempbuf
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 15)
-#define SCREENTYPE unsigned short
-#define TOPLEFT short_topleft
-#define PITCH short_pitch
-#define TEMPBUF short_tempbuf
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 16)
-#define SCREENTYPE unsigned short
-#define TOPLEFT short_topleft
-#define PITCH short_pitch
-#define TEMPBUF short_tempbuf
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 32)
-#define SCREENTYPE unsigned int
-#define TOPLEFT int_topleft
-#define PITCH int_pitch
-#define TEMPBUF int_tempbuf
-#endif
 
 #if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
 #define GETDESTCOLOR8(col) (tempfuzzmap[6*256+(col)])
-#define GETDESTCOLOR15(col) GETBLENDED15_9406(col, 0)
-#define GETDESTCOLOR16(col) GETBLENDED16_9406(col, 0)
-#define GETDESTCOLOR32(col) GETBLENDED32_9406(col, 0)
 #else
 #define GETDESTCOLOR8(col) (col)
-#define GETDESTCOLOR15(col) (col)
-#define GETDESTCOLOR16(col) (col)
-#define GETDESTCOLOR32(col) (col)
 #endif
 
-#if (R_DRAWCOLUMN_PIPELINE_BITS == 8)
 #define GETDESTCOLOR(col) GETDESTCOLOR8(col)
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 15)
-#define GETDESTCOLOR(col) GETDESTCOLOR15(col)
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 16)
-#define GETDESTCOLOR(col) GETDESTCOLOR16(col)
-#elif (R_DRAWCOLUMN_PIPELINE_BITS == 32)
-#define GETDESTCOLOR(col) GETDESTCOLOR32(col)
-#endif
 
 static void R_FLUSHWHOLE_FUNCNAME(void)
 {
@@ -183,8 +152,6 @@ static void R_FLUSHQUAD_FUNCNAME(void)
 
     }
 #else
-
-#if (R_DRAWCOLUMN_PIPELINE_BITS == 8)
     if ((sizeof(int) == 4) && (((long)source % 4) == 0) && (((long)dest % 4) == 0))
     {
 
@@ -215,32 +182,16 @@ static void R_FLUSHQUAD_FUNCNAME(void)
         }
 
     }
-#else
-    while (--count >= 0)
-    {
-
-        dest[0] = source[0];
-        dest[1] = source[1];
-        dest[2] = source[2];
-        dest[3] = source[3];
-        source += 4;
-        dest += drawvars.PITCH;
-    }
 #endif
 
-#endif
 }
 
-#undef GETDESTCOLOR32
-#undef GETDESTCOLOR16
-#undef GETDESTCOLOR15
 #undef GETDESTCOLOR8
 #undef GETDESTCOLOR
 #undef TEMPBUF
 #undef PITCH
 #undef TOPLEFT
 #undef SCREENTYPE
-#undef R_DRAWCOLUMN_PIPELINE_BITS
 #undef R_DRAWCOLUMN_PIPELINE
 #undef R_FLUSHWHOLE_FUNCNAME
 #undef R_FLUSHHEADTAIL_FUNCNAME

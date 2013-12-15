@@ -76,11 +76,7 @@ typedef struct
 {
 
     byte *byte_topleft;
-    unsigned short *short_topleft;
-    unsigned int *int_topleft;
     int byte_pitch;
-    int short_pitch;
-    int int_pitch;
     enum draw_filter_type_e filterwall;
     enum draw_filter_type_e filterfloor;
     enum draw_filter_type_e filtersprite;
