@@ -220,36 +220,32 @@ static void I_UploadNewPalette(int pal)
 {
 
     static SDL_Color* colours;
-    static int cachedgamma;
     static size_t num_pals;
 
-    if ((colours == NULL) || (cachedgamma != usegamma))
+    if (colours == NULL)
     {
 
         int pplump = W_GetNumForName("PLAYPAL");
-        int gtlump = (W_CheckNumForName)("GAMMATBL",ns_prboom);
         register const byte * palette = W_CacheLumpNum(pplump);
-        register const byte * const gtable = (const byte *)W_CacheLumpNum(gtlump) + 256*(cachedgamma = usegamma);
         register int i;
 
         num_pals = W_LumpLength(pplump) / (3*256);
         num_pals *= 256;
 
         if (!colours)
-            colours = malloc(sizeof(*colours)*num_pals);
+            colours = malloc(sizeof(*colours) * num_pals);
 
         for (i = 0; (size_t)i < num_pals; i++)
         {
 
-            colours[i].r = gtable[palette[0]];
-            colours[i].g = gtable[palette[1]];
-            colours[i].b = gtable[palette[2]];
+            colours[i].r = palette[0];
+            colours[i].g = palette[1];
+            colours[i].b = palette[2];
             palette += 3;
 
         }
 
         W_UnlockLumpNum(pplump);
-        W_UnlockLumpNum(gtlump);
 
         num_pals /= 256;
 

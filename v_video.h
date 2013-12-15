@@ -63,7 +63,6 @@ typedef enum
 } video_mode_t;
 
 extern screeninfo_t screens[NUM_SCREENS];
-extern int usegamma;
 
 #define VID_NUMCOLORWEIGHTS 64
 #define VID_COLORWEIGHTMASK (VID_NUMCOLORWEIGHTS-1)

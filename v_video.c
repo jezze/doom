@@ -11,7 +11,6 @@
 screeninfo_t screens[NUM_SCREENS];
 
 const byte *colrngs[CR_LIMIT];
-int usegamma;
 
 static void FUNC_V_CopyRect(int srcx, int srcy, int srcscrn, int width, int height, int destx, int desty, int destscrn, enum patch_translation_e flags)
 {
