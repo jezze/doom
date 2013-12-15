@@ -410,7 +410,5 @@ void M_LoadDefaults(void)
 
     }
 
-    wad_files[MAXLOADFILES - 1] = "prboom.wad";
-
 }
 
