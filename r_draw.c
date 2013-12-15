@@ -61,15 +61,15 @@ static int fuzzoffset[FUZZTABLE];
 static int fuzzpos = 0;
 
 draw_vars_t drawvars = { 
-  NULL, 0,
-  RDRAW_FILTER_POINT,
-  RDRAW_FILTER_POINT,
-  RDRAW_FILTER_POINT,
-  RDRAW_FILTER_POINT,
-  RDRAW_FILTER_POINT,
-  RDRAW_MASKEDCOLUMNEDGE_SQUARE,
-  RDRAW_MASKEDCOLUMNEDGE_SQUARE,
-  49152
+    NULL, 0,
+    RDRAW_FILTER_POINT,
+    RDRAW_FILTER_POINT,
+    RDRAW_FILTER_POINT,
+    RDRAW_FILTER_POINT,
+    RDRAW_FILTER_POINT,
+    RDRAW_MASKEDCOLUMNEDGE_SQUARE,
+    RDRAW_MASKEDCOLUMNEDGE_SQUARE,
+    49152
 };
 
 static void R_FlushWholeError(void)
@@ -182,24 +182,24 @@ byte *translationtables;
 #undef R_DRAWCOLUMN_PIPELINE_TYPE
 
 static R_DrawColumn_f drawcolumnfuncs[RDRAW_FILTER_MAXFILTERS][RDRAW_FILTER_MAXFILTERS][RDC_PIPELINE_MAXPIPELINES] = {
-        {
-            {NULL, NULL, NULL,},
-            {R_DrawColumn8_PointUV, R_DrawTranslatedColumn8_PointUV, R_DrawFuzzColumn8_PointUV,},
-            {R_DrawColumn8_LinearUV, R_DrawTranslatedColumn8_LinearUV, R_DrawFuzzColumn8_LinearUV,},
-            {R_DrawColumn8_RoundedUV, R_DrawTranslatedColumn8_RoundedUV, R_DrawFuzzColumn8_RoundedUV,},
-        },
-        {
-            {NULL, NULL, NULL,},
-            {R_DrawColumn8_PointUV_PointZ, R_DrawTranslatedColumn8_PointUV_PointZ, R_DrawFuzzColumn8_PointUV_PointZ,},
-            {R_DrawColumn8_LinearUV_PointZ, R_DrawTranslatedColumn8_LinearUV_PointZ, R_DrawFuzzColumn8_LinearUV_PointZ,},
-            {R_DrawColumn8_RoundedUV_PointZ, R_DrawTranslatedColumn8_RoundedUV_PointZ, R_DrawFuzzColumn8_RoundedUV_PointZ,},
-        },
-        {
-            {NULL, NULL, NULL,},
-            {R_DrawColumn8_PointUV_LinearZ, R_DrawTranslatedColumn8_PointUV_LinearZ, R_DrawFuzzColumn8_PointUV_LinearZ,},
-            {R_DrawColumn8_LinearUV_LinearZ, R_DrawTranslatedColumn8_LinearUV_LinearZ, R_DrawFuzzColumn8_LinearUV_LinearZ,},
-            {R_DrawColumn8_RoundedUV_LinearZ, R_DrawTranslatedColumn8_RoundedUV_LinearZ, R_DrawFuzzColumn8_RoundedUV_LinearZ,},
-        },
+    {
+        {NULL, NULL, NULL,},
+        {R_DrawColumn8_PointUV, R_DrawTranslatedColumn8_PointUV, R_DrawFuzzColumn8_PointUV,},
+        {R_DrawColumn8_LinearUV, R_DrawTranslatedColumn8_LinearUV, R_DrawFuzzColumn8_LinearUV,},
+        {R_DrawColumn8_RoundedUV, R_DrawTranslatedColumn8_RoundedUV, R_DrawFuzzColumn8_RoundedUV,},
+    },
+    {
+        {NULL, NULL, NULL,},
+        {R_DrawColumn8_PointUV_PointZ, R_DrawTranslatedColumn8_PointUV_PointZ, R_DrawFuzzColumn8_PointUV_PointZ,},
+        {R_DrawColumn8_LinearUV_PointZ, R_DrawTranslatedColumn8_LinearUV_PointZ, R_DrawFuzzColumn8_LinearUV_PointZ,},
+        {R_DrawColumn8_RoundedUV_PointZ, R_DrawTranslatedColumn8_RoundedUV_PointZ, R_DrawFuzzColumn8_RoundedUV_PointZ,},
+    },
+    {
+        {NULL, NULL, NULL,},
+        {R_DrawColumn8_PointUV_LinearZ, R_DrawTranslatedColumn8_PointUV_LinearZ, R_DrawFuzzColumn8_PointUV_LinearZ,},
+        {R_DrawColumn8_LinearUV_LinearZ, R_DrawTranslatedColumn8_LinearUV_LinearZ, R_DrawFuzzColumn8_LinearUV_LinearZ,},
+        {R_DrawColumn8_RoundedUV_LinearZ, R_DrawTranslatedColumn8_RoundedUV_LinearZ, R_DrawFuzzColumn8_RoundedUV_LinearZ,},
+    },
 };
 
 R_DrawColumn_f R_GetDrawColumnFunc(enum column_pipeline_e type, enum draw_filter_type_e filter, enum draw_filter_type_e filterz)
@@ -290,10 +290,10 @@ void R_InitTranslationTables (void)
 #include "r_drawspan.inl"
 
 static R_DrawSpan_f drawspanfuncs[RDRAW_FILTER_MAXFILTERS][RDRAW_FILTER_MAXFILTERS] = {
-        {NULL, NULL, NULL, NULL,},
-        {NULL, R_DrawSpan8_PointUV_PointZ, R_DrawSpan8_LinearUV_PointZ, R_DrawSpan8_RoundedUV_PointZ,},
-        {NULL, R_DrawSpan8_PointUV_LinearZ, R_DrawSpan8_LinearUV_LinearZ, R_DrawSpan8_RoundedUV_LinearZ,},
-        {NULL, NULL, NULL, NULL,},
+    {NULL, NULL, NULL, NULL,},
+    {NULL, R_DrawSpan8_PointUV_PointZ, R_DrawSpan8_LinearUV_PointZ, R_DrawSpan8_RoundedUV_PointZ,},
+    {NULL, R_DrawSpan8_PointUV_LinearZ, R_DrawSpan8_LinearUV_LinearZ, R_DrawSpan8_RoundedUV_LinearZ,},
+    {NULL, NULL, NULL, NULL,},
 };
 
 R_DrawSpan_f R_GetDrawSpanFunc(enum draw_filter_type_e filter, enum draw_filter_type_e filterz)

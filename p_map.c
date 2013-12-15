@@ -13,593 +13,577 @@
 #include "lprintf.h"
 #include "z_zone.h"
 
-static mobj_t    *tmthing;
-static fixed_t   tmx;
-static fixed_t   tmy;
+static mobj_t *tmthing;
+static fixed_t tmx;
+static fixed_t tmy;
 static int pe_x;
 static int pe_y;
 static int ls_x;
 static int ls_y;
-
-boolean   floatok;
-boolean   felldown;
-fixed_t   tmbbox[4];
-fixed_t   tmfloorz;
-fixed_t   tmceilingz;
-fixed_t   tmdropoffz;
-line_t    *ceilingline;
-line_t        *blockline;    /* killough 8/11/98: blocking linedef */
-line_t        *floorline;    /* killough 8/1/98: Highest touched floor */
-static int    tmunstuck;     /* killough 8/1/98: whether to allow unsticking */
-
+boolean floatok;
+boolean felldown;
+fixed_t tmbbox[4];
+fixed_t tmfloorz;
+fixed_t tmceilingz;
+fixed_t tmdropoffz;
+line_t *ceilingline;
+line_t *blockline;
+line_t *floorline;
+static int tmunstuck;
 line_t **spechit;
 static int spechit_max;
-
 int numspechit;
-
 msecnode_t* sector_list = NULL;
+static boolean telefrag;
 
-static boolean telefrag;   /* killough 8/9/98: whether to telefrag at exit */
+boolean PIT_StompThing(mobj_t* thing)
+{
 
-boolean PIT_StompThing (mobj_t* thing)
-  {
-  fixed_t blockdist;
+    fixed_t blockdist;
 
-  if (thing == tmthing)
+    if (thing == tmthing)
+        return true;
+
+    if (!(thing->flags & MF_SHOOTABLE))
+        return true;
+
+    blockdist = thing->radius + tmthing->radius;
+
+    if (D_abs(thing->x - tmx) >= blockdist || D_abs(thing->y - tmy) >= blockdist)
+        return true;
+
+    if (!telefrag)
+        return false;
+
+    P_DamageMobj (thing, tmthing, tmthing, 10000);
+
     return true;
 
-  if (!(thing->flags & MF_SHOOTABLE))
-    return true;
-
-  blockdist = thing->radius + tmthing->radius;
-
-  if (D_abs(thing->x - tmx) >= blockdist || D_abs(thing->y - tmy) >= blockdist)
-    return true;
-
-
-  if (!telefrag)
-    return false;
-
-  P_DamageMobj (thing, tmthing, tmthing, 10000);
-
-  return true;
-  }
+}
 
 int P_GetFriction(const mobj_t *mo, int *frictionfactor)
 {
-  int friction = ORIG_FRICTION;
-  int movefactor = ORIG_FRICTION_FACTOR;
-  const msecnode_t *m;
-  const sector_t *sec;
 
-  if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY))
-      && (mbf_features || (mo->player && !compatibility)) &&
-      variable_friction)
-    for (m = mo->touching_sectorlist; m; m = m->m_tnext)
-      if ((sec = m->m_sector)->special & FRICTION_MASK &&
-    (sec->friction < friction || friction == ORIG_FRICTION) &&
-    (mo->z <= sec->floorheight ||
-     (sec->heightsec != -1 &&
-      mo->z <= sectors[sec->heightsec].floorheight &&
-      mbf_features)))
-  friction = sec->friction, movefactor = sec->movefactor;
+    int friction = ORIG_FRICTION;
+    int movefactor = ORIG_FRICTION_FACTOR;
+    const msecnode_t *m;
+    const sector_t *sec;
 
-  if (frictionfactor)
-    *frictionfactor = movefactor;
+    if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY)) && (mbf_features || (mo->player && !compatibility)) && variable_friction)
+        for (m = mo->touching_sectorlist; m; m = m->m_tnext)
+            if ((sec = m->m_sector)->special & FRICTION_MASK && (sec->friction < friction || friction == ORIG_FRICTION) && (mo->z <= sec->floorheight || (sec->heightsec != -1 && mo->z <= sectors[sec->heightsec].floorheight && mbf_features)))
+                friction = sec->friction, movefactor = sec->movefactor;
 
-  return friction;
+    if (frictionfactor)
+        *frictionfactor = movefactor;
+
+    return friction;
+
 }
 
 int P_GetMoveFactor(const mobj_t *mo, int *frictionp)
 {
-  int movefactor, friction;
 
-
-  if (!mbf_features)
-  {
-    int momentum;
-
-    movefactor = ORIG_FRICTION_FACTOR;
-
-    if (!compatibility && variable_friction &&
-      !(mo->flags & (MF_NOGRAVITY | MF_NOCLIP)))
+    int movefactor, friction;
+    
+    if (!mbf_features)
     {
-      friction = mo->friction;
-      if (friction == ORIG_FRICTION)
-        ;
-      else if (friction > ORIG_FRICTION)
-      {
-        movefactor = mo->movefactor;
-        ((mobj_t*)mo)->movefactor = ORIG_FRICTION_FACTOR;
-      }
-      else
-      {
 
-        momentum = (P_AproxDistance(mo->momx,mo->momy));
-        movefactor = mo->movefactor;
-        if (momentum > MORE_FRICTION_MOMENTUM<<2)
-          movefactor <<= 3;
+        int momentum;
 
-        else if (momentum > MORE_FRICTION_MOMENTUM<<1)
-          movefactor <<= 2;
+        movefactor = ORIG_FRICTION_FACTOR;
 
+        if (!compatibility && variable_friction && !(mo->flags & (MF_NOGRAVITY | MF_NOCLIP)))
+        {
+
+            friction = mo->friction;
+
+            if (friction == ORIG_FRICTION)
+            {
+
+            }
+
+            else if (friction > ORIG_FRICTION)
+            {
+
+                movefactor = mo->movefactor;
+                ((mobj_t*)mo)->movefactor = ORIG_FRICTION_FACTOR;
+
+            }
+
+            else
+            {
+
+                momentum = (P_AproxDistance(mo->momx, mo->momy));
+                movefactor = mo->movefactor;
+
+                if (momentum > MORE_FRICTION_MOMENTUM<<2)
+                    movefactor <<= 3;
+
+                else if (momentum > MORE_FRICTION_MOMENTUM<<1)
+                    movefactor <<= 2;
+
+                else if (momentum > MORE_FRICTION_MOMENTUM)
+                    movefactor <<= 1;
+
+                ((mobj_t*)mo)->movefactor = ORIG_FRICTION_FACTOR;
+
+            }
+
+        }
+
+        return movefactor;
+
+    }
+
+    if ((friction = P_GetFriction(mo, &movefactor)) < ORIG_FRICTION)
+    {
+
+        int momentum = P_AproxDistance(mo->momx, mo->momy);
+
+        if (momentum > MORE_FRICTION_MOMENTUM << 2)
+            movefactor <<= 3;
+        else if (momentum > MORE_FRICTION_MOMENTUM << 1)
+            movefactor <<= 2;
         else if (momentum > MORE_FRICTION_MOMENTUM)
-          movefactor <<= 1;
+            movefactor <<= 1;
 
-        ((mobj_t*)mo)->movefactor = ORIG_FRICTION_FACTOR;
-      }
     }
 
-    return(movefactor);
-  }
+    if (frictionp)
+        *frictionp = friction;
 
-  if ((friction = P_GetFriction(mo, &movefactor)) < ORIG_FRICTION)
-    {
+    return movefactor;
 
-
-
-     int momentum = P_AproxDistance(mo->momx,mo->momy);
-
-     if (momentum > MORE_FRICTION_MOMENTUM<<2)
-       movefactor <<= 3;
-     else if (momentum > MORE_FRICTION_MOMENTUM<<1)
-       movefactor <<= 2;
-     else if (momentum > MORE_FRICTION_MOMENTUM)
-       movefactor <<= 1;
-    }
-
-  if (frictionp)
-    *frictionp = friction;
-
-  return movefactor;
 }
 
 boolean P_TeleportMove (mobj_t* thing,fixed_t x,fixed_t y, boolean boss)
-  {
-  int     xl;
-  int     xh;
-  int     yl;
-  int     yh;
-  int     bx;
-  int     by;
+{
 
-  subsector_t*  newsubsec;
+    int xl;
+    int xh;
+    int yl;
+    int yh;
+    int bx;
+    int by;
 
-  telefrag = thing->player ||
-    (!comp[comp_telefrag] ? boss : (gamemap==30));
+    subsector_t *newsubsec;
+    telefrag = thing->player || (!comp[comp_telefrag] ? boss : (gamemap == 30));
+    tmthing = thing;
+    tmx = x;
+    tmy = y;
+    tmbbox[BOXTOP] = y + tmthing->radius;
+    tmbbox[BOXBOTTOM] = y - tmthing->radius;
+    tmbbox[BOXRIGHT] = x + tmthing->radius;
+    tmbbox[BOXLEFT] = x - tmthing->radius;
+    newsubsec = R_PointInSubsector(x,y);
+    ceilingline = NULL;
+    tmfloorz = tmdropoffz = newsubsec->sector->floorheight;
+    tmceilingz = newsubsec->sector->ceilingheight;
+    validcount++;
+    numspechit = 0;
+    xl = (tmbbox[BOXLEFT] - bmaporgx - MAXRADIUS) >> MAPBLOCKSHIFT;
+    xh = (tmbbox[BOXRIGHT] - bmaporgx + MAXRADIUS) >> MAPBLOCKSHIFT;
+    yl = (tmbbox[BOXBOTTOM] - bmaporgy - MAXRADIUS) >> MAPBLOCKSHIFT;
+    yh = (tmbbox[BOXTOP] - bmaporgy + MAXRADIUS) >> MAPBLOCKSHIFT;
 
-  tmthing = thing;
+    for (bx = xl; bx <= xh; bx++)
+        for (by = yl; by <= yh; by++)
+            if (!P_BlockThingsIterator(bx, by, PIT_StompThing))
+                return false;
 
-  tmx = x;
-  tmy = y;
+    P_UnsetThingPosition(thing);
 
-  tmbbox[BOXTOP] = y + tmthing->radius;
-  tmbbox[BOXBOTTOM] = y - tmthing->radius;
-  tmbbox[BOXRIGHT] = x + tmthing->radius;
-  tmbbox[BOXLEFT] = x - tmthing->radius;
+    thing->floorz = tmfloorz;
+    thing->ceilingz = tmceilingz;
+    thing->dropoffz = tmdropoffz;
+    thing->x = x;
+    thing->y = y;
 
-  newsubsec = R_PointInSubsector (x,y);
-  ceilingline = NULL;
+    P_SetThingPosition (thing);
 
-  tmfloorz = tmdropoffz = newsubsec->sector->floorheight;
-  tmceilingz = newsubsec->sector->ceilingheight;
+    thing->PrevX = x;
+    thing->PrevY = y;
+    thing->PrevZ = thing->floorz;
 
-  validcount++;
-  numspechit = 0;
+    return true;
 
-  xl = (tmbbox[BOXLEFT] - bmaporgx - MAXRADIUS)>>MAPBLOCKSHIFT;
-  xh = (tmbbox[BOXRIGHT] - bmaporgx + MAXRADIUS)>>MAPBLOCKSHIFT;
-  yl = (tmbbox[BOXBOTTOM] - bmaporgy - MAXRADIUS)>>MAPBLOCKSHIFT;
-  yh = (tmbbox[BOXTOP] - bmaporgy + MAXRADIUS)>>MAPBLOCKSHIFT;
-
-  for (bx=xl ; bx<=xh ; bx++)
-    for (by=yl ; by<=yh ; by++)
-      if (!P_BlockThingsIterator(bx,by,PIT_StompThing))
-        return false;
-
-  P_UnsetThingPosition (thing);
-
-  thing->floorz = tmfloorz;
-  thing->ceilingz = tmceilingz;
-  thing->dropoffz = tmdropoffz;
-
-  thing->x = x;
-  thing->y = y;
-
-  P_SetThingPosition (thing);
-
-  thing->PrevX = x;
-  thing->PrevY = y;
-  thing->PrevZ = thing->floorz;
-
-  return true;
-  }
+}
 
 static void SpechitOverrun(line_t *ld);
 
-static
-boolean PIT_CrossLine (line_t* ld)
-  {
-  if (!(ld->flags & ML_TWOSIDED) ||
-      (ld->flags & (ML_BLOCKING|ML_BLOCKMONSTERS)))
-    if (!(tmbbox[BOXLEFT]   > ld->bbox[BOXRIGHT]  ||
-          tmbbox[BOXRIGHT]  < ld->bbox[BOXLEFT]   ||
-          tmbbox[BOXTOP]    < ld->bbox[BOXBOTTOM] ||
-          tmbbox[BOXBOTTOM] > ld->bbox[BOXTOP]))
-      if (P_PointOnLineSide(pe_x,pe_y,ld) != P_PointOnLineSide(ls_x,ls_y,ld))
-        return(false);
-  return(true);
-  }
+static boolean PIT_CrossLine(line_t* ld)
+{
+
+    if (!(ld->flags & ML_TWOSIDED) || (ld->flags & (ML_BLOCKING|ML_BLOCKMONSTERS)))
+        if (!(tmbbox[BOXLEFT] > ld->bbox[BOXRIGHT] || tmbbox[BOXRIGHT] < ld->bbox[BOXLEFT] || tmbbox[BOXTOP] < ld->bbox[BOXBOTTOM] || tmbbox[BOXBOTTOM] > ld->bbox[BOXTOP]))
+            if (P_PointOnLineSide(pe_x,pe_y,ld) != P_PointOnLineSide(ls_x,ls_y,ld))
+                return false;
+
+    return true;
+
+}
 
 static int untouched(line_t *ld)
 {
-  fixed_t x, y, tmbbox[4];
-  return
-    (tmbbox[BOXRIGHT] = (x=tmthing->x)+tmthing->radius) <= ld->bbox[BOXLEFT] ||
-    (tmbbox[BOXLEFT] = x-tmthing->radius) >= ld->bbox[BOXRIGHT] ||
-    (tmbbox[BOXTOP] = (y=tmthing->y)+tmthing->radius) <= ld->bbox[BOXBOTTOM] ||
-    (tmbbox[BOXBOTTOM] = y-tmthing->radius) >= ld->bbox[BOXTOP] ||
-    P_BoxOnLineSide(tmbbox, ld) != -1;
+
+    fixed_t x, y, tmbbox[4];
+
+    return (tmbbox[BOXRIGHT] = (x=tmthing->x)+tmthing->radius) <= ld->bbox[BOXLEFT] || (tmbbox[BOXLEFT] = x-tmthing->radius) >= ld->bbox[BOXRIGHT] || (tmbbox[BOXTOP] = (y=tmthing->y)+tmthing->radius) <= ld->bbox[BOXBOTTOM] || (tmbbox[BOXBOTTOM] = y-tmthing->radius) >= ld->bbox[BOXTOP] || P_BoxOnLineSide(tmbbox, ld) != -1;
+
 }
 
-static
-boolean PIT_CheckLine (line_t* ld)
+static boolean PIT_CheckLine(line_t *ld)
 {
-  if (tmbbox[BOXRIGHT] <= ld->bbox[BOXLEFT]
-   || tmbbox[BOXLEFT] >= ld->bbox[BOXRIGHT]
-   || tmbbox[BOXTOP] <= ld->bbox[BOXBOTTOM]
-   || tmbbox[BOXBOTTOM] >= ld->bbox[BOXTOP] )
+
+    if (tmbbox[BOXRIGHT] <= ld->bbox[BOXLEFT] || tmbbox[BOXLEFT] >= ld->bbox[BOXRIGHT] || tmbbox[BOXTOP] <= ld->bbox[BOXBOTTOM] || tmbbox[BOXBOTTOM] >= ld->bbox[BOXTOP])
+        return true;
+
+    if (P_BoxOnLineSide(tmbbox, ld) != -1)
+        return true;
+
+    if (!ld->backsector)
+    {
+
+        blockline = ld;
+
+        return tmunstuck && !untouched(ld) && FixedMul(tmx - tmthing->x, ld->dy) > FixedMul(tmy - tmthing->y, ld->dx);
+
+    }
+
+    if (!(tmthing->flags & (MF_MISSILE | MF_BOUNCES)))
+    {
+
+        if (ld->flags & ML_BLOCKING)
+            return tmunstuck && !untouched(ld);
+
+        if (!(tmthing->flags & MF_FRIEND || tmthing->player) && ld->flags & ML_BLOCKMONSTERS)
+            return false;
+
+    }
+
+    P_LineOpening (ld);
+
+    if (opentop < tmceilingz)
+    {
+
+        tmceilingz = opentop;
+        ceilingline = ld;
+        blockline = ld;
+
+    }
+
+    if (openbottom > tmfloorz)
+    {
+
+        tmfloorz = openbottom;
+        floorline = ld;
+        blockline = ld;
+
+    }
+
+    if (lowfloor < tmdropoffz)
+        tmdropoffz = lowfloor;
+
+    if (ld->special)
+    {
+
+        if (numspechit >= spechit_max)
+        {
+
+            spechit_max = spechit_max ? spechit_max * 2 : 8;
+            spechit = realloc(spechit, sizeof *spechit * spechit_max);
+
+        }
+
+        spechit[numspechit++] = ld;
+
+        if (numspechit >= 8 && demo_compatibility)
+            SpechitOverrun(ld);
+
+    }
+
     return true;
 
-  if (P_BoxOnLineSide(tmbbox, ld) != -1)
-    return true;
-
-  if (!ld->backsector)
-    {
-      blockline = ld;
-      return tmunstuck && !untouched(ld) &&
-  FixedMul(tmx-tmthing->x,ld->dy) > FixedMul(tmy-tmthing->y,ld->dx);
-    }
-
-
-  if (!(tmthing->flags & (MF_MISSILE | MF_BOUNCES)))
-    {
-      if (ld->flags & ML_BLOCKING)
-  return tmunstuck && !untouched(ld);
-
-
-      if (!(tmthing->flags & MF_FRIEND || tmthing->player)
-    && ld->flags & ML_BLOCKMONSTERS)
-  return false;
-    }
-
-
-
-
-  P_LineOpening (ld);
-
-
-
-  if (opentop < tmceilingz)
-    {
-      tmceilingz = opentop;
-      ceilingline = ld;
-      blockline = ld;
-    }
-
-  if (openbottom > tmfloorz)
-    {
-      tmfloorz = openbottom;
-      floorline = ld;
-      blockline = ld;
-    }
-
-  if (lowfloor < tmdropoffz)
-    tmdropoffz = lowfloor;
-
-
-
-  if (ld->special)
-    {
-
-      if (numspechit >= spechit_max) {
-        spechit_max = spechit_max ? spechit_max*2 : 8;
-    spechit = realloc(spechit,sizeof *spechit*spechit_max);
-      }
-      spechit[numspechit++] = ld;
-
-      if (numspechit >= 8 && demo_compatibility)
-        SpechitOverrun(ld);
-    }
-
-  return true;
 }
 
 static boolean PIT_CheckThing(mobj_t *thing)
 {
-  fixed_t blockdist;
-  int damage;
 
+    fixed_t blockdist;
+    int damage;
 
-  if (!(thing->flags & (MF_SOLID|MF_SPECIAL|MF_SHOOTABLE|MF_TOUCHY)))
-    return true;
+    if (!(thing->flags & (MF_SOLID|MF_SPECIAL|MF_SHOOTABLE|MF_TOUCHY)))
+        return true;
 
-  blockdist = thing->radius + tmthing->radius;
+    blockdist = thing->radius + tmthing->radius;
 
-  if (D_abs(thing->x - tmx) >= blockdist || D_abs(thing->y - tmy) >= blockdist)
-    return true;
+    if (D_abs(thing->x - tmx) >= blockdist || D_abs(thing->y - tmy) >= blockdist)
+        return true;
 
-  if (thing == tmthing)
-    return true;
+    if (thing == tmthing)
+        return true;
 
-  if (thing->flags & MF_TOUCHY &&
-      tmthing->flags & MF_SOLID &&
-      thing->health > 0 &&
-      (thing->intflags & MIF_ARMED ||
-       sentient(thing)) &&
-      (thing->type != tmthing->type ||
-       thing->type == MT_PLAYER) &&
-      thing->z + thing->height >= tmthing->z &&
-      tmthing->z + tmthing->height >= thing->z &&
-      (thing->type ^ MT_PAIN) |
-      (tmthing->type ^ MT_SKULL) &&
-      (thing->type ^ MT_SKULL) |
-      (tmthing->type ^ MT_PAIN))
+    if (thing->flags & MF_TOUCHY && tmthing->flags & MF_SOLID && thing->health > 0 && (thing->intflags & MIF_ARMED || sentient(thing)) && (thing->type != tmthing->type || thing->type == MT_PLAYER) && thing->z + thing->height >= tmthing->z && tmthing->z + tmthing->height >= thing->z && (thing->type ^ MT_PAIN) | (tmthing->type ^ MT_SKULL) && (thing->type ^ MT_SKULL) | (tmthing->type ^ MT_PAIN))
     {
-      P_DamageMobj(thing, NULL, NULL, thing->health);
-      return true;
+
+        P_DamageMobj(thing, NULL, NULL, thing->health);
+
+        return true;
+
     }
 
-  if (tmthing->flags & MF_SKULLFLY)
+    if (tmthing->flags & MF_SKULLFLY)
     {
 
-      int damage = ((P_Random(pr_skullfly)%8)+1)*tmthing->info->damage;
+        int damage = ((P_Random(pr_skullfly) % 8) + 1) * tmthing->info->damage;
 
-      P_DamageMobj (thing, tmthing, tmthing, damage);
+        P_DamageMobj (thing, tmthing, tmthing, damage);
 
-      tmthing->flags &= ~MF_SKULLFLY;
-      tmthing->momx = tmthing->momy = tmthing->momz = 0;
+        tmthing->flags &= ~MF_SKULLFLY;
+        tmthing->momx = tmthing->momy = tmthing->momz = 0;
 
-      P_SetMobjState (tmthing, tmthing->info->spawnstate);
+        P_SetMobjState (tmthing, tmthing->info->spawnstate);
 
-      return false;
+        return false;
+
     }
 
-
-
-
-  if (tmthing->flags & MF_MISSILE || (tmthing->flags & MF_BOUNCES &&
-              !(tmthing->flags & MF_SOLID)))
+    if (tmthing->flags & MF_MISSILE || (tmthing->flags & MF_BOUNCES && !(tmthing->flags & MF_SOLID)))
     {
 
+        if (tmthing->z > thing->z + thing->height)
+            return true;
 
-      if (tmthing->z > thing->z + thing->height)
-  return true;
+        if (tmthing->z+tmthing->height < thing->z)
+            return true;
 
-      if (tmthing->z+tmthing->height < thing->z)
-  return true;
-
-      if (tmthing->target && (tmthing->target->type == thing->type ||
-    (tmthing->target->type == MT_KNIGHT && thing->type == MT_BRUISER)||
-    (tmthing->target->type == MT_BRUISER && thing->type == MT_KNIGHT)))
-      {
-  if (thing == tmthing->target)
-    return true;
-  else
-
-    if (thing->type != MT_PLAYER && !monsters_infight)
-      return false;
-      }
-
-      if (!(tmthing->flags & MF_MISSILE)) {
-  if (!(thing->flags & MF_SOLID)) {
-      return true;
-  } else {
-      tmthing->momx = -tmthing->momx;
-      tmthing->momy = -tmthing->momy;
-      if (!(tmthing->flags & MF_NOGRAVITY))
+        if (tmthing->target && (tmthing->target->type == thing->type || (tmthing->target->type == MT_KNIGHT && thing->type == MT_BRUISER) || (tmthing->target->type == MT_BRUISER && thing->type == MT_KNIGHT)))
         {
-    tmthing->momx >>= 2;
-    tmthing->momy >>= 2;
+
+            if (thing == tmthing->target)
+                return true;
+            else if (thing->type != MT_PLAYER && !monsters_infight)
+                return false;
+
         }
-      return false;
-  }
-      }
 
-      if (!(thing->flags & MF_SHOOTABLE))
-  return !(thing->flags & MF_SOLID);
+        if (!(tmthing->flags & MF_MISSILE))
+        {
 
-      damage = ((P_Random(pr_damage)%8)+1)*tmthing->info->damage;
-      P_DamageMobj (thing, tmthing, tmthing->target, damage);
+            if (!(thing->flags & MF_SOLID))
+            {
 
-      return false;
+                return true;
+
+            }
+            
+            else
+            {
+
+                tmthing->momx = -tmthing->momx;
+                tmthing->momy = -tmthing->momy;
+
+                if (!(tmthing->flags & MF_NOGRAVITY))
+                {
+
+                    tmthing->momx >>= 2;
+                    tmthing->momy >>= 2;
+
+                }
+
+                return false;
+
+            }
+
+        }
+
+        if (!(thing->flags & MF_SHOOTABLE))
+            return !(thing->flags & MF_SOLID);
+
+        damage = ((P_Random(pr_damage)%8)+1)*tmthing->info->damage;
+
+        P_DamageMobj(thing, tmthing, tmthing->target, damage);
+
+        return false;
+
     }
 
-  if (thing->flags & MF_SPECIAL)
+    if (thing->flags & MF_SPECIAL)
     {
-      uint_64_t solid = thing->flags & MF_SOLID;
-      if (tmthing->flags & MF_PICKUP)
-  P_TouchSpecialThing(thing, tmthing);
-      return !solid;
+
+        uint_64_t solid = thing->flags & MF_SOLID;
+
+        if (tmthing->flags & MF_PICKUP)
+            P_TouchSpecialThing(thing, tmthing);
+
+        return !solid;
+
     }
 
-  return !(thing->flags & MF_SOLID)
-    || (!demo_compatibility
-        && (thing->flags & MF_NOCLIP || !(tmthing->flags & MF_SOLID)));
+    return !(thing->flags & MF_SOLID) || (!demo_compatibility && (thing->flags & MF_NOCLIP || !(tmthing->flags & MF_SOLID)));
 
 }
 
 boolean Check_Sides(mobj_t* actor, int x, int y)
-  {
-  int bx,by,xl,xh,yl,yh;
+{
 
-  pe_x = actor->x;
-  pe_y = actor->y;
-  ls_x = x;
-  ls_y = y;
-  tmbbox[BOXLEFT]   = pe_x < x ? pe_x : x;
-  tmbbox[BOXRIGHT]  = pe_x > x ? pe_x : x;
-  tmbbox[BOXTOP]    = pe_y > y ? pe_y : y;
-  tmbbox[BOXBOTTOM] = pe_y < y ? pe_y : y;
-  xl = (tmbbox[BOXLEFT]   - bmaporgx)>>MAPBLOCKSHIFT;
-  xh = (tmbbox[BOXRIGHT]  - bmaporgx)>>MAPBLOCKSHIFT;
-  yl = (tmbbox[BOXBOTTOM] - bmaporgy)>>MAPBLOCKSHIFT;
-  yh = (tmbbox[BOXTOP]    - bmaporgy)>>MAPBLOCKSHIFT;
+    int bx, by, xl, xh, yl, yh;
 
-  validcount++;
-  for (bx = xl ; bx <= xh ; bx++)
-    for (by = yl ; by <= yh ; by++)
-      if (!P_BlockLinesIterator(bx,by,PIT_CrossLine))
+    pe_x = actor->x;
+    pe_y = actor->y;
+    ls_x = x;
+    ls_y = y;
+    tmbbox[BOXLEFT] = pe_x < x ? pe_x : x;
+    tmbbox[BOXRIGHT] = pe_x > x ? pe_x : x;
+    tmbbox[BOXTOP] = pe_y > y ? pe_y : y;
+    tmbbox[BOXBOTTOM] = pe_y < y ? pe_y : y;
+    xl = (tmbbox[BOXLEFT] - bmaporgx) >> MAPBLOCKSHIFT;
+    xh = (tmbbox[BOXRIGHT] - bmaporgx) >> MAPBLOCKSHIFT;
+    yl = (tmbbox[BOXBOTTOM] - bmaporgy) >> MAPBLOCKSHIFT;
+    yh = (tmbbox[BOXTOP] - bmaporgy) >> MAPBLOCKSHIFT;
+    validcount++;
+
+    for (bx = xl; bx <= xh; bx++)
+        for (by = yl; by <= yh; by++)
+            if (!P_BlockLinesIterator(bx,by,PIT_CrossLine))
+                return true;
+
+    return false;
+
+}
+
+boolean P_CheckPosition (mobj_t* thing, fixed_t x, fixed_t y)
+{
+
+    int xl;
+    int xh;
+    int yl;
+    int yh;
+    int bx;
+    int by;
+    subsector_t *newsubsec;
+    tmthing = thing;
+    tmx = x;
+    tmy = y;
+    tmbbox[BOXTOP] = y + tmthing->radius;
+    tmbbox[BOXBOTTOM] = y - tmthing->radius;
+    tmbbox[BOXRIGHT] = x + tmthing->radius;
+    tmbbox[BOXLEFT] = x - tmthing->radius;
+    newsubsec = R_PointInSubsector(x, y);
+    floorline = blockline = ceilingline = NULL;
+    tmunstuck = thing->player && thing->player->mo == thing && mbf_features;
+    tmfloorz = tmdropoffz = newsubsec->sector->floorheight;
+    tmceilingz = newsubsec->sector->ceilingheight;
+    validcount++;
+    numspechit = 0;
+
+    if (tmthing->flags & MF_NOCLIP)
         return true;
-  return(false);
-  }
 
-boolean P_CheckPosition (mobj_t* thing,fixed_t x,fixed_t y)
-  {
-  int     xl;
-  int     xh;
-  int     yl;
-  int     yh;
-  int     bx;
-  int     by;
-  subsector_t*  newsubsec;
+    xl = (tmbbox[BOXLEFT] - bmaporgx - MAXRADIUS)>>MAPBLOCKSHIFT;
+    xh = (tmbbox[BOXRIGHT] - bmaporgx + MAXRADIUS)>>MAPBLOCKSHIFT;
+    yl = (tmbbox[BOXBOTTOM] - bmaporgy - MAXRADIUS)>>MAPBLOCKSHIFT;
+    yh = (tmbbox[BOXTOP] - bmaporgy + MAXRADIUS)>>MAPBLOCKSHIFT;
 
-  tmthing = thing;
+    for (bx = xl; bx <= xh; bx++)
+        for (by = yl; by <= yh; by++)
+            if (!P_BlockThingsIterator(bx, by, PIT_CheckThing))
+                return false;
 
-  tmx = x;
-  tmy = y;
+    xl = (tmbbox[BOXLEFT] - bmaporgx) >> MAPBLOCKSHIFT;
+    xh = (tmbbox[BOXRIGHT] - bmaporgx) >> MAPBLOCKSHIFT;
+    yl = (tmbbox[BOXBOTTOM] - bmaporgy) >> MAPBLOCKSHIFT;
+    yh = (tmbbox[BOXTOP] - bmaporgy) >> MAPBLOCKSHIFT;
 
-  tmbbox[BOXTOP] = y + tmthing->radius;
-  tmbbox[BOXBOTTOM] = y - tmthing->radius;
-  tmbbox[BOXRIGHT] = x + tmthing->radius;
-  tmbbox[BOXLEFT] = x - tmthing->radius;
+    for (bx = xl; bx <= xh; bx++)
+        for (by = yl; by <= yh; by++)
+            if (!P_BlockLinesIterator(bx, by, PIT_CheckLine))
+                return false;
 
-  newsubsec = R_PointInSubsector (x,y);
-  floorline = blockline = ceilingline = NULL;
-
-  tmunstuck = thing->player &&          /* only players */
-    thing->player->mo == thing &&       /* not voodoo dolls */
-    mbf_features; /* not under old demos */
-
-  tmfloorz = tmdropoffz = newsubsec->sector->floorheight;
-  tmceilingz = newsubsec->sector->ceilingheight;
-  validcount++;
-  numspechit = 0;
-
-  if ( tmthing->flags & MF_NOCLIP )
     return true;
 
-  xl = (tmbbox[BOXLEFT] - bmaporgx - MAXRADIUS)>>MAPBLOCKSHIFT;
-  xh = (tmbbox[BOXRIGHT] - bmaporgx + MAXRADIUS)>>MAPBLOCKSHIFT;
-  yl = (tmbbox[BOXBOTTOM] - bmaporgy - MAXRADIUS)>>MAPBLOCKSHIFT;
-  yh = (tmbbox[BOXTOP] - bmaporgy + MAXRADIUS)>>MAPBLOCKSHIFT;
+}
 
-  for (bx=xl ; bx<=xh ; bx++)
-    for (by=yl ; by<=yh ; by++)
-      if (!P_BlockThingsIterator(bx,by,PIT_CheckThing))
+boolean P_TryMove(mobj_t* thing, fixed_t x, fixed_t y, boolean dropoff)
+{
+
+    fixed_t oldx;
+    fixed_t oldy;
+
+    felldown = floatok = false;
+
+    if (!P_CheckPosition (thing, x, y))
         return false;
 
-  xl = (tmbbox[BOXLEFT] - bmaporgx)>>MAPBLOCKSHIFT;
-  xh = (tmbbox[BOXRIGHT] - bmaporgx)>>MAPBLOCKSHIFT;
-  yl = (tmbbox[BOXBOTTOM] - bmaporgy)>>MAPBLOCKSHIFT;
-  yh = (tmbbox[BOXTOP] - bmaporgy)>>MAPBLOCKSHIFT;
-
-  for (bx=xl ; bx<=xh ; bx++)
-    for (by=yl ; by<=yh ; by++)
-      if (!P_BlockLinesIterator (bx,by,PIT_CheckLine))
-        return false;
-
-  return true;
-  }
-
-boolean P_TryMove(mobj_t* thing,fixed_t x,fixed_t y,
-                  boolean dropoff)
-  {
-  fixed_t oldx;
-  fixed_t oldy;
-
-  felldown = floatok = false;
-
-  if (!P_CheckPosition (thing, x, y))
-    return false;
-
-  if ( !(thing->flags & MF_NOCLIP) )
+    if (!(thing->flags & MF_NOCLIP))
     {
 
-      if (tmceilingz - tmfloorz < thing->height ||
+        if (tmceilingz - tmfloorz < thing->height || (floatok = true, !(thing->flags & MF_TELEPORT) && tmceilingz - thing->z < thing->height) || (!(thing->flags & MF_TELEPORT) && tmfloorz - thing->z > 24 * FRACUNIT))
+            return tmunstuck && !(ceilingline && untouched(ceilingline)) && !(floorline && untouched(floorline));
 
-    (floatok = true, !(thing->flags & MF_TELEPORT) &&
-     tmceilingz - thing->z < thing->height) ||
+        if (!(thing->flags & (MF_DROPOFF|MF_FLOAT)))
+        {
 
-    (!(thing->flags & MF_TELEPORT) &&
-     tmfloorz - thing->z > 24*FRACUNIT))
-  return tmunstuck
-    && !(ceilingline && untouched(ceilingline))
-    && !(  floorline && untouched(  floorline));
+            if (comp[comp_dropoff])
+            {
 
-      if (!(thing->flags & (MF_DROPOFF|MF_FLOAT))) {
-  if (comp[comp_dropoff])
-    {
-      if ((compatibility || !dropoff
+                if ((compatibility || !dropoff || (mbf_features && compatibility_level <= prboom_2_compatibility)) && (tmfloorz - tmdropoffz > 24 * FRACUNIT))
+                    return false;
+            }
 
-            || (mbf_features && compatibility_level <= prboom_2_compatibility))
-          && (tmfloorz - tmdropoffz > 24*FRACUNIT))
-        return false;
-    }
-  else
-    if (!dropoff || (dropoff==2 &&
-         (tmfloorz-tmdropoffz > 128*FRACUNIT ||
-          !thing->target || thing->target->z >tmdropoffz)))
-      {
-        if (!mbf_features ?
-      tmfloorz - tmdropoffz > 24*FRACUNIT :
-      thing->floorz  - tmfloorz > 24*FRACUNIT ||
-      thing->dropoffz - tmdropoffz > 24*FRACUNIT)
-    return false;
-      }
-    else { /* dropoff allowed -- check for whether it fell more than 24 */
-      felldown = !(thing->flags & MF_NOGRAVITY) &&
-        thing->z - tmfloorz > 24*FRACUNIT;
-    }
-      }
+            else if (!dropoff || (dropoff == 2 && (tmfloorz-tmdropoffz > 128 * FRACUNIT || !thing->target || thing->target->z >tmdropoffz)))
+            {
 
-      if (thing->flags & MF_BOUNCES &&
-    !(thing->flags & (MF_MISSILE|MF_NOGRAVITY)) &&
-    !sentient(thing) && tmfloorz - thing->z > 16*FRACUNIT)
-  return false;
+                if (!mbf_features ? tmfloorz - tmdropoffz > 24 * FRACUNIT : thing->floorz  - tmfloorz > 24 * FRACUNIT || thing->dropoffz - tmdropoffz > 24 * FRACUNIT)
+                    return false;
 
+            }
 
-      if (thing->intflags & MIF_FALLING && tmfloorz - thing->z >
-    FixedMul(thing->momx,thing->momx)+FixedMul(thing->momy,thing->momy))
-  return false;
+            else
+            {
+
+                felldown = !(thing->flags & MF_NOGRAVITY) && thing->z - tmfloorz > 24 * FRACUNIT;
+
+            }
+
+        }
+
+        if (thing->flags & MF_BOUNCES && !(thing->flags & (MF_MISSILE|MF_NOGRAVITY)) && !sentient(thing) && tmfloorz - thing->z > 16 * FRACUNIT)
+            return false;
+
+        if (thing->intflags & MIF_FALLING && tmfloorz - thing->z > FixedMul(thing->momx,thing->momx)+FixedMul(thing->momy,thing->momy))
+            return false;
+
     }
 
-  P_UnsetThingPosition (thing);
+    P_UnsetThingPosition (thing);
 
-  oldx = thing->x;
-  oldy = thing->y;
-  thing->floorz = tmfloorz;
-  thing->ceilingz = tmceilingz;
-  thing->dropoffz = tmdropoffz;
-  thing->x = x;
-  thing->y = y;
+    oldx = thing->x;
+    oldy = thing->y;
+    thing->floorz = tmfloorz;
+    thing->ceilingz = tmceilingz;
+    thing->dropoffz = tmdropoffz;
+    thing->x = x;
+    thing->y = y;
 
-  P_SetThingPosition (thing);
+    P_SetThingPosition (thing);
 
+    if (!(thing->flags&(MF_TELEPORT|MF_NOCLIP)))
+        while (numspechit--)
+            if (spechit[numspechit]->special)
+            {
 
+                int oldside;
 
-  if (! (thing->flags&(MF_TELEPORT|MF_NOCLIP)) )
-    while (numspechit--)
-      if (spechit[numspechit]->special)
-  {
-    int oldside;
-    if ((oldside = P_PointOnLineSide(oldx, oldy, spechit[numspechit])) !=
-        P_PointOnLineSide(thing->x, thing->y, spechit[numspechit]))
-      P_CrossSpecialLine(spechit[numspechit], oldside, thing);
-  }
+                if ((oldside = P_PointOnLineSide(oldx, oldy, spechit[numspechit])) != P_PointOnLineSide(thing->x, thing->y, spechit[numspechit]))
+                    P_CrossSpecialLine(spechit[numspechit], oldside, thing);
 
-  return true;
-  }
+            }
+
+    return true;
+
+}
 
 static boolean PIT_ApplyTorque(line_t *ld)
 {
