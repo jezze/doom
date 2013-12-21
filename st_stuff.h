@@ -26,15 +26,6 @@ typedef enum
 
 } st_stateenum_t;
 
-typedef enum
-{
-
-    StartChatState,
-    WaitDestState,
-    GetChatState
-
-} st_chatstateenum_t;
-
 extern int health_red;
 extern int health_yellow;
 extern int health_green;

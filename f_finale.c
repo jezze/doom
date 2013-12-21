@@ -6,6 +6,7 @@
 #include "sounds.h"
 #include "d_englsh.h"
 #include "f_finale.h"
+#include "wi_stuff.h"
 
 #define TEXTSPEED                       3
 #define TEXTWAIT                        250

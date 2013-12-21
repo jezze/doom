@@ -16,7 +16,6 @@
 extern int hudcolor_titl;
 extern int hudcolor_xyco;
 extern int hudcolor_mesg;
-extern int hudcolor_chat;
 extern int hudcolor_list;
 extern int hud_msg_lines;
 

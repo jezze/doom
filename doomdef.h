@@ -213,7 +213,6 @@ typedef enum
     ss_auto,
     ss_enem,
     ss_mess,
-    ss_chat,
     ss_gen,
     ss_comp,
     ss_max

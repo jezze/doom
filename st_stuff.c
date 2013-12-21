@@ -101,11 +101,8 @@
 static player_t *plyr;
 static unsigned int st_clock;
 static int st_msgcounter = 0;
-static st_chatstateenum_t st_chatstate;
 static st_stateenum_t st_gamestate;
 static boolean st_statusbaron;
-static boolean st_chat;
-static boolean st_oldchat;
 static boolean st_notdeathmatch;
 static boolean st_armson;
 static patchnum_t tallnum[10];
@@ -426,9 +423,6 @@ static void ST_updateWidgets(void)
     st_notdeathmatch = true;
     st_armson = st_statusbaron;
 
-    if (!--st_msgcounter)
-        st_chat = st_oldchat;
-
 }
 
 void ST_Ticker(void)
@@ -645,10 +639,8 @@ static void ST_initData(void)
 
     plyr = &players[displayplayer];
     st_clock = 0;
-    st_chatstate = StartChatState;
     st_gamestate = FirstPersonState;
     st_statusbaron = true;
-    st_oldchat = st_chat = false;
     st_faceindex = 0;
     st_palette = -1;
     st_oldhealth = -1;

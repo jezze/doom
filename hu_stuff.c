@@ -219,8 +219,7 @@ int plyrcoltran[MAXPLAYERS] = {
     CR_GREEN,CR_GRAY,CR_BROWN,CR_RED
 };
 
-char chat_char;
-static player_t*  plr;
+static player_t *plr;
 
 patchnum_t hu_font[HU_FONTSIZE];
 patchnum_t hu_font2[HU_FONTSIZE];
@@ -229,7 +228,6 @@ patchnum_t hu_msgbg[9];
 
 static hu_textline_t w_title;
 static hu_stext_t w_message;
-static hu_itext_t w_chat;
 static hu_itext_t w_inputbuffer[MAXPLAYERS];
 static hu_textline_t w_coordx;
 static hu_textline_t w_coordy;
@@ -243,8 +241,6 @@ static hu_textline_t w_gkeys;
 static hu_textline_t w_monsec;
 static hu_mtext_t w_rtext;
 static boolean always_off = false;
-static char chat_dest[MAXPLAYERS];
-boolean chat_on;
 static boolean message_on;
 static boolean message_list;
 boolean message_dontfuckwithme;
@@ -254,7 +250,6 @@ static boolean headsupactive = false;
 int hudcolor_titl;
 int hudcolor_xyco;
 int hudcolor_mesg;
-int hudcolor_chat;
 int hud_msg_lines;
 int hudcolor_list;
 static char hud_coordstrx[32];
@@ -368,7 +363,6 @@ void HU_Start(void)
     message_on = false;
     message_dontfuckwithme = false;
     message_nottobefuckedwith = false;
-    chat_on = false;
 
     HUlib_initSText(&w_message, HU_MSGX, HU_MSGY, HU_MSGHEIGHT, hu_font, HU_FONTSTART, hudcolor_mesg, &message_on);
     HUlib_initTextLine(&w_title, HU_TITLEX, HU_TITLEY, hu_font, HU_FONTSTART, hudcolor_titl);
@@ -471,11 +465,6 @@ void HU_Start(void)
 
     while (*s)
         HUlib_addCharToTextLine(&w_monsec, *(s++));
-
-    HUlib_initIText(&w_chat, HU_INPUTX, HU_INPUTY, hu_font, HU_FONTSTART, hudcolor_chat, &chat_on);
-
-    for (i = 0; i < MAXPLAYERS; i++)
-        HUlib_initIText(&w_inputbuffer[i], 0, 0, 0, 0, hudcolor_chat, &always_off);
 
     headsupactive = true;
 
@@ -837,8 +826,6 @@ void HU_Drawer(void)
     if (hud_msg_lines > 1 && message_list)
         HUlib_drawMText(&w_rtext);
 
-    HUlib_drawIText(&w_chat);
-
 }
 
 void HU_Erase(void)
@@ -849,7 +836,6 @@ void HU_Erase(void)
     else
         HUlib_eraseMText(&w_rtext);
 
-    HUlib_eraseIText(&w_chat);
     HUlib_eraseTextLine(&w_title);
 
 }
@@ -873,8 +859,6 @@ void HU_Ticker(void)
 
     if (bsdown && bscounter++ > 9)
     {
-
-        HUlib_keyInIText(&w_chat, (unsigned char)key_backspace);
 
         bscounter = 8;
 
@@ -943,33 +927,28 @@ boolean HU_Responder(event_t *ev)
     if (ev->type != ev_keydown)
         return false;
 
-    if (!chat_on)
+    if (ev->data1 == key_enter)
     {
 
-        if (ev->data1 == key_enter)
+        if (hud_msg_lines>1)
         {
 
-            if (hud_msg_lines>1)
-            {
+            if (message_list)
+                HU_Erase();
 
-                if (message_list)
-                    HU_Erase();
-
-                message_list = !message_list;
-
-            }
-
-            if (!message_list)
-            {
-
-                message_on = true;
-                message_counter = HU_MSGTIMEOUT;
-
-            }
-
-            eatkey = true;
+            message_list = !message_list;
 
         }
+
+        if (!message_list)
+        {
+
+            message_on = true;
+            message_counter = HU_MSGTIMEOUT;
+
+        }
+
+        eatkey = true;
 
     }
 
