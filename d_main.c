@@ -97,7 +97,6 @@ void D_Display(void)
     {
 
         HU_Erase();
-        R_FillBackScreen();
         R_RenderPlayerView(&players[displayplayer]);
         ST_Drawer();
         HU_Drawer();

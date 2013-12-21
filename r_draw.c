@@ -331,35 +331,6 @@ void R_InitBuffer(int width, int height)
 
 }
 
-void R_FillBackScreen(void)
-{
-
-    int x, y;
-
-    if (scaledviewwidth == SCREENWIDTH)
-        return;
-
-    V_DrawBackground(gamemode == commercial ? "GRNROCK" : "FLOOR7_2", 1);
-
-    for (x = 0; x < scaledviewwidth; x += 8)
-        V_DrawNamePatch(viewwindowx + x, viewwindowy - 8, 1, "brdr_t", CR_DEFAULT, VPT_NONE);
-
-    for (x = 0; x < scaledviewwidth; x += 8)
-        V_DrawNamePatch(viewwindowx + x, viewwindowy + viewheight, 1, "brdr_b", CR_DEFAULT, VPT_NONE);
-
-    for (y = 0; y < viewheight; y += 8)
-        V_DrawNamePatch(viewwindowx - 8, viewwindowy + y, 1, "brdr_l", CR_DEFAULT, VPT_NONE);
-
-    for (y = 0; y < viewheight; y += 8)
-        V_DrawNamePatch(viewwindowx+scaledviewwidth,viewwindowy+y,1,"brdr_r", CR_DEFAULT, VPT_NONE);
-
-    V_DrawNamePatch(viewwindowx - 8,viewwindowy - 8, 1, "brdr_tl", CR_DEFAULT, VPT_NONE);
-    V_DrawNamePatch(viewwindowx + scaledviewwidth, viewwindowy - 8, 1, "brdr_tr", CR_DEFAULT, VPT_NONE);
-    V_DrawNamePatch(viewwindowx - 8,viewwindowy + viewheight, 1, "brdr_bl", CR_DEFAULT, VPT_NONE);
-    V_DrawNamePatch(viewwindowx + scaledviewwidth, viewwindowy + viewheight, 1, "brdr_br", CR_DEFAULT, VPT_NONE);
-
-}
-
 void R_VideoErase(int x, int y, int count)
 {
 

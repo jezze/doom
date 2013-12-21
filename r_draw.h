@@ -98,7 +98,6 @@ R_DrawSpan_f R_GetDrawSpanFunc(enum draw_filter_type_e filter, enum draw_filter_
 void R_DrawSpan(draw_span_vars_t *dsvars);
 void R_InitBuffer(int width, int height);
 void R_InitTranslationTables(void);
-void R_FillBackScreen(void);
 void R_ResetColumnBuffer(void);
 void R_SetDefaultDrawColumnVars(draw_column_vars_t *dcvars);
 void R_VideoErase(int x, int y, int count);
