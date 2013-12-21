@@ -819,21 +819,32 @@ void G_DoWorldDone (void)
 }
 
 #define MIN_MAXPLAYERS 32
-
-extern boolean setsizeneeded;
-
 #define VERSIONSIZE   16
 
-const char * comp_lev_str[MAX_COMPATIBILITY_LEVEL] =
-{ "doom v1.2", "doom v1.666", "doom/doom2 v1.9", "ultimate doom", "final doom",
-  "dosdoom compatibility", "tasdoom compatibility", "\"boom compatibility\"", "boom v2.01", "boom v2.02", "lxdoom v1.3.2+",
-  "MBF", "PrBoom 2.03beta", "PrBoom v2.1.0-2.1.1", "PrBoom v2.1.2-v2.2.6",
-  "PrBoom v2.3.x", "PrBoom 2.4.0", "Current PrBoom"  };
+const char * comp_lev_str[MAX_COMPATIBILITY_LEVEL] = {
+    "doom v1.2",
+    "doom v1.666",
+    "doom/doom2 v1.9",
+    "ultimate doom",
+    "final doom",
+    "dosdoom compatibility",
+    "tasdoom compatibility",
+    "\"boom compatibility\"",
+    "boom v2.01",
+    "boom v2.02",
+    "lxdoom v1.3.2+",
+    "MBF",
+    "PrBoom 2.03beta",
+    "PrBoom v2.1.0-2.1.1",
+    "PrBoom v2.1.2-v2.2.6",
+    "PrBoom v2.3.x",
+    "PrBoom 2.4.0",
+    "Current PrBoom"
+};
 
-
-
-static byte map_old_comp_levels[] =
-{ 0, 1, 2, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+static byte map_old_comp_levels[] = {
+    0, 1, 2, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+};
 
 static const struct {
   int comp_level;
