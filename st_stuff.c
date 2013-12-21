@@ -388,7 +388,7 @@ static void ST_updateWidgets(void)
 void ST_Ticker(void)
 {
   st_clock++;
-  st_randomnumber = M_Random();
+  st_randomnumber = P_Random(pr_misc);
   ST_updateWidgets();
   st_oldhealth = plyr->health;
 }

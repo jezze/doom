@@ -181,10 +181,10 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
 
 
   if (sfx_id >= sfx_sawup && sfx_id <= sfx_sawhit)
-    pitch += 8 - (M_Random()&15);
+    pitch += 8 - (P_Random(pr_misc)&15);
   else
     if (sfx_id != sfx_itemup && sfx_id != sfx_tink)
-      pitch += 16 - (M_Random()&31);
+      pitch += 16 - (P_Random(pr_misc)&31);
 
   if (pitch<0)
     pitch = 0;
