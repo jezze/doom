@@ -19,58 +19,48 @@
 
 typedef struct
 {
-    boolean     istexture;
-    int         picnum;
-    int         basepic;
-    int         numpics;
-    int         speed;
+
+    boolean istexture;
+    int picnum;
+    int basepic;
+    int numpics;
+    int speed;
 
 } anim_t;
 
 typedef struct
 {
-  signed char istexture;
-  char        endname[9];
-  char        startname[9];
-  int         speed;
+  char istexture;
+  char endname[9];
+  char startname[9];
+  int speed;
 } animdef_t;
 
-animdef_t		animdefs[] =
-{
-    {false,	"NUKAGE3",	"NUKAGE1",	8},
-    {false,	"FWATER4",	"FWATER1",	8},
-    {false,	"SWATER4",	"SWATER1", 	8},
-    {false,	"LAVA4",	"LAVA1",	8},
-    {false,	"BLOOD3",	"BLOOD1",	8},
-
-    {false,	"RROCK08",	"RROCK05",	8},		
-    {false,	"SLIME04",	"SLIME01",	8},
-    {false,	"SLIME08",	"SLIME05",	8},
-    {false,	"SLIME12",	"SLIME09",	8},
-
-    {true,	"BLODGR4",	"BLODGR1",	8},
-    {true,	"SLADRIP3",	"SLADRIP1",	8},
-
-    {true,	"BLODRIP4",	"BLODRIP1",	8},
-    {true,	"FIREWALL",	"FIREWALA",	8},
-    {true,	"GSTFONT3",	"GSTFONT1",	8},
-    {true,	"FIRELAVA",	"FIRELAV3",	8},
-    {true,	"FIREMAG3",	"FIREMAG1",	8},
-    {true,	"FIREBLU2",	"FIREBLU1",	8},
-    {true,	"ROCKRED3",	"ROCKRED1",	8},
-
-    {true,	"BFALL4",	"BFALL1",	8},
-    {true,	"SFALL4",	"SFALL1",	8},
-    {true,	"WFALL4",	"WFALL1",	8},
-    {true,	"DBRAIN4",	"DBRAIN1",	8},
-	
+animdef_t animdefs[] = {
+    {false, "NUKAGE3", "NUKAGE1", 8},
+    {false, "FWATER4", "FWATER1", 8},
+    {false, "SWATER4", "SWATER1",  8},
+    {false, "LAVA4", "LAVA1", 8},
+    {false, "BLOOD3", "BLOOD1", 8},
+    {false, "RROCK08", "RROCK05", 8},  
+    {false, "SLIME04", "SLIME01", 8},
+    {false, "SLIME08", "SLIME05", 8},
+    {false, "SLIME12", "SLIME09", 8},
+    {true, "BLODGR4", "BLODGR1", 8},
+    {true, "SLADRIP3", "SLADRIP1", 8},
+    {true, "BLODRIP4", "BLODRIP1", 8},
+    {true, "FIREWALL", "FIREWALA", 8},
+    {true, "GSTFONT3", "GSTFONT1", 8},
+    {true, "FIRELAVA", "FIRELAV3", 8},
+    {true, "FIREMAG3", "FIREMAG1", 8},
+    {true, "FIREBLU2", "FIREBLU1", 8},
+    {true, "ROCKRED3", "ROCKRED1", 8},
+    {true, "BFALL4", "BFALL1", 8},
+    {true, "SFALL4", "SFALL1", 8},
+    {true, "WFALL4", "WFALL1", 8},
+    {true, "DBRAIN4", "DBRAIN1", 8},
     {-1}
 };
-
-
-
-
-
 
 #define MAXANIMS 32
 
@@ -83,10 +73,11 @@ static void P_SpawnPushers(void);
 
 void P_InitPicAnims (void)
 {
-  int         i;
 
+    int i;
 
-  lastanim = anims;
+    lastanim = anims;
+
   for (i=0 ; animdefs[i].istexture != -1 ; i++)
   {
 

@@ -206,10 +206,10 @@ boolean I_AnySoundStillPlaying(void)
 static void I_UpdateSound(void *unused, Uint8 *stream, int len)
 {
 
-    signed short *leftout = (signed short *)stream;
-    signed short *rightout = ((signed short *)stream)+1;
+    short *leftout = (short *)stream;
+    short *rightout = ((short *)stream)+1;
     int step = 2;
-    signed short *leftend = leftout + (len / 4) * step;
+    short *leftend = leftout + (len / 4) * step;
     int chan;
 
     while (leftout != leftend)
@@ -243,14 +243,14 @@ static void I_UpdateSound(void *unused, Uint8 *stream, int len)
         else if (dl < SHRT_MIN)
             *leftout = SHRT_MIN;
         else
-            *leftout = (signed short)dl;
+            *leftout = (short)dl;
 
         if (dr > SHRT_MAX)
             *rightout = SHRT_MAX;
         else if (dr < SHRT_MIN)
             *rightout = SHRT_MIN;
         else
-            *rightout = (signed short)dr;
+            *rightout = (short)dr;
 
         leftout += step;
         rightout += step;

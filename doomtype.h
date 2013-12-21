@@ -11,7 +11,7 @@ typedef unsigned char byte;
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #endif
 
-typedef signed long long int_64_t;
+typedef long long int_64_t;
 typedef unsigned long long uint_64_t;
 
 #define LONGLONG(num)   (uint_64_t)num ## ll

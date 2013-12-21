@@ -485,7 +485,7 @@ int EV_VerticalDoor(line_t *line, mobj_t *thing)
         if (compatibility_level < prboom_4_compatibility || door->thinker.function == T_VerticalDoor)
         {
 
-            signed int outval = 0;
+            int outval = 0;
 
             if (door->thinker.function == T_VerticalDoor && door->direction == -1)
             {
