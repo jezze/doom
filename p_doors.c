@@ -8,552 +8,653 @@
 #include "i_system.h"
 #include "z_zone.h"
 
-void T_VerticalDoor (vldoor_t* door)
+void T_VerticalDoor (vldoor_t *door)
 {
-  result_e  res;
 
+    result_e res;
 
-  switch(door->direction)
-  {
+    switch (door->direction)
+    {
+
     case 0:
-
-      if (!--door->topcountdown)
-      {
-        switch(door->type)
+        if (!--door->topcountdown)
         {
-          case blazeRaise:
-          case genBlazeRaise:
-            door->direction = -1;
-            S_StartSound((mobj_t *)&door->sector->soundorg,sfx_bdcls);
-            break;
 
-          case normal:
-          case genRaise:
-            door->direction = -1;
-            S_StartSound((mobj_t *)&door->sector->soundorg,sfx_dorcls);
-            break;
+            switch (door->type)
+            {
 
-          case close30ThenOpen:
-          case genCdO:
-            door->direction = 1;
-            S_StartSound((mobj_t *)&door->sector->soundorg,sfx_doropn);
-            break;
+            case blazeRaise:
+            case genBlazeRaise:
+                door->direction = -1;
 
-          case genBlazeCdO:
-            door->direction = 1;
-            S_StartSound((mobj_t *)&door->sector->soundorg,sfx_bdopn);
-            break;
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdcls);
 
-          default:
-            break;
+                break;
+
+            case normal:
+            case genRaise:
+                door->direction = -1;
+
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_dorcls);
+                
+                break;
+
+            case close30ThenOpen:
+            case genCdO:
+                door->direction = 1;
+
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_doropn);
+
+                break;
+
+            case genBlazeCdO:
+                door->direction = 1;
+
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdopn);
+
+                break;
+
+            default:
+                break;
+
+            }
+
         }
-      }
-      break;
+
+        break;
 
     case 2:
-
-      if (!--door->topcountdown)
-      {
-        switch(door->type)
+        if (!--door->topcountdown)
         {
-          case raiseIn5Mins:
-            door->direction = 1;
-            door->type = normal;
-            S_StartSound((mobj_t *)&door->sector->soundorg,sfx_doropn);
-            break;
 
-          default:
-            break;
+            switch (door->type)
+            {
+
+            case raiseIn5Mins:
+                door->direction = 1;
+                door->type = normal;
+
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_doropn);
+
+                break;
+
+            default:
+                break;
+            }
+
         }
-      }
-      break;
+
+        break;
 
     case -1:
+        res = T_MovePlane(door->sector, door->speed, door->sector->floorheight, false, 1, door->direction);
 
-      res = T_MovePlane
-            (
-              door->sector,
-              door->speed,
-              door->sector->floorheight,
-              false,
-              1,
-              door->direction
-            );
+        if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level >= mbf_compatibility)
+            EV_LightTurnOnPartway(door->line, FixedDiv(door->sector->ceilingheight - door->sector->floorheight, door->topheight - door->sector->floorheight));
 
-
-      if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level >= mbf_compatibility)
-        EV_LightTurnOnPartway(door->line,
-                              FixedDiv(door->sector->ceilingheight -
-                                       door->sector->floorheight,
-                                       door->topheight -
-                                       door->sector->floorheight));
-
-
-      if (res == pastdest)
-      {
-        switch(door->type)
+        if (res == pastdest)
         {
 
-          case blazeRaise:
-          case blazeClose:
-          case genBlazeRaise:
-          case genBlazeClose:
-            door->sector->ceilingdata = NULL;
-            P_RemoveThinker (&door->thinker);
+            switch (door->type)
+            {
 
-            if (comp[comp_blazing])
-              S_StartSound((mobj_t *)&door->sector->soundorg,sfx_bdcls);
-            break;
+            case blazeRaise:
+            case blazeClose:
+            case genBlazeRaise:
+            case genBlazeClose:
+                door->sector->ceilingdata = NULL;
 
-          case normal:
-          case close:
-          case genRaise:
-          case genClose:
-            door->sector->ceilingdata = NULL;
-            P_RemoveThinker (&door->thinker);
-            break;
+                P_RemoveThinker(&door->thinker);
 
+                if (comp[comp_blazing])
+                    S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdcls);
 
-          case close30ThenOpen:
-            door->direction = 0;
-            door->topcountdown = TICRATE*30;
-            break;
+                break;
 
-          case genCdO:
-          case genBlazeCdO:
-            door->direction = 0;
-            door->topcountdown = door->topwait;
-            break;
+            case normal:
+            case close:
+            case genRaise:
+            case genClose:
+                door->sector->ceilingdata = NULL;
 
-          default:
-            break;
+                P_RemoveThinker(&door->thinker);
+
+                break;
+
+            case close30ThenOpen:
+                door->direction = 0;
+                door->topcountdown = TICRATE * 30;
+
+                break;
+
+            case genCdO:
+            case genBlazeCdO:
+                door->direction = 0;
+                door->topcountdown = door->topwait;
+
+                break;
+
+            default:
+                break;
+
+            }
+
+            if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level < mbf_compatibility)
+                EV_LightTurnOnPartway(door->line, 0);
+
         }
 
-
-        if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level < mbf_compatibility)
-          EV_LightTurnOnPartway(door->line,0);
-      }
-      else if (res == crushed)
-      {
-        switch(door->type)
+        else if (res == crushed)
         {
-          case genClose:
-          case genBlazeClose:
-          case blazeClose:
-          case close:
-            break;
 
-          case blazeRaise:
-          case genBlazeRaise:
-            door->direction = 1;
-        if (!comp[comp_blazing]) {
-          S_StartSound((mobj_t *)&door->sector->soundorg,sfx_bdopn);
-          break;
+            switch (door->type)
+            {
+
+            case genClose:
+            case genBlazeClose:
+            case blazeClose:
+            case close:
+                break;
+
+            case blazeRaise:
+            case genBlazeRaise:
+                door->direction = 1;
+
+            if (!comp[comp_blazing])
+            {
+
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdopn);
+
+                break;
+
+            }
+
+            default:
+                door->direction = 1;
+
+                S_StartSound((mobj_t *)&door->sector->soundorg,sfx_doropn);
+
+                break;
+
+            }
         }
 
-          default:
-            door->direction = 1;
-            S_StartSound((mobj_t *)&door->sector->soundorg,sfx_doropn);
-            break;
-        }
-      }
-      break;
+        break;
 
     case 1:
+        res = T_MovePlane(door->sector, door->speed, door->topheight, false, 1, door->direction);
 
-      res = T_MovePlane
-            (
-              door->sector,
-              door->speed,
-              door->topheight,
-              false,
-              1,
-              door->direction
-            );
+        if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level >= mbf_compatibility)
+            EV_LightTurnOnPartway(door->line, FixedDiv(door->sector->ceilingheight - door->sector->floorheight, door->topheight - door->sector->floorheight));
 
-      if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level >= mbf_compatibility)
-        EV_LightTurnOnPartway(door->line,
-                              FixedDiv(door->sector->ceilingheight -
-                                       door->sector->floorheight,
-                                       door->topheight -
-                                       door->sector->floorheight));
-
-
-      if (res == pastdest)
-      {
-        switch(door->type)
+        if (res == pastdest)
         {
-          case blazeRaise:
-          case normal:
-          case genRaise:
-          case genBlazeRaise:
-            door->direction = 0;
-            door->topcountdown = door->topwait;
-            break;
 
-          case close30ThenOpen:
-          case blazeOpen:
-          case open:
-          case genBlazeOpen:
-          case genOpen:
-          case genCdO:
-          case genBlazeCdO:
-            door->sector->ceilingdata = NULL;
-            P_RemoveThinker (&door->thinker);
-            break;
+            switch (door->type)
+            {
 
-          default:
-            break;
+            case blazeRaise:
+            case normal:
+            case genRaise:
+            case genBlazeRaise:
+                door->direction = 0;
+                door->topcountdown = door->topwait;
+
+                break;
+
+            case close30ThenOpen:
+            case blazeOpen:
+            case open:
+            case genBlazeOpen:
+            case genOpen:
+            case genCdO:
+            case genBlazeCdO:
+                door->sector->ceilingdata = NULL;
+
+                P_RemoveThinker (&door->thinker);
+
+                break;
+
+            default:
+                break;
+
+            }
+
+            if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level < mbf_compatibility)
+                EV_LightTurnOnPartway(door->line, FRACUNIT);
+
         }
 
-        if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level < mbf_compatibility)
-          EV_LightTurnOnPartway(door->line,FRACUNIT);
-      }
-      break;
-  }
+        break;
+
+    }
+
 }
 
-int EV_DoLockedDoor
-( line_t* line,
-  vldoor_e  type,
-  mobj_t* thing )
+int EV_DoLockedDoor(line_t *line, vldoor_e type, mobj_t *thing)
 {
-  player_t* p;
 
+    player_t *p = thing->player;
 
-  p = thing->player;
-  if (!p)
-    return 0;
+    if (!p)
+        return 0;
 
-  switch(line->special)
-  {
+    switch (line->special)
+    {
+
     case 99:
     case 133:
-      if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
-      {
-        p->message = PD_BLUEO;
-        S_StartSound(p->mo,sfx_oof);
-        return 0;
-      }
-      break;
+        if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
+        {
+
+            p->message = PD_BLUEO;
+
+            S_StartSound(p->mo, sfx_oof);
+
+            return 0;
+
+        }
+
+        break;
 
     case 134:
     case 135:
-      if (!p->cards[it_redcard] && !p->cards[it_redskull])
-      {
-        p->message = PD_REDO;
-        S_StartSound(p->mo,sfx_oof);
-        return 0;
-      }
-      break;
+        if (!p->cards[it_redcard] && !p->cards[it_redskull])
+        {
+
+            p->message = PD_REDO;
+
+            S_StartSound(p->mo, sfx_oof);
+
+            return 0;
+
+        }
+
+        break;
 
     case 136:
     case 137:
-      if (!p->cards[it_yellowcard] && !p->cards[it_yellowskull])
-      {
-        p->message = PD_YELLOWO;
-        S_StartSound(p->mo,sfx_oof);
-        return 0;
-      }
-      break;
-  }
+        if (!p->cards[it_yellowcard] && !p->cards[it_yellowskull])
+        {
 
-  return EV_DoDoor(line,type);
-}
+            p->message = PD_YELLOWO;
 
-int EV_DoDoor
-( line_t* line,
-  vldoor_e  type )
-{
-  int   secnum,rtn;
-  sector_t* sec;
-  vldoor_t* door;
+            S_StartSound(p->mo, sfx_oof);
 
-  secnum = -1;
-  rtn = 0;
+            return 0;
 
-  while ((secnum = P_FindSectorFromLineTag(line,secnum)) >= 0)
-  {
-    sec = &sectors[secnum];
+        }
 
-    if (P_SectorActive(ceiling_special,sec))
-        continue;
-
-
-    rtn = 1;
-    door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
-    memset(door, 0, sizeof(*door));
-    P_AddThinker (&door->thinker);
-    sec->ceilingdata = door;
-
-    door->thinker.function = T_VerticalDoor;
-    door->sector = sec;
-    door->type = type;
-    door->topwait = VDOORWAIT;
-    door->speed = VDOORSPEED;
-    door->line = line;
-    door->lighttag = 0;
-
-    switch(type)
-    {
-      case blazeClose:
-        door->topheight = P_FindLowestCeilingSurrounding(sec);
-        door->topheight -= 4*FRACUNIT;
-        door->direction = -1;
-        door->speed = VDOORSPEED * 4;
-        S_StartSound((mobj_t *)&door->sector->soundorg,sfx_bdcls);
         break;
 
-      case close:
-        door->topheight = P_FindLowestCeilingSurrounding(sec);
-        door->topheight -= 4*FRACUNIT;
-        door->direction = -1;
-        S_StartSound((mobj_t *)&door->sector->soundorg,sfx_dorcls);
-        break;
-
-      case close30ThenOpen:
-        door->topheight = sec->ceilingheight;
-        door->direction = -1;
-        S_StartSound((mobj_t *)&door->sector->soundorg,sfx_dorcls);
-        break;
-
-      case blazeRaise:
-      case blazeOpen:
-        door->direction = 1;
-        door->topheight = P_FindLowestCeilingSurrounding(sec);
-        door->topheight -= 4*FRACUNIT;
-        door->speed = VDOORSPEED * 4;
-        if (door->topheight != sec->ceilingheight)
-          S_StartSound((mobj_t *)&door->sector->soundorg,sfx_bdopn);
-        break;
-
-      case normal:
-      case open:
-        door->direction = 1;
-        door->topheight = P_FindLowestCeilingSurrounding(sec);
-        door->topheight -= 4*FRACUNIT;
-        if (door->topheight != sec->ceilingheight)
-          S_StartSound((mobj_t *)&door->sector->soundorg,sfx_doropn);
-        break;
-
-      default:
-        break;
     }
-  }
-  return rtn;
+
+    return EV_DoDoor(line, type);
+
 }
 
-int EV_VerticalDoor
-( line_t* line,
-  mobj_t* thing )
+int EV_DoDoor(line_t *line, vldoor_e type)
 {
-  player_t* player;
-  sector_t* sec;
-  vldoor_t* door;
 
+    int secnum, rtn;
+    sector_t *sec;
+    vldoor_t *door;
+    secnum = -1;
+    rtn = 0;
 
-  player = thing->player;
+    while ((secnum = P_FindSectorFromLineTag(line, secnum)) >= 0)
+    {
 
-  switch(line->special)
-  {
+        sec = &sectors[secnum];
+
+        if (P_SectorActive(ceiling_special, sec))
+            continue;
+
+        rtn = 1;
+        door = Z_Malloc(sizeof(*door), PU_LEVSPEC, 0);
+        memset(door, 0, sizeof(*door));
+        P_AddThinker(&door->thinker);
+
+        sec->ceilingdata = door;
+        door->thinker.function = T_VerticalDoor;
+        door->sector = sec;
+        door->type = type;
+        door->topwait = VDOORWAIT;
+        door->speed = VDOORSPEED;
+        door->line = line;
+        door->lighttag = 0;
+
+        switch (type)
+        {
+
+        case blazeClose:
+            door->topheight = P_FindLowestCeilingSurrounding(sec);
+            door->topheight -= 4 * FRACUNIT;
+            door->direction = -1;
+            door->speed = VDOORSPEED * 4;
+
+            S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdcls);
+
+            break;
+
+        case close:
+            door->topheight = P_FindLowestCeilingSurrounding(sec);
+            door->topheight -= 4 * FRACUNIT;
+            door->direction = -1;
+            S_StartSound((mobj_t *)&door->sector->soundorg, sfx_dorcls);
+
+            break;
+
+        case close30ThenOpen:
+            door->topheight = sec->ceilingheight;
+            door->direction = -1;
+
+            S_StartSound((mobj_t *)&door->sector->soundorg, sfx_dorcls);
+
+            break;
+
+        case blazeRaise:
+        case blazeOpen:
+            door->direction = 1;
+            door->topheight = P_FindLowestCeilingSurrounding(sec);
+            door->topheight -= 4 * FRACUNIT;
+            door->speed = VDOORSPEED * 4;
+
+            if (door->topheight != sec->ceilingheight)
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdopn);
+
+            break;
+
+        case normal:
+        case open:
+            door->direction = 1;
+            door->topheight = P_FindLowestCeilingSurrounding(sec);
+            door->topheight -= 4 * FRACUNIT;
+
+            if (door->topheight != sec->ceilingheight)
+                S_StartSound((mobj_t *)&door->sector->soundorg, sfx_doropn);
+
+            break;
+
+        default:
+            break;
+
+        }
+
+    }
+
+    return rtn;
+
+}
+
+int EV_VerticalDoor(line_t *line, mobj_t *thing)
+{
+
+    player_t *player = thing->player;
+    sector_t *sec;
+    vldoor_t *door;
+
+    switch (line->special)
+    {
+
     case 26:
     case 32:
-      if ( !player )
-        return 0;
-      if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
-      {
-          player->message = PD_BLUEK;
-          S_StartSound(player->mo,sfx_oof);
-          return 0;
-      }
-      break;
+        if (!player)
+            return 0;
+
+        if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
+        {
+
+            player->message = PD_BLUEK;
+
+            S_StartSound(player->mo, sfx_oof);
+
+            return 0;
+
+        }
+
+        break;
 
     case 27:
     case 34:
-      if ( !player )
-          return 0;
-      if (!player->cards[it_yellowcard] && !player->cards[it_yellowskull])
-      {
-          player->message = PD_YELLOWK;
-          S_StartSound(player->mo,sfx_oof);
-          return 0;
-      }
-      break;
+        if (!player)
+            return 0;
+
+        if (!player->cards[it_yellowcard] && !player->cards[it_yellowskull])
+        {
+
+            player->message = PD_YELLOWK;
+
+            S_StartSound(player->mo, sfx_oof);
+
+            return 0;
+
+        }
+
+        break;
 
     case 28:
     case 33:
-      if ( !player )
-          return 0;
-      if (!player->cards[it_redcard] && !player->cards[it_redskull])
-      {
-          player->message = PD_REDK;
-          S_StartSound(player->mo,sfx_oof);
-          return 0;
-      }
-      break;
+        if (!player)
+            return 0;
 
-    default:
-      break;
-  }
+        if (!player->cards[it_redcard] && !player->cards[it_redskull])
+        {
 
+            player->message = PD_REDK;
 
-  if (line->sidenum[1]==NO_INDEX)
-  {
-    S_StartSound(player->mo,sfx_oof);
-    return 0;
-  }
+            S_StartSound(player->mo, sfx_oof);
 
+            return 0;
 
-  sec = sides[line->sidenum[1]].sector;
-
-  door = sec->ceilingdata;
-  if (demo_compatibility) {
-    if (!door) door = sec->floordata;
-    if (!door) door = sec->lightingdata;
-  }
-  if (door &&
-      ((compatibility_level == prboom_4_compatibility) ||
-       (line->special == 1) || (line->special == 117) || (line->special == 26) || (line->special == 27) || (line->special == 28)
-      )
-     ) {
-    if (compatibility_level < prboom_4_compatibility || 
-        door->thinker.function == T_VerticalDoor) {
-      signed int outval = 0;
-
-      if (door->thinker.function == T_VerticalDoor && door->direction == -1) {
-        outval = 1; /* go back up */
-      } else if (player) {
-        outval = -1; /* go back down */
-      }
-
-      if (outval) {
-        if (door->thinker.function == T_VerticalDoor) {
-          door->direction = outval;
-        } else if (door->thinker.function == T_PlatRaise) {
-          plat_t* p = (plat_t*)door;
-          p->wait = outval;
-        } else {
-          I_Print("EV_VerticalDoor: unknown thinker.function in thinker corruption emulation");
         }
 
-        return 1;
-      }
-    }
-    return 0;
-  }
-
-
-  switch(line->special)
-  {
-    case 117:
-    case 118:
-      S_StartSound((mobj_t *)&sec->soundorg,sfx_bdopn);
-      break;
+        break;
 
     default:
-      S_StartSound((mobj_t *)&sec->soundorg,sfx_doropn);
-      break;
-  }
+        break;
 
+    }
 
-  door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
-  memset(door, 0, sizeof(*door));
-  P_AddThinker (&door->thinker);
-  sec->ceilingdata = door;
-  door->thinker.function = T_VerticalDoor;
-  door->sector = sec;
-  door->direction = 1;
-  door->speed = VDOORSPEED;
-  door->topwait = VDOORWAIT;
-  door->line = line;
+    if (line->sidenum[1] == NO_INDEX)
+    {
 
-  /* killough 10/98: use gradual lighting changes if nonzero tag given */
-  door->lighttag = comp[comp_doorlight] ? 0 : line->tag;
+        S_StartSound(player->mo, sfx_oof);
 
+        return 0;
 
-  switch(line->special)
-  {
+    }
+
+    sec = sides[line->sidenum[1]].sector;
+    door = sec->ceilingdata;
+
+    if (demo_compatibility)
+    {
+
+        if (!door)
+            door = sec->floordata;
+
+        if (!door)
+            door = sec->lightingdata;
+
+    }
+
+    if (door && ((compatibility_level == prboom_4_compatibility) || (line->special == 1) || (line->special == 117) || (line->special == 26) || (line->special == 27) || (line->special == 28)))
+    {
+
+        if (compatibility_level < prboom_4_compatibility || door->thinker.function == T_VerticalDoor)
+        {
+
+            signed int outval = 0;
+
+            if (door->thinker.function == T_VerticalDoor && door->direction == -1)
+            {
+
+                outval = 1;
+
+            }
+            
+            else if (player)
+            {
+
+                outval = -1;
+
+            }
+
+            if (outval)
+            {
+
+                if (door->thinker.function == T_VerticalDoor)
+                {
+
+                    door->direction = outval;
+
+                }
+                
+                else if (door->thinker.function == T_PlatRaise)
+                {
+
+                    plat_t *p = (plat_t*)door;
+                    p->wait = outval;
+
+                }
+                
+                else
+                {
+
+                    I_Print("EV_VerticalDoor: unknown thinker.function in thinker corruption emulation");
+
+                }
+
+                return 1;
+
+            }
+
+        }
+        
+        return 0;
+
+    }
+
+    switch (line->special)
+    {
+
+    case 117:
+    case 118:
+        S_StartSound((mobj_t *)&sec->soundorg, sfx_bdopn);
+
+        break;
+
+    default:
+        S_StartSound((mobj_t *)&sec->soundorg, sfx_doropn);
+
+        break;
+
+    }
+
+    door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
+
+    memset(door, 0, sizeof(*door));
+    P_AddThinker (&door->thinker);
+
+    sec->ceilingdata = door;
+    door->thinker.function = T_VerticalDoor;
+    door->sector = sec;
+    door->direction = 1;
+    door->speed = VDOORSPEED;
+    door->topwait = VDOORWAIT;
+    door->line = line;
+    door->lighttag = comp[comp_doorlight] ? 0 : line->tag;
+
+    switch (line->special)
+    {
+
     case 1:
     case 26:
     case 27:
     case 28:
-      door->type = normal;
-      break;
+        door->type = normal;
+
+        break;
 
     case 31:
     case 32:
     case 33:
     case 34:
-      door->type = open;
-      line->special = 0;
-      break;
+        door->type = open;
+        line->special = 0;
+
+        break;
 
     case 117:
-      door->type = blazeRaise;
-      door->speed = VDOORSPEED*4;
-      break;
+        door->type = blazeRaise;
+        door->speed = VDOORSPEED * 4;
+
+        break;
+
     case 118:
-      door->type = blazeOpen;
-      line->special = 0;
-      door->speed = VDOORSPEED*4;
-      break;
+        door->type = blazeOpen;
+        line->special = 0;
+        door->speed = VDOORSPEED * 4;
+
+        break;
 
     default:
-      door->lighttag = 0;
-      break;
-  }
+        door->lighttag = 0;
 
+        break;
 
-  door->topheight = P_FindLowestCeilingSurrounding(sec);
-  door->topheight -= 4*FRACUNIT;
-  return 1;
+    }
+
+    door->topheight = P_FindLowestCeilingSurrounding(sec);
+    door->topheight -= 4 * FRACUNIT;
+
+    return 1;
+
 }
 
-void P_SpawnDoorCloseIn30 (sector_t* sec)
+void P_SpawnDoorCloseIn30(sector_t* sec)
 {
-  vldoor_t* door;
 
-  door = Z_Malloc ( sizeof(*door), PU_LEVSPEC, 0);
+    vldoor_t *door = Z_Malloc(sizeof(*door), PU_LEVSPEC, 0);
 
-  memset(door, 0, sizeof(*door));
-  P_AddThinker (&door->thinker);
+    memset(door, 0, sizeof(*door));
+    P_AddThinker(&door->thinker);
 
-  sec->ceilingdata = door;
-  sec->special = 0;
+    sec->ceilingdata = door;
+    sec->special = 0;
+    door->thinker.function = T_VerticalDoor;
+    door->sector = sec;
+    door->direction = 0;
+    door->type = normal;
+    door->speed = VDOORSPEED;
+    door->topcountdown = 30 * 35;
+    door->line = NULL;
+    door->lighttag = 0;
 
-  door->thinker.function = T_VerticalDoor;
-  door->sector = sec;
-  door->direction = 0;
-  door->type = normal;
-  door->speed = VDOORSPEED;
-  door->topcountdown = 30 * 35;
-  door->line = NULL;
-  door->lighttag = 0;
 }
 
-void P_SpawnDoorRaiseIn5Mins
-( sector_t* sec,
-  int   secnum )
+void P_SpawnDoorRaiseIn5Mins(sector_t *sec, int secnum)
 {
-  vldoor_t* door;
 
-  door = Z_Malloc ( sizeof(*door), PU_LEVSPEC, 0);
+    vldoor_t *door = Z_Malloc (sizeof(*door), PU_LEVSPEC, 0);
 
-  memset(door, 0, sizeof(*door));
-  P_AddThinker (&door->thinker);
+    memset(door, 0, sizeof(*door));
+    P_AddThinker (&door->thinker);
 
-  sec->ceilingdata = door;
-  sec->special = 0;
+    sec->ceilingdata = door;
+    sec->special = 0;
+    door->thinker.function = T_VerticalDoor;
+    door->sector = sec;
+    door->direction = 2;
+    door->type = raiseIn5Mins;
+    door->speed = VDOORSPEED;
+    door->topheight = P_FindLowestCeilingSurrounding(sec);
+    door->topheight -= 4*FRACUNIT;
+    door->topwait = VDOORWAIT;
+    door->topcountdown = 5 * 60 * 35;
+    door->line = NULL;
+    door->lighttag = 0;
 
-  door->thinker.function = T_VerticalDoor;
-  door->sector = sec;
-  door->direction = 2;
-  door->type = raiseIn5Mins;
-  door->speed = VDOORSPEED;
-  door->topheight = P_FindLowestCeilingSurrounding(sec);
-  door->topheight -= 4*FRACUNIT;
-  door->topwait = VDOORWAIT;
-  door->topcountdown = 5 * 60 * 35;
-  door->line = NULL;
-  door->lighttag = 0;
 }
+
