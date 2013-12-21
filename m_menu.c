@@ -22,7 +22,6 @@
 extern patchnum_t hu_font[HU_FONTSIZE];
 int mouseSensitivity_horiz;
 int mouseSensitivity_vert;
-int screenblocks;
 
 boolean menuactive;
 

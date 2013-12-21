@@ -97,14 +97,6 @@ void D_Display(void)
     {
 
         HU_Erase();
-
-        if (setsizeneeded)
-        {
-
-            R_ExecuteSetViewSize();
-
-        }
-
         R_FillBackScreen();
         R_RenderPlayerView(&players[displayplayer]);
         ST_Drawer();

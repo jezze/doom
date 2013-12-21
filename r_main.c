@@ -218,24 +218,9 @@ static void R_InitLightTables (void)
     }
 }
 
-boolean setsizeneeded;
-int     setblocks;
-
-void R_SetViewSize(int blocks)
-{
-  setsizeneeded = true;
-  setblocks = blocks;
-}
-
-
-
-
-
-void R_ExecuteSetViewSize (void)
+static void R_ExecuteSetViewSize(int setblocks)
 {
   int i;
-
-  setsizeneeded = false;
 
   if (setblocks == 11)
     {
@@ -298,8 +283,6 @@ void R_ExecuteSetViewSize (void)
 
 }
 
-extern int screenblocks;
-
 void R_Init (void)
 {
 
@@ -307,7 +290,7 @@ void R_Init (void)
   R_LoadTrigTables();
   I_Print("\nR_InitData: ");
   R_InitData();
-  R_SetViewSize(screenblocks);
+  R_ExecuteSetViewSize(10);
   I_Print("\nR_Init: R_InitPlanes ");
   R_InitPlanes();
   I_Print("R_InitLightTables ");

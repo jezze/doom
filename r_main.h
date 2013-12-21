@@ -45,7 +45,5 @@ subsector_t *R_PointInSubsector(fixed_t x, fixed_t y);
 
 void R_RenderPlayerView(player_t *player);
 void R_Init(void);
-void R_SetViewSize(int blocks);
-void R_ExecuteSetViewSize(void);
 
 #endif
