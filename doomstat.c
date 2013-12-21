@@ -4,7 +4,6 @@ GameMode_t gamemode = indetermined;
 GameMission_t gamemission = doom;
 complevel_t compatibility_level, default_compatibility_level;
 int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
-int demo_insurance, default_demo_insurance;
 int allow_pushers = 1;
 int default_allow_pushers;
 int variable_friction = 1;
@@ -21,6 +20,5 @@ int monster_friction = 1;
 int default_monster_friction = 1;
 int monster_backing, default_monster_backing;
 int monster_avoid_hazards, default_monster_avoid_hazards;
-int flashing_hom;
 int doom_weapon_toggles;
 

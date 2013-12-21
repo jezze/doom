@@ -29,7 +29,7 @@ int (P_Random)(pr_class_t pr_class)
     int compat = pr_class == pr_misc ? (rng.prndindex = (rng.prndindex + 1) & 255) : (rng. rndindex = (rng. rndindex + 1) & 255);
     unsigned long boom;
 
-    if (pr_class != pr_misc && !demo_insurance)
+    if (pr_class != pr_misc)
         pr_class = pr_all_in_one;
 
     boom = rng.seed[pr_class];
@@ -39,9 +39,6 @@ int (P_Random)(pr_class_t pr_class)
         return rndtable[compat];
 
     boom >>= 20;
-
-    if (demo_insurance)
-        boom += (gametic-basetic) * 7;
 
     return boom & 255;
 

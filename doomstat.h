@@ -46,7 +46,6 @@ extern boolean fastparm;
 extern GameMode_t gamemode;
 extern GameMission_t gamemission;
 extern complevel_t compatibility_level, default_compatibility_level;
-extern int demo_insurance, default_demo_insurance;
 extern int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
 extern skill_t startskill;
 extern int startepisode;
@@ -94,7 +93,6 @@ extern int default_player_bobbing;
 extern int monster_backing, default_monster_backing;
 extern int monster_avoid_hazards, default_monster_avoid_hazards;
 extern int monster_friction, default_monster_friction;
-extern int flashing_hom;
 extern int doom_weapon_toggles;
 extern int monster_infighting, default_monster_infighting;
 

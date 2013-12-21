@@ -79,8 +79,6 @@ struct setting defaults[] =
 {
   {"default_compatibility_level", {(int*)&default_compatibility_level}, {-1}, -1, MAX_COMPATIBILITY_LEVEL - 1, def_int,ss_none},
   {"realtic_clock_rate", {&realtic_clock_rate}, {100}, 0, UL, def_int, ss_none},
-  {"flashing_hom", {&flashing_hom},{0}, 0, 1, def_bool,ss_none},
-  {"demo_insurance", {&default_demo_insurance}, {2}, 0, 2, def_int, ss_none},
   {"endoom_mode", {&endoom_mode},{5},0,7, def_hex, ss_none},
   {"level_precache", {(int*)&precache}, {0}, 0, 1, def_bool, ss_none},
   {"default_skill", {&defaultskill}, {3}, 1, 5, def_int, ss_none},

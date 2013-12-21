@@ -966,9 +966,6 @@ void G_ReloadDefaults(void)
     memcpy(comp, default_comp, sizeof comp);
   G_Compatibility();
 
-
-  demo_insurance = default_demo_insurance == 1;
-
   rngseed += I_GetRandomTimeSeed() + gametic;
 }
 
