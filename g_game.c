@@ -932,7 +932,6 @@ void G_Compatibility(void)
     monster_backing = 0;
     monster_avoid_hazards = 0;
     monster_friction = 0;
-    help_friends = 0;
   }
 }
 
@@ -948,7 +947,6 @@ void G_ReloadDefaults(void)
   monster_backing = default_monster_backing;
   monster_avoid_hazards = default_monster_avoid_hazards;
   monster_friction = default_monster_friction;
-  help_friends = default_help_friends;
   respawnparm = clrespawnparm;
   fastparm = clfastparm;
 

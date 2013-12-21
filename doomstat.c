@@ -21,7 +21,6 @@ int monster_friction = 1;
 int default_monster_friction = 1;
 int monster_backing, default_monster_backing;
 int monster_avoid_hazards, default_monster_avoid_hazards;
-int help_friends, default_help_friends;
 int flashing_hom;
 int doom_weapon_toggles;
 

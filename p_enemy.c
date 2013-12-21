@@ -693,40 +693,6 @@ static boolean P_LookForTargets(mobj_t *actor, int allaround)
     P_LookForPlayers (actor, allaround) || P_LookForMonsters(actor, allaround);
 }
 
-static boolean P_HelpFriend(mobj_t *actor)
-{
-  thinker_t *cap, *th;
-
-
-  if (actor->health*3 < actor->info->spawnhealth)
-    return false;
-
-  current_actor = actor;
-  current_allaround = true;
-
-
-  cap = &thinkerclasscap[actor->flags & MF_FRIEND ? th_friends : th_enemies];
-
-  for (th = cap->cnext; th != cap; th = th->cnext)
-    if (((mobj_t *) th)->health*2 >= ((mobj_t *) th)->info->spawnhealth)
-      {
-  if (P_Random(pr_helpfriend) < 180)
-    break;
-      }
-    else
-      if (((mobj_t *) th)->flags & MF_JUSTHIT &&
-    ((mobj_t *) th)->target &&
-    ((mobj_t *) th)->target != actor->target &&
-    !PIT_FindTarget(((mobj_t *) th)->target))
-  {
-
-    actor->threshold = BASETHRESHOLD;
-    return true;
-  }
-
-  return false;
-}
-
 void A_KeenDie(mobj_t* mo)
 {
   thinker_t *th;
@@ -854,12 +820,10 @@ void A_Chase(mobj_t *actor)
         }
 
   if (!actor->threshold) {
-    if (help_friends && P_HelpFriend(actor))
-      return;      /* killough 9/8/98: Help friends in need */
-    else if (actor->pursuecount)
+    if (actor->pursuecount)
       actor->pursuecount--;
     else {
-  actor->pursuecount = BASETHRESHOLD;
+        actor->pursuecount = BASETHRESHOLD;
 
   if (!(actor->target && actor->target->health > 0 && ((comp[comp_pursuit]) || (((actor->target->flags ^ actor->flags) & MF_FRIEND || (!(actor->flags & MF_FRIEND) && monster_infighting)) && P_CheckSight(actor, actor->target)))) && P_LookForTargets(actor, true))
         return;
