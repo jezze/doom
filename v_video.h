@@ -70,13 +70,10 @@ extern screeninfo_t screens[NUM_SCREENS];
 
 void V_InitMode();
 void V_Init(void);
-
 typedef void (*V_CopyRect_f)(int srcx, int srcy, int srcscrn, int width, int height, int destx, int desty, int destscrn, enum patch_translation_e flags);
 extern V_CopyRect_f V_CopyRect;
-
 typedef void (*V_FillRect_f)(int scrn, int x, int y, int width, int height, byte colour);
 extern V_FillRect_f V_FillRect;
-
 typedef void (*V_DrawNumPatch_f)(int x, int y, int scrn, int lump, int cm, enum patch_translation_e flags);
 extern V_DrawNumPatch_f V_DrawNumPatch;
 
