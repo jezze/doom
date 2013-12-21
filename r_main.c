@@ -374,7 +374,6 @@ static void R_SetupFrame (player_t *player)
 
 }
 
-int autodetect_hom = 0;
 int rendered_visplanes, rendered_segs, rendered_vissprites;
 boolean rendering_stats;
 
@@ -398,7 +397,7 @@ static void R_ShowStats(void)
 
 }
 
-void R_RenderPlayerView(player_t* player)
+void R_RenderPlayerView(player_t *player)
 {
 
     R_SetupFrame(player);
@@ -408,15 +407,6 @@ void R_RenderPlayerView(player_t* player)
     R_ClearSprites();
 
     rendered_segs = rendered_visplanes = 0;
-
-    if (autodetect_hom)
-    {
-
-        unsigned char color = (gametic % 20) < 9 ? 0xb0 : 0;
-
-        V_FillRect(0, viewwindowx, viewwindowy, viewwidth, viewheight, color);
-
-    }
 
     R_RenderBSPNode(numnodes - 1);
     R_ResetColumnBuffer();

@@ -274,7 +274,7 @@ int R_FlatNumForName(const char *name)
 
 int R_CheckTextureNumForName(const char *name)
 {
-  int i = NO_TEXTURE;
+  int i = 0;
   if (*name != '-')
     {
       i = textures[W_LumpNameHash(name) % (unsigned) numtextures]->index;
@@ -296,7 +296,7 @@ int R_SafeTextureNumForName(const char *name, int snum)
 {
   int i = R_CheckTextureNumForName(name);
   if (i == -1) {
-    i = NO_TEXTURE;
+    i = 0;
     I_Print("bad texture '%s' in sidedef %d\n",name,snum);
   }
   return i;

@@ -326,7 +326,7 @@ void HUlib_addMessageToMText(hu_mtext_t* m, const char* prefix, const char* msg)
 
 }
 
-void HUlib_drawMBg(int x, int y, int w, int h, const patchnum_t* bgp)
+static void HUlib_drawMBg(int x, int y, int w, int h, const patchnum_t* bgp)
 {
 
     int xs = bgp[0].width;
@@ -474,25 +474,6 @@ static void HUlib_delCharFromIText(hu_itext_t* it)
 
     if (it->l.len != it->lm)
         HUlib_delCharFromTextLine(&it->l);
-
-}
-
-void HUlib_resetIText(hu_itext_t* it)
-{
-
-    it->lm = 0;
-
-    HUlib_clearTextLine(&it->l);
-
-}
-
-void HUlib_addPrefixToIText(hu_itext_t *it, char *str)
-{
-
-    while (*str)
-        HUlib_addCharToTextLine(&it->l, *(str++));
-
-    it->lm = it->l.len;
 
 }
 
