@@ -66,28 +66,14 @@ void D_PostEvent(event_t *ev)
 
 extern boolean setsizeneeded;
 
-void D_Display (void)
+void D_Display(void)
 {
-
-    static gamestate_t oldgamestate = -1;
 
     if (!I_StartDisplay())
         return;
 
     if (gamestate != GS_LEVEL)
     {
-
-        switch (oldgamestate)
-        {
-
-        case -1:
-        case GS_LEVEL:
-            V_SetPalette(0);
-
-        default:
-            break;
-
-        }
 
         switch (gamestate)
         {
@@ -118,20 +104,15 @@ void D_Display (void)
         {
 
             R_ExecuteSetViewSize();
-            oldgamestate = -1;
 
         }
 
-        if (oldgamestate != GS_LEVEL)
-            R_FillBackScreen();
-
+        R_FillBackScreen();
         R_RenderPlayerView(&players[displayplayer]);
         ST_Drawer();
         HU_Drawer();
 
     }
-
-    oldgamestate = gamestate;
 
     M_Drawer();
     D_BuildNewTiccmds();
