@@ -10,7 +10,7 @@
 #include "p_inter.h"
 #include "m_random.h"
 #include "m_bbox.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "z_zone.h"
 
 static mobj_t *tmthing;
@@ -1597,9 +1597,7 @@ static void SpechitOverrun(line_t *ld)
       break;
       
     default:
-        lprintf(LO_ERROR, "SpechitOverrun: Warning: unable to emulate"
-                          " an overrun where numspechit=%i\n",
-                          numspechit);
+        I_Print("SpechitOverrun: Warning: unable to emulate an overrun where numspechit=%i\n", numspechit);
       break;
     }
   }
@@ -1621,7 +1619,7 @@ static void SpechitOverrun(line_t *ld)
         crushchange = addr;
         break;
       default:
-        lprintf(LO_ERROR, "SpechitOverrun: Warning: unable to emulate"
+        I_Print("SpechitOverrun: Warning: unable to emulate"
                           " an overrun where numspechit=%i\n",
                           numspechit);
         break;

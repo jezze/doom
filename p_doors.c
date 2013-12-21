@@ -5,7 +5,7 @@
 #include "sounds.h"
 #include "r_main.h"
 #include "d_englsh.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "z_zone.h"
 
 void T_VerticalDoor (vldoor_t* door)
@@ -433,7 +433,7 @@ int EV_VerticalDoor
           plat_t* p = (plat_t*)door;
           p->wait = outval;
         } else {
-          lprintf(LO_DEBUG, "EV_VerticalDoor: unknown thinker.function in thinker corruption emulation");
+          I_Print("EV_VerticalDoor: unknown thinker.function in thinker corruption emulation");
         }
 
         return 1;

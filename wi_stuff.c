@@ -7,7 +7,7 @@
 #include "wi_stuff.h"
 #include "s_sound.h"
 #include "sounds.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "r_draw.h"
 
 #define NUMEPISODES 4
@@ -280,7 +280,7 @@ static void WI_drawOnLnode(int n, const char* const c[])
   }
   else
   {
-    lprintf(LO_DEBUG,"Could not place patch on level %d", n+1);
+    I_Print("Could not place patch on level %d", n+1);
   }
 }
 

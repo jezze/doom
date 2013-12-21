@@ -9,7 +9,6 @@
 #include "i_system.h"
 #include "r_draw.h"
 #include "r_patch.h"
-#include "lprintf.h"
 #include <assert.h>
 
 typedef struct

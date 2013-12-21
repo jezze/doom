@@ -8,7 +8,7 @@
 #include "p_tick.h"
 #include "p_inter.h"
 #include "p_enemy.h"
-#include "lprintf.h"
+#include "i_system.h"
 
 #define BONUSADD        6
 

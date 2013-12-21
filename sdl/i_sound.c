@@ -4,11 +4,12 @@
 #include <SDL_mutex.h>
 #include <SDL_byteorder.h>
 #include <SDL_version.h>
+#include "m_fixed.h"
 #include "z_zone.h"
 #include "i_sound.h"
 #include "m_misc.h"
 #include "w_wad.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "s_sound.h"
 #include "doomdef.h"
 #include "doomstat.h"
@@ -264,9 +265,9 @@ void I_ShutdownSound(void)
     if (!sound_inited)
         return;
 
-    lprintf(LO_INFO, "I_ShutdownSound: ");
+    I_Print("I_ShutdownSound: ");
     SDL_CloseAudio();
-    lprintf(LO_INFO, "\n");
+    I_Print("\n");
 
     sound_inited = false;
 
@@ -277,7 +278,7 @@ void I_InitSound(void)
 
     SDL_AudioSpec audio;
 
-    lprintf(LO_INFO,"I_InitSound: ");
+    I_Print("I_InitSound: ");
 
     audio.freq = snd_samplerate;
 #if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
@@ -292,14 +293,14 @@ void I_InitSound(void)
     if (SDL_OpenAudio(&audio, NULL) < 0 )
     {
 
-        lprintf(LO_INFO,"couldn't open audio with desired format\n");
+        I_Print("couldn't open audio with desired format\n");
 
         return;
     }
 
     SAMPLECOUNT = audio.samples;
 
-    lprintf(LO_INFO," configured audio device with %d samples/slice\n", SAMPLECOUNT);
+    I_Print(" configured audio device with %d samples/slice\n", SAMPLECOUNT);
 
     if (first_sound_init)
     {
@@ -313,7 +314,7 @@ void I_InitSound(void)
     if (!nomusicparm)
         I_InitMusic();
 
-    lprintf(LO_INFO,"I_InitSound: sound module ready\n");
+    I_Print("I_InitSound: sound module ready\n");
     SDL_PauseAudio(0);
 
 }

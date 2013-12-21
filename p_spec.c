@@ -14,7 +14,7 @@
 #include "sounds.h"
 #include "m_bbox.h"
 #include "r_plane.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "z_zone.h"
 
 typedef struct
@@ -43,7 +43,6 @@ animdef_t		animdefs[] =
     {false,	"LAVA4",	"LAVA1",	8},
     {false,	"BLOOD3",	"BLOOD1",	8},
 
-    // DOOM II flat animations.
     {false,	"RROCK08",	"RROCK05",	8},		
     {false,	"SLIME04",	"SLIME01",	8},
     {false,	"SLIME08",	"SLIME05",	8},
@@ -1850,7 +1849,7 @@ void P_PlayerInSpecialSector (player_t* player)
 
       case 11:
 
-        if (comp[comp_god]) /* killough 2/21/98: add compatibility switch */
+        if (comp[comp_god])
           player->cheats &= ~CF_GODMODE;
 
         if (!(leveltime&0x1f))
@@ -2297,7 +2296,7 @@ static void Add_Friction(int friction, int movefactor, int affectee)
     {
     friction_t *f = Z_Malloc(sizeof *f, PU_LEVSPEC, 0);
 
-    f->thinker.function/*.acp1*/ = /*(actionf_p1) */T_Friction;
+    f->thinker.function = T_Friction;
     f->friction = friction;
     f->movefactor = movefactor;
     f->affectee = affectee;

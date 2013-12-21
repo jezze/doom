@@ -15,6 +15,16 @@
 
 int ms_to_next_tick;
 
+void I_Print(const char *s, ...)
+{
+
+}
+
+void I_Error(const char *s, ...)
+{
+
+}
+
 boolean I_StartDisplay(void)
 {
 

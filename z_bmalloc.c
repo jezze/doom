@@ -1,7 +1,8 @@
 #include "doomtype.h"
+#include "m_fixed.h"
 #include "z_zone.h"
 #include "z_bmalloc.h"
-#include "lprintf.h"
+#include "i_system.h"
 
 typedef struct bmalpool_s {
   struct bmalpool_s *nextpool;

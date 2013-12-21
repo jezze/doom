@@ -27,7 +27,6 @@
 #include "r_main.h"
 #include "r_fps.h"
 #include "d_main.h"
-#include "lprintf.h"
 
 boolean clnomonsters;
 boolean clrespawnparm;
@@ -327,7 +326,7 @@ static void IdentifyVersion(void)
     if (iwad && *iwad)
     {
 
-        lprintf(LO_CONFIRM,"IWAD found: %s\n", iwad);
+        I_Print("IWAD found: %s\n", iwad);
         CheckIWAD(iwad, &gamemode, &haswolflevels);
 
         switch (gamemode)
@@ -359,7 +358,7 @@ static void IdentifyVersion(void)
         }
 
         if (gamemode == indetermined)
-            lprintf(LO_WARN,"Unknown Game Version, may not work\n");
+            I_Print("Unknown Game Version, may not work\n");
 
         D_AddFile(iwad,source_iwad);
         free(iwad);
@@ -383,7 +382,7 @@ static void D_DoomMainSetup(void)
 
     setbuf(stdout, NULL);
 
-    lprintf(LO_INFO,"M_LoadDefaults: Load system defaults.\n");
+    I_Print("M_LoadDefaults: Load system defaults.\n");
     M_LoadDefaults();
 
     IdentifyVersion();
@@ -400,7 +399,7 @@ static void D_DoomMainSetup(void)
 
     G_ReloadDefaults();
     I_CalculateRes(desired_screenwidth, desired_screenheight);
-    lprintf(LO_INFO,"V_Init: allocate screens.\n");
+    I_Print("V_Init: allocate screens.\n");
     V_Init();
 
     {
@@ -421,7 +420,7 @@ static void D_DoomMainSetup(void)
             if (!fpath)
             {
 
-                lprintf(LO_WARN, "Failed to autoload %s\n", fname);
+                I_Print("Failed to autoload %s\n", fname);
 
             }
 
@@ -437,24 +436,24 @@ static void D_DoomMainSetup(void)
 
     }
 
-    lprintf(LO_INFO,"D_InitNetGame: Checking for network game.\n");
+    I_Print("D_InitNetGame: Checking for network game.\n");
     D_InitNetGame();
-    lprintf(LO_INFO,"W_Init: Init WADfiles.\n");
+    I_Print("W_Init: Init WADfiles.\n");
     W_Init();
-    lprintf(LO_INFO,"M_Init: Init miscellaneous info.\n");
+    I_Print("M_Init: Init miscellaneous info.\n");
     M_Init();
-    lprintf(LO_INFO,"R_Init: Init DOOM refresh daemon - ");
+    I_Print("R_Init: Init DOOM refresh daemon - ");
     R_Init();
-    lprintf(LO_INFO,"\nP_Init: Init Playloop state.\n");
+    I_Print("\nP_Init: Init Playloop state.\n");
     P_Init();
-    lprintf(LO_INFO,"I_Init: Setting up machine state.\n");
+    I_Print("I_Init: Setting up machine state.\n");
     I_Init();
-    lprintf(LO_INFO,"S_Init: Setting up sound.\n");
+    I_Print("S_Init: Setting up sound.\n");
     S_Init(snd_SfxVolume, snd_MusicVolume);
-    lprintf(LO_INFO,"HU_Init: Setting up heads up display.\n");
+    I_Print("HU_Init: Setting up heads up display.\n");
     HU_Init();
     I_InitGraphics();
-    lprintf(LO_INFO,"ST_Init: Init status bar.\n");
+    I_Print("ST_Init: Init status bar.\n");
     ST_Init();
 
     idmusnum = -1;

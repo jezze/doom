@@ -9,7 +9,6 @@
 #include "m_bbox.h"
 #include "r_sky.h"
 #include "v_video.h"
-#include "lprintf.h"
 #include "st_stuff.h"
 #include "i_main.h"
 #include "i_system.h"
@@ -304,20 +303,20 @@ extern int screenblocks;
 void R_Init (void)
 {
 
-  lprintf(LO_INFO, "\nR_LoadTrigTables: ");
+  I_Print("\nR_LoadTrigTables: ");
   R_LoadTrigTables();
-  lprintf(LO_INFO, "\nR_InitData: ");
+  I_Print("\nR_InitData: ");
   R_InitData();
   R_SetViewSize(screenblocks);
-  lprintf(LO_INFO, "\nR_Init: R_InitPlanes ");
+  I_Print("\nR_Init: R_InitPlanes ");
   R_InitPlanes();
-  lprintf(LO_INFO, "R_InitLightTables ");
+  I_Print("R_InitLightTables ");
   R_InitLightTables();
-  lprintf(LO_INFO, "R_InitSkyMap ");
+  I_Print("R_InitSkyMap ");
   R_InitSkyMap();
-  lprintf(LO_INFO, "R_InitTranslationsTables ");
+  I_Print("R_InitTranslationsTables ");
   R_InitTranslationTables();
-  lprintf(LO_INFO, "R_InitPatches ");
+  I_Print("R_InitPatches ");
   R_InitPatches();
 }
 

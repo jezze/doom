@@ -6,7 +6,6 @@
 #include "r_main.h"
 #include "m_random.h"
 #include "w_wad.h"
-#include "lprintf.h"
 
 #define S_CLIPPING_DIST (1200<<FRACBITS)
 #define S_CLOSE_DIST (160<<FRACBITS)
@@ -47,7 +46,7 @@ void S_Init(int sfxVolume, int musicVolume)
   {
     int i;
 
-    lprintf(LO_CONFIRM, "S_Init: default sfx volume %d\n", sfxVolume);
+    I_Print("S_Init: default sfx volume %d\n", sfxVolume);
 
 
     I_SetChannels();

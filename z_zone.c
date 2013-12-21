@@ -4,7 +4,7 @@
 #include "doomstat.h"
 #include "v_video.h"
 #include "g_game.h"
-#include "lprintf.h"
+#include "i_system.h"
 
 #define CACHE_ALIGN 32
 #define CHUNK_SIZE 32

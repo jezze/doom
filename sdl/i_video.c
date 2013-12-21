@@ -13,7 +13,7 @@
 #include "sounds.h"
 #include "w_wad.h"
 #include "st_stuff.h"
-#include "lprintf.h"
+#include "i_system.h"
 
 #define NO_PALETTE_CHANGE 1000
 
@@ -281,7 +281,7 @@ void I_FinishUpdate(void)
         if (SDL_LockSurface(screen) < 0)
         {
 
-            lprintf(LO_INFO,"I_FinishUpdate: %s\n", SDL_GetError());
+            I_Print("I_FinishUpdate: %s\n", SDL_GetError());
 
             return;
 
@@ -377,7 +377,7 @@ void I_SetRes(void)
     screens[4].height = (ST_SCALED_HEIGHT + 1);
     screens[4].byte_pitch = SCREENPITCH;
 
-    lprintf(LO_INFO,"I_SetRes: Using resolution %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
+    I_Print("I_SetRes: Using resolution %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
 
 }
 
@@ -392,7 +392,7 @@ void I_InitGraphics(void)
         firsttime = 0;
 
         atexit(I_ShutdownGraphics);
-        lprintf(LO_INFO, "I_InitGraphics: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
+        I_Print("I_InitGraphics: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
         I_UpdateVideoMode();
         I_InitInputs();
 
@@ -403,7 +403,7 @@ void I_InitGraphics(void)
 void I_UpdateVideoMode(void)
 {
 
-    lprintf(LO_INFO, "I_UpdateVideoMode: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
+    I_Print("I_UpdateVideoMode: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
 
     V_InitMode();
     V_FreeScreens();
@@ -414,7 +414,7 @@ void I_UpdateVideoMode(void)
     if (screen == NULL)
         I_Error("Couldn't set %dx%d video mode [%s]", SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
 
-    lprintf(LO_INFO, "I_UpdateVideoMode: %s, %s\n", screen->pixels ? "SDL buffer" : "own buffer", SDL_MUSTLOCK(screen) ? "lock-and-copy": "direct access");
+    I_Print("I_UpdateVideoMode: %s, %s\n", screen->pixels ? "SDL buffer" : "own buffer", SDL_MUSTLOCK(screen) ? "lock-and-copy": "direct access");
 
     mouse_currently_grabbed = false;
 

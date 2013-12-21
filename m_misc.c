@@ -16,7 +16,6 @@
 #include "m_misc.h"
 #include "s_sound.h"
 #include "sounds.h"
-#include "lprintf.h"
 #include "d_main.h"
 #include "r_draw.h"
 #include "r_fps.h"

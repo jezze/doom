@@ -1,11 +1,9 @@
 #include <fcntl.h>
-
 #include "doomstat.h"
 #include "d_client.h"
 #include "doomtype.h"
 #include "i_system.h"
 #include "w_wad.h"
-#include "lprintf.h"
 
 lumpinfo_t *lumpinfo;
 int numlumps;
@@ -64,7 +62,7 @@ static void W_AddFile(wadfile_info_t *wadfile)
       return;
     }
 
-  lprintf (LO_INFO," adding %s\n",wadfile->name);
+  I_Print(" adding %s\n",wadfile->name);
   startlump = numlumps;
 
   if (  strlen(wadfile->name)<=4 || 
@@ -241,7 +239,7 @@ void W_Init(void)
 
   W_HashLumps();
 
-  lprintf(LO_INFO,"W_InitCache\n");
+  I_Print("W_InitCache\n");
   W_InitCache();
 }
 

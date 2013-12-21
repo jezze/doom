@@ -6,7 +6,7 @@
 #include "v_video.h"
 #include "st_stuff.h"
 #include "g_game.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "z_zone.h"
 
 #define FUZZTABLE                       50

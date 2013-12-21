@@ -7,7 +7,7 @@
 #include "r_bsp.h"
 #include "r_things.h"
 #include "p_tick.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "p_tick.h"
 #include "z_zone.h"
 
@@ -156,7 +156,7 @@ static void R_InitTextures (void)
           if (patch->patch == -1)
             {
 
-              lprintf(LO_ERROR,"\nR_InitTextures: Missing patch %d in texture %.8s",
+              I_Print("\nR_InitTextures: Missing patch %d in texture %.8s",
                      mpatch->patch), texture->name;
               ++errors;
             }
@@ -255,11 +255,11 @@ const lighttable_t* R_ColourMap(int lightlevel, fixed_t spryscale)
 
 void R_InitData(void)
 {
-  lprintf(LO_INFO, "Textures ");
+  I_Print("Textures ");
   R_InitTextures();
-  lprintf(LO_INFO, "Flats ");
+  I_Print("Flats ");
   R_InitFlats();
-  lprintf(LO_INFO, "Sprites ");
+  I_Print("Sprites ");
   R_InitSpriteLumps();
   R_InitColormaps();
 }
@@ -297,7 +297,7 @@ int R_SafeTextureNumForName(const char *name, int snum)
   int i = R_CheckTextureNumForName(name);
   if (i == -1) {
     i = NO_TEXTURE;
-    lprintf(LO_DEBUG,"bad texture '%s' in sidedef %d\n",name,snum);
+    I_Print("bad texture '%s' in sidedef %d\n",name,snum);
   }
   return i;
 }

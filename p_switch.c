@@ -5,7 +5,7 @@
 #include "g_game.h"
 #include "s_sound.h"
 #include "sounds.h"
-#include "lprintf.h"
+#include "i_system.h"
 
 static int *switchlist;
 static int max_numswitches;
@@ -84,11 +84,11 @@ void P_InitSwitchList(void)
 
       texture1 = R_CheckTextureNumForName(alphSwitchList[i].name1);
       if (texture1 == -1)
-        lprintf(LO_WARN, "P_InitSwitchList: unknown texture %s\n",
+        I_Print("P_InitSwitchList: unknown texture %s\n",
             alphSwitchList[i].name1);
       texture2 = R_CheckTextureNumForName(alphSwitchList[i].name2);
       if (texture2 == -1)
-        lprintf(LO_WARN, "P_InitSwitchList: unknown texture %s\n",
+        I_Print("P_InitSwitchList: unknown texture %s\n",
             alphSwitchList[i].name2);
       if (texture1 != -1 && texture2 != -1) {
         switchlist[index++] = texture1;
@@ -121,8 +121,6 @@ static void P_StartButton
       buttonlist[i].where = w;
       buttonlist[i].btexture = texture;
       buttonlist[i].btimer = time;
-      /* use sound origin of line itself - no need to compatibility-wrap
-       * as the popout code gets it wrong whatever its value */
       buttonlist[i].soundorg = (mobj_t *)&line->soundorg;
       return;
     }

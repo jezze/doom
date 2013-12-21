@@ -1,6 +1,8 @@
 #ifndef __I_SYSTEM__
 #define __I_SYSTEM__
 
+void I_Print(const char *s, ...) __attribute__((format(printf, 1, 2)));
+void I_Error(const char *s, ...) __attribute__((format(printf, 1, 2)));
 boolean I_StartDisplay(void);
 void I_EndDisplay(void);
 int I_GetTime_RealTime(void);

@@ -6,7 +6,7 @@
 #include "v_video.h"
 #include "i_video.h"
 #include "r_filter.h"
-#include "lprintf.h"
+#include "i_system.h"
 
 screeninfo_t screens[NUM_SCREENS];
 
@@ -103,7 +103,7 @@ static void V_DrawMemPatch(int x, int y, int scrn, const rpatch_t *patch,
     unsigned int    w = patch->width;
 
     if (y<0 || y+patch->height > ((flags & VPT_STRETCH) ? 200 :  SCREENHEIGHT)) {
-      lprintf(LO_WARN, "V_DrawMemPatch8: Patch (%d,%d)-(%d,%d) exceeds LFB in vertical direction (horizontal is clipped)\nBad V_DrawMemPatch8 (flags=%u)", x, y, x+patch->width, y+patch->height, flags);
+      I_Print("V_DrawMemPatch8: Patch (%d,%d)-(%d,%d) exceeds LFB in vertical direction (horizontal is clipped)\nBad V_DrawMemPatch8 (flags=%u)", x, y, x+patch->width, y+patch->height, flags);
       return;
     }
 
@@ -333,7 +333,7 @@ V_DrawLine_f V_DrawLine = NULL_DrawLine;
 
 void V_InitMode() {
 
-      lprintf(LO_INFO, "V_InitMode: using 8 bit video mode\n");
+      I_Print("V_InitMode: using 8 bit video mode\n");
       V_CopyRect = FUNC_V_CopyRect;
       V_FillRect = V_FillRect8;
       V_DrawNumPatch = FUNC_V_DrawNumPatch;

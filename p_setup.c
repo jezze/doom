@@ -12,7 +12,7 @@
 #include "p_tick.h"
 #include "p_enemy.h"
 #include "s_sound.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "v_video.h"
 #include "r_fps.h"
 #include "z_zone.h"
@@ -114,26 +114,26 @@ static void P_GetNodesVersion(int lumpnum, int gl_lumpnum)
       data = W_CacheLumpNum(gl_lumpnum+ML_GL_SEGS);
       if (*(const int *)data == gNd3) {
         nodesVersion = gNd3;
-        lprintf(LO_DEBUG, "P_GetNodesVersion: found version 3 nodes\n");
+        I_Print("P_GetNodesVersion: found version 3 nodes\n");
         I_Error("P_GetNodesVersion: version 3 nodes not supported\n");
       } else {
         nodesVersion = gNd2;
-        lprintf(LO_DEBUG, "P_GetNodesVersion: found version 2 nodes\n");
+        I_Print("P_GetNodesVersion: found version 2 nodes\n");
       }
     }
     if (*(const int *)data == gNd4) {
       nodesVersion = gNd4;
-      lprintf(LO_DEBUG, "P_GetNodesVersion: found version 4 nodes\n");
+      I_Print("P_GetNodesVersion: found version 4 nodes\n");
       I_Error("P_GetNodesVersion: version 4 nodes not supported\n");
     }
     if (*(const int *)data == gNd5) {
       nodesVersion = gNd5;
-      lprintf(LO_DEBUG, "P_GetNodesVersion: found version 5 nodes\n");
+      I_Print("P_GetNodesVersion: found version 5 nodes\n");
       I_Error("P_GetNodesVersion: version 5 nodes not supported\n");
     }
   } else {
     nodesVersion = 0;
-    lprintf(LO_DEBUG,"P_GetNodesVersion: using normal BSP nodes\n");
+    I_Print("P_GetNodesVersion: using normal BSP nodes\n");
     if (P_CheckForZDoomNodes(lumpnum, gl_lumpnum))
       I_Error("P_GetNodesVersion: ZDoom nodes not supported yet");
   }
@@ -279,7 +279,7 @@ static void P_LoadSegs (int lump)
         li->frontsector = sides[ldef->sidenum[side]].sector;
       else {
         li->frontsector = 0;
-        lprintf(LO_WARN, "P_LoadSegs: front of seg %i has no sidedef\n", i);
+        I_Print("P_LoadSegs: front of seg %i has no sidedef\n", i);
       }
 
       if (ldef->flags & ML_TWOSIDED && ldef->sidenum[side^1]!=NO_INDEX)
@@ -422,7 +422,7 @@ static void P_LoadNodes (int lump)
   {
 
     if (numsubsectors == 1)
-      lprintf(LO_INFO,
+      I_Print(
           "P_LoadNodes: trivial map (no nodes, one subsector)\n");
     else
       I_Error("P_LoadNodes: no nodes in level");
@@ -542,20 +542,20 @@ static void P_LoadLineDefs (int lump)
         {
           if (ld->sidenum[j] != NO_INDEX && ld->sidenum[j] >= numsides) {
             ld->sidenum[j] = NO_INDEX;
-            lprintf(LO_WARN, "P_LoadLineDefs: linedef %d has out-of-range sidedef number\n",numlines-i-1);
+            I_Print("P_LoadLineDefs: linedef %d has out-of-range sidedef number\n",numlines-i-1);
           }
         }
         
         if (ld->sidenum[0] == NO_INDEX) {
           ld->sidenum[0] = 0;
 
-          lprintf(LO_WARN, "P_LoadLineDefs: linedef %d missing first sidedef\n",numlines-i-1);
+          I_Print("P_LoadLineDefs: linedef %d missing first sidedef\n",numlines-i-1);
         }
         
         if ((ld->sidenum[1] == NO_INDEX) && (ld->flags & ML_TWOSIDED)) {
           ld->flags &= ~ML_TWOSIDED;
 
-          lprintf(LO_WARN, "P_LoadLineDefs: linedef %d has two-sided flag set, but no second sidedef\n",numlines-i-1);
+          I_Print("P_LoadLineDefs: linedef %d has two-sided flag set, but no second sidedef\n",numlines-i-1);
         }
       }
 
@@ -615,7 +615,7 @@ static void P_LoadSideDefs2(int lump)
       { /* cph 2006/09/30 - catch out-of-range sector numbers; use sector 0 instead */
         unsigned short sector_num = msd->sector;
         if (sector_num >= numsectors) {
-          lprintf(LO_WARN,"P_LoadSideDefs2: sidedef %i has out-of-range sector num %u\n", i, sector_num);
+          I_Print("P_LoadSideDefs2: sidedef %i has out-of-range sector num %u\n", i, sector_num);
           sector_num = 0;
         }
         sd->sector = sec = &sectors[sector_num];
@@ -977,7 +977,7 @@ static void P_LoadReject(int lumpnum, int totallines)
       pad >>= 8;
     }
   }
-  lprintf(LO_WARN, "P_LoadReject: REJECT too short (%u<%u) - padded\n",
+  I_Print("P_LoadReject: REJECT too short (%u<%u) - padded\n",
           length, required);
 }
 

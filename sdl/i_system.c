@@ -8,18 +8,46 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <SDL.h>
-#include "lprintf.h"
 #include "doomtype.h"
 #include "doomdef.h"
-#include "lprintf.h"
 #include "m_fixed.h"
 #include "r_fps.h"
+#include "i_main.h"
 #include "i_system.h"
+
+#define MAX_MESSAGE_SIZE                1024
 
 static unsigned int start_displaytime;
 static unsigned int displaytime;
 static boolean InDisplay = false;
 int ms_to_next_tick;
+
+void I_Print(const char *s, ...)
+{
+
+    char msg[MAX_MESSAGE_SIZE];
+    va_list v;
+ 
+    va_start(v, s);
+    vsnprintf(msg, sizeof (msg), s, v);
+    va_end(v);
+    fprintf(stdout, "%s\n", msg);
+
+}
+
+void I_Error(const char *s, ...)
+{
+
+    char msg[MAX_MESSAGE_SIZE];
+    va_list v;
+
+    va_start(v, s);
+    vsnprintf(msg, sizeof (msg), s, v);
+    va_end(v);
+    fprintf(stderr, "%s\n", msg);
+    I_SafeExit(-1);
+
+}
 
 boolean I_StartDisplay(void)
 {
@@ -216,7 +244,7 @@ char *I_FindFile(const char *wfname, const char *ext)
         if (!access(p,F_OK))
         {
 
-            lprintf(LO_INFO, " found %s\n", p);
+            I_Print(" found %s\n", p);
 
             return p;
 

@@ -12,7 +12,7 @@
 #include "info.h"
 #include "g_game.h"
 #include "p_inter.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "z_zone.h"
 
 boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
@@ -898,7 +898,7 @@ void P_SpawnMapThing(const mapthing_t *mthing)
     {
 
         if (!demo_compatibility)
-            lprintf(LO_WARN, "P_SpawnMapThing: correcting bad flags (%u) (thing type %d)\n", options, mthing->type);
+            I_Print("P_SpawnMapThing: correcting bad flags (%u) (thing type %d)\n", options, mthing->type);
 
         options &= MTF_EASY | MTF_NORMAL | MTF_HARD | MTF_AMBUSH | MTF_NOTSINGLE;
 

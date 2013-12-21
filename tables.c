@@ -1,7 +1,6 @@
 #include <stddef.h>
 #include "w_wad.h"
 #include "tables.h"
-#include "lprintf.h"
 
 const fixed_t *finesine;
 const fixed_t *finecosine;

@@ -7,7 +7,7 @@
 #include "r_things.h"
 #include "r_fps.h"
 #include "v_video.h"
-#include "lprintf.h"
+#include "i_system.h"
 #include "z_zone.h"
 
 #define MINZ        (FRACUNIT*4)
