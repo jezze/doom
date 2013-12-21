@@ -564,10 +564,6 @@ void G_Ticker (void)
     prevgamestate = gamestate;
   }
 
-  if (gamestate != GS_LEVEL)
-    return;
-
-
   switch (gamestate)
     {
     case GS_LEVEL:
