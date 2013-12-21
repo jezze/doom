@@ -14,6 +14,17 @@
 #include "i_system.h"
 
 int ms_to_next_tick;
+int realtic_clock_rate = 100;
+
+void I_SafeExit(int rc)
+{
+
+}
+
+void I_Init(void)
+{
+
+}
 
 void I_Print(const char *s, ...)
 {
@@ -56,13 +67,6 @@ unsigned long I_GetRandomTimeSeed(void)
 
 }
 
-const char *I_SigString(char *buf, size_t sz, int signum)
-{
-
-    return 0;
-
-}
-
 void I_Read(int fd, void *vbuf, size_t sz)
 {
 
@@ -75,15 +79,18 @@ int I_Filelength(int handle)
 
 }
 
-boolean HasTrailingSlash(const char *dn)
+char *I_FindFile(const char *wfname, const char *ext)
 {
 
-    return ((dn[strlen(dn) - 1] == '/'));
+    return 0;
 
 }
 
-char *I_FindFile(const char *wfname, const char *ext)
+int main(int argc, char **argv)
 {
+
+    I_PreInitGraphics();
+    D_DoomMain();
 
     return 0;
 

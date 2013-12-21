@@ -7,7 +7,6 @@
 #include "g_game.h"
 #include "m_menu.h"
 #include "i_system.h"
-#include "i_main.h"
 #include "i_video.h"
 #include "r_main.h"
 

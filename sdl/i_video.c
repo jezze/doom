@@ -17,15 +17,11 @@
 
 #define NO_PALETTE_CHANGE 1000
 
-extern void M_QuitDOOM(int choice);
-
 static SDL_Surface *screen;
 int leds_always_off = 0;
 static int newpal = 0;
-static boolean mouse_enabled;
-static boolean mouse_currently_grabbed;
 
-static int I_TranslateKey(SDL_keysym *key)
+static int getkey(SDL_keysym *key)
 {
 
     int rc = 0;
@@ -95,7 +91,7 @@ static int I_TranslateKey(SDL_keysym *key)
 
 }
 
-static int I_SDLtoDoomMouseState(Uint8 buttonstate)
+static int getmouse(Uint8 buttonstate)
 {
 
     return 0 | (buttonstate & SDL_BUTTON(1) ? 1 : 0) | (buttonstate & SDL_BUTTON(2) ? 2 : 0) | (buttonstate & SDL_BUTTON(3) ? 4 : 0);
@@ -112,7 +108,7 @@ static void I_GetEvent(SDL_Event *Event)
 
     case SDL_KEYDOWN:
         event.type = ev_keydown;
-        event.data1 = I_TranslateKey(&Event->key.keysym);
+        event.data1 = getkey(&Event->key.keysym);
 
         D_PostEvent(&event);
 
@@ -120,7 +116,7 @@ static void I_GetEvent(SDL_Event *Event)
 
     case SDL_KEYUP:
         event.type = ev_keyup;
-        event.data1 = I_TranslateKey(&Event->key.keysym);
+        event.data1 = getkey(&Event->key.keysym);
 
         D_PostEvent(&event);
 
@@ -128,36 +124,27 @@ static void I_GetEvent(SDL_Event *Event)
 
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
-        if (mouse_enabled)
-        {
+        event.type = ev_mouse;
+        event.data1 = getmouse(SDL_GetMouseState(NULL, NULL));
+        event.data2 = event.data3 = 0;
 
-            event.type = ev_mouse;
-            event.data1 = I_SDLtoDoomMouseState(SDL_GetMouseState(NULL, NULL));
-            event.data2 = event.data3 = 0;
-
-            D_PostEvent(&event);
-        }
+        D_PostEvent(&event);
 
         break;
 
     case SDL_MOUSEMOTION:
-        if (mouse_currently_grabbed)
-        {
+        event.type = ev_mouse;
+        event.data1 = getmouse(Event->motion.state);
+        event.data2 = Event->motion.xrel << 5;
+        event.data3 = -Event->motion.yrel << 5;
 
-            event.type = ev_mouse;
-            event.data1 = I_SDLtoDoomMouseState(Event->motion.state);
-            event.data2 = Event->motion.xrel << 5;
-            event.data3 = -Event->motion.yrel << 5;
-
-            D_PostEvent(&event);
-
-        }
+        D_PostEvent(&event);
 
         break;
 
     case SDL_QUIT:
         S_StartSound(NULL, sfx_swtchn);
-        M_QuitDOOM(0);
+        exit(0);
 
     default:
         break;
@@ -171,27 +158,8 @@ void I_StartTic(void)
 
     SDL_Event Event;
 
-    boolean should_be_grabbed = mouse_enabled && !(gamestate != GS_LEVEL);
-
-    if (mouse_currently_grabbed != should_be_grabbed)
-        SDL_WM_GrabInput((mouse_currently_grabbed = should_be_grabbed) ? SDL_GRAB_ON : SDL_GRAB_OFF);
-
     while (SDL_PollEvent(&Event))
         I_GetEvent(&Event);
-
-}
-
-void I_StartFrame(void)
-{
-
-}
-
-static void I_InitInputs(void)
-{
-
-    mouse_enabled = 1;
-
-    SDL_WarpMouse((unsigned short)(SCREENWIDTH / 2), (unsigned short)(SCREENHEIGHT / 2));
 
 }
 
@@ -251,16 +219,6 @@ static void I_UploadNewPalette(int pal)
     }
 
     SDL_SetPalette(SDL_GetVideoSurface(), SDL_LOGPAL | SDL_PHYSPAL, colours + 256 * pal, 0, 256);
-
-}
-
-void I_ShutdownGraphics(void)
-{
-
-}
-
-void I_UpdateNoBlit(void)
-{
 
 }
 
@@ -356,11 +314,14 @@ void I_CalculateRes(unsigned int width, unsigned int height)
 
 }
 
-void I_SetRes(void)
+void I_InitGraphics(void)
 {
 
     int i;
 
+    I_Print("I_InitGraphics: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
+    V_InitMode();
+    V_FreeScreens();
     I_CalculateRes(SCREENWIDTH, SCREENHEIGHT);
 
     for (i = 0; i < 3; i++)
@@ -375,47 +336,10 @@ void I_SetRes(void)
     screens[4].width = SCREENWIDTH;
     screens[4].height = (ST_SCALED_HEIGHT + 1);
     screens[4].byte_pitch = SCREENPITCH;
-
-    I_Print("I_SetRes: Using resolution %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
-
-}
-
-void I_InitGraphics(void)
-{
-
-    static int firsttime = 1;
-
-    if (firsttime)
-    {
-
-        firsttime = 0;
-
-        atexit(I_ShutdownGraphics);
-        I_Print("I_InitGraphics: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
-        I_UpdateVideoMode();
-        I_InitInputs();
-
-    }
-
-}
-
-void I_UpdateVideoMode(void)
-{
-
-    I_Print("I_UpdateVideoMode: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
-
-    V_InitMode();
-    V_FreeScreens();
-    I_SetRes();
-
     screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_DOUBLEBUF | SDL_HWPALETTE | SDL_FULLSCREEN);
 
     if (screen == NULL)
         I_Error("Couldn't set %dx%d video mode [%s]", SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
-
-    I_Print("I_UpdateVideoMode: %s, %s\n", screen->pixels ? "SDL buffer" : "own buffer", SDL_MUSTLOCK(screen) ? "lock-and-copy": "direct access");
-
-    mouse_currently_grabbed = false;
 
     if (!SDL_MUSTLOCK(screen))
     {
@@ -433,8 +357,10 @@ void I_UpdateVideoMode(void)
     }
 
     V_AllocScreens();
-    SDL_ShowCursor(0);
     R_InitBuffer(SCREENWIDTH, SCREENHEIGHT);
+    SDL_ShowCursor(0);
+    SDL_WM_GrabInput(SDL_GRAB_ON);
+    SDL_WarpMouse((unsigned short)(SCREENWIDTH / 2), (unsigned short)(SCREENHEIGHT / 2));
 
 }
 

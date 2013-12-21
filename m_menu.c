@@ -13,7 +13,6 @@
 #include "sounds.h"
 #include "m_menu.h"
 #include "m_misc.h"
-#include "i_main.h"
 #include "i_system.h"
 #include "i_video.h"
 #include "i_sound.h"

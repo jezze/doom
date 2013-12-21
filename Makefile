@@ -1,11 +1,11 @@
 BACKEND=sdl
 
-OBJ_sdl=sdl/i_main.o sdl/i_sound.o sdl/i_system.o sdl/i_video.o
+OBJ_sdl=sdl/i_sound.o sdl/i_system.o sdl/i_video.o
 LIB_sdl=sdl/libsdldoom.a
 CFLAGS_sdl=-I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -std=c99
 LDFLAGS_sdl=-L/usr/lib -lSDL -lpthread
 
-OBJ_fudge=fudge/i_main.o fudge/i_sound.o fudge/i_system.o fudge/i_video.o
+OBJ_fudge=fudge/i_sound.o fudge/i_system.o fudge/i_video.o
 LIB_fudge=fudge/libfudgedoom.a
 CFLAGS_fudge=
 LDFLAGS_fudge=

@@ -14,7 +14,6 @@
 #include "f_finale.h"
 #include "m_misc.h"
 #include "m_menu.h"
-#include "i_main.h"
 #include "i_system.h"
 #include "i_sound.h"
 #include "i_video.h"
@@ -112,7 +111,6 @@ static void D_DoomLoop(void)
     for (;;)
     {
 
-        I_StartFrame();
         TryRunTics();
 
         if (players[displayplayer].mo)

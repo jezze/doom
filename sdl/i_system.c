@@ -10,9 +10,11 @@
 #include <SDL.h>
 #include "doomtype.h"
 #include "doomdef.h"
+#include "d_main.h"
 #include "m_fixed.h"
-#include "i_main.h"
 #include "i_system.h"
+#include "i_video.h"
+#include "i_sound.h"
 
 #define MAX_MESSAGE_SIZE                1024
 
@@ -20,6 +22,38 @@ static unsigned int start_displaytime;
 static unsigned int displaytime;
 static boolean InDisplay = false;
 int ms_to_next_tick;
+int realtic_clock_rate = 100;
+static int_64_t I_GetTime_Scale = 1 << 24;
+tic_vars_t tic_vars;
+
+static void handle_signal(int s)
+{
+
+    char buf[2048];
+
+    signal(s, SIG_IGN);
+    strcpy(buf,"Exiting on signal: ");
+    snprintf(buf + strlen(buf), 2000 - strlen(buf), "signal %d", s);
+    I_Error("%s", buf);
+
+}
+
+void I_SafeExit(int rc)
+{
+
+    exit(rc);
+
+}
+
+void I_Init(void)
+{
+
+    if (!(nomusicparm && nosfxparm))
+        I_InitSound();
+
+    tic_vars.msec = realtic_clock_rate * TICRATE / 100000.0f;
+
+}
 
 void I_Print(const char *s, ...)
 {
@@ -119,15 +153,6 @@ unsigned long I_GetRandomTimeSeed(void)
 
 }
 
-const char *I_SigString(char *buf, size_t sz, int signum)
-{
-
-    snprintf(buf, sz, "signal %d", signum);
-
-    return buf;
-
-}
-
 void I_Read(int fd, void *vbuf, size_t sz)
 {
 
@@ -160,7 +185,7 @@ int I_Filelength(int handle)
 
 }
 
-boolean HasTrailingSlash(const char *dn)
+static boolean HasTrailingSlash(const char *dn)
 {
 
     return ((dn[strlen(dn) - 1] == '/'));
@@ -242,6 +267,22 @@ char *I_FindFile(const char *wfname, const char *ext)
     }
 
     return NULL;
+
+}
+
+int main(int argc, char **argv)
+{
+
+    signal(SIGSEGV, handle_signal);
+    signal(SIGTERM, handle_signal);
+    signal(SIGFPE, handle_signal);
+    signal(SIGILL, handle_signal);
+    signal(SIGINT, handle_signal);
+    signal(SIGABRT, handle_signal);
+    I_PreInitGraphics();
+    D_DoomMain();
+
+    return 0;
 
 }
 

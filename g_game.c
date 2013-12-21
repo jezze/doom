@@ -26,7 +26,6 @@
 #include "r_sky.h"
 #include "p_inter.h"
 #include "g_game.h"
-#include "i_main.h"
 #include "i_system.h"
 #include "z_zone.h"
 
