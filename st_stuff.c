@@ -101,7 +101,6 @@
 static player_t *plyr;
 static unsigned int st_clock;
 static int st_msgcounter = 0;
-static st_stateenum_t st_gamestate;
 static boolean st_statusbaron;
 static boolean st_notdeathmatch;
 static boolean st_armson;
@@ -123,6 +122,7 @@ int health_green;
 int armor_red;
 int armor_yellow;
 int armor_green;
+static int st_palette = 0;
 static st_percent_t w_health;
 static st_binicon_t w_armsbg;
 static st_multicon_t w_arms[6];
@@ -437,8 +437,6 @@ void ST_Ticker(void)
 
 }
 
-int st_palette = 0;
-
 static void ST_doPaletteStuff(void)
 {
 
@@ -458,13 +456,13 @@ static void ST_doPaletteStuff(void)
     if (cnt)
     {
 
-        palette = (cnt+7) >> 3;
+        palette = (cnt + 7) >> 3;
 
         if (palette >= NUMREDPALS)
-            palette = NUMREDPALS-1;
+            palette = NUMREDPALS - 1;
 
         if (menuactive)
-            palette >>=1;
+            palette >>= 1;
 
         palette += STARTREDPALS;
 
@@ -639,7 +637,6 @@ static void ST_initData(void)
 
     plyr = &players[displayplayer];
     st_clock = 0;
-    st_gamestate = FirstPersonState;
     st_statusbaron = true;
     st_faceindex = 0;
     st_palette = -1;

@@ -81,8 +81,6 @@ void TryRunTics(void)
 
             }
 
-            WasRenderedInTryRunTics = true;
-
             if (movement_smooth)
             {
 

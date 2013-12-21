@@ -9,8 +9,7 @@
 #include "g_game.h"
 #include "r_main.h"
 
-const char *const mapnames[] =
-{
+const char *const mapnames[] = {
     HUSTR_E1M1,
     HUSTR_E1M2,
     HUSTR_E1M3,
@@ -53,8 +52,7 @@ const char *const mapnames[] =
 
 };
 
-const char *const mapnames2[] =
-{
+const char *const mapnames2[] = {
     HUSTR_1,
     HUSTR_2,
     HUSTR_3,
@@ -91,8 +89,7 @@ const char *const mapnames2[] =
     HUSTR_32,
 };
 
-const char *const mapnamesp[] =
-{
+const char *const mapnamesp[] = {
     PHUSTR_1,
     PHUSTR_2,
     PHUSTR_3,
@@ -129,8 +126,7 @@ const char *const mapnamesp[] =
     PHUSTR_32,
 };
 
-const char *const mapnamest[] =
-{
+const char *const mapnamest[] = {
     THUSTR_1,
     THUSTR_2,
     THUSTR_3,
@@ -240,7 +236,6 @@ static hu_textline_t w_keys;
 static hu_textline_t w_gkeys;
 static hu_textline_t w_monsec;
 static hu_mtext_t w_rtext;
-static boolean always_off = false;
 static boolean message_on;
 static boolean message_list;
 boolean message_dontfuckwithme;

@@ -43,7 +43,6 @@ static interpolation_t *curipos;
 
 static boolean NoInterpolateView;
 static boolean didInterp;
-boolean WasRenderedInTryRunTics;
 
 void R_InterpolateView (player_t *player, fixed_t frac)
 {

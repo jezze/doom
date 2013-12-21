@@ -75,7 +75,6 @@ extern mapthing_t playerstarts[];
 extern wbstartstruct_t wminfo;
 extern int mouseSensitivity_horiz;
 extern int mouseSensitivity_vert;
-extern boolean singletics;
 extern int skyflatnum;
 extern int maketic;
 extern ticcmd_t netcmds[][BACKUPTICS];

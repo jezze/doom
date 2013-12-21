@@ -18,14 +18,6 @@ void ST_Drawer(void);
 void ST_Start(void);
 void ST_Init(void);
 
-typedef enum
-{
-
-    AutomapState,
-    FirstPersonState
-
-} st_stateenum_t;
-
 extern int health_red;
 extern int health_yellow;
 extern int health_green;
@@ -34,6 +26,5 @@ extern int armor_yellow;
 extern int armor_green;
 extern int ammo_red;
 extern int ammo_yellow;
-extern int st_palette;
 
 #endif

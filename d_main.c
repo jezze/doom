@@ -32,7 +32,6 @@ boolean clrespawnparm;
 boolean clfastparm;
 boolean respawnparm;
 boolean fastparm;
-boolean singletics = false;
 boolean nosfxparm;
 boolean nomusicparm;
 
@@ -116,35 +115,13 @@ static void D_DoomLoop(void)
     for (;;)
     {
 
-        WasRenderedInTryRunTics = false;
-        I_StartFrame ();
-
-        if (singletics)
-        {
-
-            I_StartTic ();
-            G_BuildTiccmd(&netcmds[consoleplayer][maketic % BACKUPTICS]);
-
-            M_Ticker();
-            G_Ticker();
-
-            gametic++;
-            maketic++;
-
-        }
-
-        else
-        {
-
-            TryRunTics ();
-
-        }
+        I_StartFrame();
+        TryRunTics();
 
         if (players[displayplayer].mo)
             S_UpdateSounds(players[displayplayer].mo);
 
-        if (!movement_smooth || !WasRenderedInTryRunTics)
-            D_Display();
+        D_Display();
 
     }
 
