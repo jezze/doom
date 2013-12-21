@@ -69,8 +69,7 @@ void TryRunTics(void)
         if (!runtics)
         {
 
-            if (!movement_smooth)
-                I_uSleep(ms_to_next_tick * 1000);
+            I_uSleep(ms_to_next_tick * 1000);
 
             if (I_GetTime() - entertime > 10)
             {
@@ -78,13 +77,6 @@ void TryRunTics(void)
                 M_Ticker();
                 
                 return;
-
-            }
-
-            if (movement_smooth)
-            {
-
-                D_Display();
 
             }
 

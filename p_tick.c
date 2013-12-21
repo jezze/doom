@@ -17,7 +17,7 @@ void P_InitThinkers(void)
 
     int i;
 
-    for (i=0; i < NUMTHCLASS; i++)
+    for (i = 0; i < NUMTHCLASS; i++)
         thinkerclasscap[i].cprev = thinkerclasscap[i].cnext = &thinkerclasscap[i];
 
     thinkercap.prev = thinkercap.next = &thinkercap;
@@ -84,8 +84,6 @@ void P_RemoveThinkerDelayed(thinker_t *thinker)
 void P_RemoveThinker(thinker_t *thinker)
 {
 
-    R_StopInterpolationIfNeeded(thinker);
-
     thinker->function = P_RemoveThinkerDelayed;
 
     P_UpdateThinker(thinker);
@@ -117,14 +115,11 @@ void P_SetTarget(mobj_t **mop, mobj_t *targ)
 
 }
 
-static void P_RunThinkers (void)
+static void P_RunThinkers(void)
 {
 
     for (currentthinker = thinkercap.next; currentthinker != &thinkercap; currentthinker = currentthinker->next)
     {
-
-        if (newthinkerpresent)
-            R_ActivateThinkerInterpolations(currentthinker);
 
         if (currentthinker->function)
             currentthinker->function(currentthinker);
@@ -143,7 +138,6 @@ void P_Ticker(void)
     if ((menuactive && players[consoleplayer].viewz != 1))
         return;
 
-    R_UpdateInterpolations ();
     P_MapStart();
 
     if (gamestate == GS_LEVEL)

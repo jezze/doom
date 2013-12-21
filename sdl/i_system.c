@@ -116,13 +116,6 @@ fixed_t I_GetTimeFrac (void)
 void I_GetTime_SaveMS(void)
 {
 
-    if (!movement_smooth)
-        return;
-
-    tic_vars.start = SDL_GetTicks();
-    tic_vars.next = (unsigned int)((tic_vars.start * tic_vars.msec + 1.0f) / tic_vars.msec);
-    tic_vars.step = tic_vars.next - tic_vars.start;
-
 }
 
 unsigned long I_GetRandomTimeSeed(void)

@@ -321,13 +321,7 @@ static void R_SetupFrame (player_t *player)
     viewplayer = player;
 
     if (player->mo != oviewer || NoInterpolate)
-    {
-
-        R_ResetViewInterpolation();
-
         oviewer = player->mo;
-
-    }
 
     tic_vars.frac = I_GetTimeFrac();
 
@@ -339,8 +333,6 @@ static void R_SetupFrame (player_t *player)
     extralight = player->extralight;
     viewsin = finesine[viewangle >> ANGLETOFINESHIFT];
     viewcos = finecosine[viewangle >> ANGLETOFINESHIFT];
-
-    R_DoInterpolations(tic_vars.frac);
 
     if (player->mo->subsector->sector->heightsec != -1)
     {
@@ -416,8 +408,6 @@ void R_RenderPlayerView(player_t *player)
 
     if (rendering_stats)
         R_ShowStats();
-
-    R_RestoreInterpolations();
 
 }
 

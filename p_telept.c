@@ -72,9 +72,6 @@ int EV_Teleport(line_t *line, int side, mobj_t *thing)
     if (player)
       player->momx = player->momy = 0;
 
-     if (player && player->mo == thing)
-      R_ResetViewInterpolation();
-
           return 1;
         }
   return 0;
@@ -138,9 +135,6 @@ int EV_SilentTeleport(line_t *line, int side, mobj_t *thing)
             }
           
 
-          if (player && player->mo == thing)
-            R_ResetViewInterpolation();
-
           return 1;
         }
   return 0;
@@ -193,11 +187,8 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
             x += l->dy < 0 != side ? -1 : 1;
 
 
-        if (!P_TeleportMove(thing, x, y, false)) /* killough 8/9/98 */
+        if (!P_TeleportMove(thing, x, y, false))
           return 0;
-
-        if (player && player->mo == thing)
-          R_ResetViewInterpolation();
 
         thing->z = z + sides[l->sidenum[stepdown]].sector->floorheight;
         thing->angle += angle;
@@ -217,9 +208,6 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
 
             player->deltaviewheight = deltaviewheight;
           }
-
-        if (player && player->mo == thing)
-          R_ResetViewInterpolation();
 
         return 1;
       }
