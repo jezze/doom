@@ -42,7 +42,6 @@ const lighttable_t *(*zlight)[MAXLIGHTZ];
 const lighttable_t *fullcolormap;
 const lighttable_t **colormaps;
 int extralight;
-typedef fixed_t fixed2_t[2];
 
 void R_InterpolateView(player_t *player, fixed_t frac)
 {

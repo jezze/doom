@@ -12,17 +12,6 @@
 #define LIGHTZSHIFT                     20
 #define NUMCOLORMAPS                    32
 
-typedef struct
-{
-
-    fixed_t viewx;
-    fixed_t viewy;
-    fixed_t viewz;
-    angle_t viewangle;
-    angle_t viewpitch;
-
-} view_vars_t;
-
 extern fixed_t viewcos;
 extern fixed_t viewsin;
 extern int viewwidth;
