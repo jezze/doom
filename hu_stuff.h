@@ -18,7 +18,6 @@ extern int hudcolor_xyco;
 extern int hudcolor_mesg;
 extern int hudcolor_chat;
 extern int hudcolor_list;
-extern int hud_list_bgon;
 extern int hud_msg_lines;
 
 void HU_Init(void);

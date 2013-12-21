@@ -257,7 +257,6 @@ int hudcolor_mesg;
 int hudcolor_chat;
 int hud_msg_lines;
 int hudcolor_list;
-int hud_list_bgon;
 static char hud_coordstrx[32];
 static char hud_coordstry[32];
 static char hud_coordstrz[32];

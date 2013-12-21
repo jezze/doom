@@ -170,7 +170,6 @@ struct setting defaults[] = {
   {"hudcolor_chat", {&hudcolor_chat}, {5},0,9, def_int,ss_mess},
   {"hudcolor_list", {&hudcolor_list}, {5},0,9, def_int,ss_mess},
   {"hud_msg_lines", {&hud_msg_lines}, {1},1,16, def_int,ss_mess},
-  {"hud_list_bgon", {&hud_list_bgon}, {0},0,1, def_bool,ss_mess},
   {"health_red",    {&health_red}   , {25},0,200, def_int,ss_stat},
   {"health_yellow", {&health_yellow}, {50},0,200, def_int,ss_stat},
   {"health_green",  {&health_green} , {100},0,200, def_int,ss_stat},

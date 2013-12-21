@@ -289,7 +289,7 @@ void HUlib_initMText(hu_mtext_t *m, int x, int y, int w, int h, const patchnum_t
     m->on = on;
 
     for (i = 0; i < HU_MAXMESSAGES; i++)
-        HUlib_initTextLine(&m->l[i], x, y + (hud_list_bgon ? i + 1 : i) * HU_REFRESHSPACING, font, startchar, cm);
+        HUlib_initTextLine(&m->l[i], x, y + i * HU_REFRESHSPACING, font, startchar, cm);
 
 }
 
@@ -326,41 +326,6 @@ void HUlib_addMessageToMText(hu_mtext_t* m, const char* prefix, const char* msg)
 
 }
 
-static void HUlib_drawMBg(int x, int y, int w, int h, const patchnum_t* bgp)
-{
-
-    int xs = bgp[0].width;
-    int ys = bgp[0].height;
-    int i, j;
-
-    V_DrawNumPatch(x, y, FG, bgp[0].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-    for (j = x + xs; j < x + w - xs; j += xs)
-        V_DrawNumPatch(j, y, FG, bgp[1].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-    V_DrawNumPatch(j, y, FG, bgp[2].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-    for (i=y+ys;i<y+h-ys;i+=ys)
-    {
-
-        V_DrawNumPatch(x, i, FG, bgp[3].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-        for (j = x + xs; j < x + w - xs; j += xs)
-            V_DrawNumPatch(j, i, FG, bgp[4].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-        V_DrawNumPatch(j, i, FG, bgp[5].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-    }
-
-    V_DrawNumPatch(x, i, FG, bgp[6].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-    for (j = x + xs; j < x + w - xs; j += xs)
-        V_DrawNumPatch(j, i, FG, bgp[7].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-    V_DrawNumPatch(j, i, FG, bgp[8].lumpnum, CR_DEFAULT, VPT_STRETCH);
-
-}
-
 void HUlib_drawMText(hu_mtext_t* m)
 {
 
@@ -369,9 +334,6 @@ void HUlib_drawMText(hu_mtext_t* m)
 
     if (!*m->on)
         return;
-
-    if (hud_list_bgon)
-        HUlib_drawMBg(m->x,m->y,m->w,m->h,m->bg);
 
     for (i = 0; i < m->nl; i++)
     {
@@ -382,22 +344,8 @@ void HUlib_drawMText(hu_mtext_t* m)
             idx += m->nl;
 
         l = &m->l[idx];
-
-        if (hud_list_bgon)
-        {
-
-            l->x = m->x + 4;
-            l->y = m->y + (i + 1) * HU_REFRESHSPACING;
-
-        }
-
-        else
-        {
-
-            l->x = m->x;
-            l->y = m->y + i * HU_REFRESHSPACING;
-
-        }
+        l->x = m->x;
+        l->y = m->y + i * HU_REFRESHSPACING;
 
         HUlib_drawTextLine(l, false);
 
@@ -405,47 +353,10 @@ void HUlib_drawMText(hu_mtext_t* m)
 
 }
 
-static void HUlib_eraseMBg(hu_mtext_t* m)
-{
-
-    int lh;
-    int y;
-
-    if (viewwindowx)
-    {
-
-        lh = m->l[0].f[0].height + 1;
-
-        for (y=m->y; y<m->y+lh*(hud_msg_lines+2) ; y++)
-        {
-
-            if (y < viewwindowy || y >= viewwindowy + viewheight)
-            {
-
-                R_VideoErase(0, y, SCREENWIDTH);
-
-            }
-
-            else
-            {
-
-                R_VideoErase(0, y, viewwindowx);
-                R_VideoErase(viewwindowx + viewwidth, y, viewwindowx);
-
-            }
-
-        }
-
-    }
-}
-
 void HUlib_eraseMText(hu_mtext_t* m)
 {
 
     int i;
-
-    if (hud_list_bgon)
-        HUlib_eraseMBg(m);
 
     for (i = 0; i < m->nl; i++)
     {
