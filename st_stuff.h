@@ -43,9 +43,6 @@ extern int armor_yellow;
 extern int armor_green;
 extern int ammo_red;
 extern int ammo_yellow;
-extern int sts_always_red;
-extern int sts_pct_always_gray;
-extern int sts_traditional_keys;
 extern int st_palette;
 
 #endif

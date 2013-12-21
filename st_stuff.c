@@ -405,8 +405,6 @@ static void ST_updateFaceWidget(void)
 
 }
 
-int sts_traditional_keys;
-
 static void ST_updateWidgets(void)
 {
 

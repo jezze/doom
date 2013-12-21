@@ -6,9 +6,6 @@
 #include "st_lib.h"
 #include "r_main.h"
 
-int sts_always_red;
-int sts_pct_always_gray;
-
 void STlib_initNum(st_number_t *n, int x, int y, const patchnum_t *pl, int *num, boolean *on, int width)
 {
 
@@ -57,21 +54,21 @@ static void STlib_drawNum(st_number_t *n, int cm, boolean refresh)
     x = n->x;
 
     if (!num)
-        V_DrawNumPatch(x - w, n->y, FG, n->p[0].lumpnum, cm, (((cm != CR_DEFAULT) && !sts_always_red) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
+        V_DrawNumPatch(x - w, n->y, FG, n->p[0].lumpnum, cm, ((cm != CR_DEFAULT) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
 
     while (num && numdigits--)
     {
 
         x -= w;
 
-        V_DrawNumPatch(x, n->y, FG, n->p[num % 10].lumpnum, cm, (((cm!=CR_DEFAULT) && !sts_always_red) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
+        V_DrawNumPatch(x, n->y, FG, n->p[num % 10].lumpnum, cm, ((cm != CR_DEFAULT) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
 
         num /= 10;
 
     }
 
     if (neg)
-        V_DrawNamePatch(x - w, n->y, FG, "STTMINUS", cm, (((cm != CR_DEFAULT) && !sts_always_red) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
+        V_DrawNamePatch(x - w, n->y, FG, "STTMINUS", cm, ((cm != CR_DEFAULT) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
 
 }
 
@@ -96,7 +93,7 @@ void STlib_updatePercent(st_percent_t *per, int cm, int refresh)
 {
 
     if (*per->n.on && (refresh || (per->n.oldnum != *per->n.num)))
-        V_DrawNumPatch(per->n.x, per->n.y, FG, per->p->lumpnum, sts_pct_always_gray ? CR_GRAY : cm, (sts_always_red ? VPT_NONE : VPT_TRANS) | VPT_STRETCH);
+        V_DrawNumPatch(per->n.x, per->n.y, FG, per->p->lumpnum, cm, VPT_NONE | VPT_STRETCH);
 
     STlib_updateNum(&per->n, cm, refresh);
 

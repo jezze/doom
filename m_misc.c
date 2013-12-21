@@ -74,8 +74,7 @@ int mus_pause_opt;
 int endoom_mode;
 extern const char* S_music_files[];
 
-struct setting defaults[] =
-{
+struct setting defaults[] = {
   {"default_compatibility_level", {(int*)&default_compatibility_level}, {-1}, -1, MAX_COMPATIBILITY_LEVEL - 1, def_int,ss_none},
   {"realtic_clock_rate", {&realtic_clock_rate}, {100}, 0, UL, def_int, ss_none},
   {"endoom_mode", {&endoom_mode},{5},0,7, def_hex, ss_none},
@@ -90,9 +89,6 @@ struct setting defaults[] =
   {"monster_friction", {&default_monster_friction}, {1}, 0, 1, def_bool, ss_enem, &monster_friction},
   {"allow_pushers", {&default_allow_pushers}, {1}, 0, 1, def_bool,ss_weap, &allow_pushers},
   {"variable_friction", {&default_variable_friction}, {1}, 0, 1, def_bool,ss_weap, &variable_friction},
-  {"sts_always_red", {&sts_always_red}, {1}, 0, 1, def_bool,ss_stat},
-  {"sts_pct_always_gray", {&sts_pct_always_gray}, {0}, 0, 1, def_bool,ss_stat},
-  {"sts_traditional_keys", {&sts_traditional_keys}, {0}, 0, 1, def_bool,ss_stat},
   {"autorun", {&autorun}, {0}, 0, 1, def_bool,ss_none},
   {"comp_zombie", {&default_comp[comp_zombie]}, {0}, 0, 1, def_bool, ss_comp, &comp[comp_zombie]},
   {"comp_infcheat", {&default_comp[comp_infcheat]}, {0}, 0, 1, def_bool, ss_comp, &comp[comp_infcheat]},
