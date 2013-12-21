@@ -936,9 +936,6 @@ void P_SpawnMapThing(const mapthing_t *mthing)
 
     }
 
-    if (nomonsters && (i == MT_SKULL || (mobjinfo[i].flags & MF_COUNTKILL)))
-        return;
-
     x = mthing->x << FRACBITS;
     y = mthing->y << FRACBITS;
 

@@ -74,8 +74,6 @@ int key_autorun;
 int key_reverse;
 int key_backspace;
 int key_enter;
-int key_quit;
-int key_pause;
 int destination_keys[MAXPLAYERS];
 int key_weapontoggle;
 int key_weapon1;
@@ -453,11 +451,6 @@ boolean G_Responder (event_t* ev)
   switch (ev->type)
     {
     case ev_keydown:
-      if (ev->data1 == key_pause)
-        {
-          special_event = BT_SPECIAL | (BTS_PAUSE & BT_SPECIALMASK);
-          return true;
-        }
       if (ev->data1 <NUMKEYS)
         gamekeydown[ev->data1] = true;
       return true;
@@ -959,7 +952,6 @@ void G_ReloadDefaults(void)
   help_friends = default_help_friends;
   respawnparm = clrespawnparm;
   fastparm = clfastparm;
-  nomonsters = clnomonsters;
 
   if (startskill==sk_none)
     startskill = (skill_t)(defaultskill-1);

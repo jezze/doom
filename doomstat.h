@@ -41,7 +41,6 @@ enum
 
 };
 
-extern boolean nomonsters;
 extern boolean respawnparm;
 extern boolean fastparm;
 extern GameMode_t gamemode;

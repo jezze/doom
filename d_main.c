@@ -28,10 +28,8 @@
 #include "r_fps.h"
 #include "d_main.h"
 
-boolean clnomonsters;
 boolean clrespawnparm;
 boolean clfastparm;
-boolean nomonsters;
 boolean respawnparm;
 boolean fastparm;
 boolean singletics = false;
@@ -362,7 +360,6 @@ static void D_DoomMainSetup(void)
 
     IdentifyVersion();
 
-    nomonsters = clnomonsters = 0;
     respawnparm = clrespawnparm = 0;
     fastparm = clfastparm = 0;
 

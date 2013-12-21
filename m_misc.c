@@ -161,8 +161,6 @@ struct setting defaults[] =
   {"key_use", {&key_use}, {' '}, 0, MAX_KEY, def_key, ss_keys},
   {"key_strafe", {&key_strafe}, {KEYD_RALT}, 0, MAX_KEY, def_key, ss_keys},
   {"key_speed", {&key_speed}, {KEYD_RSHIFT}, 0, MAX_KEY, def_key, ss_keys},
-  {"key_quit", {&key_quit}, {KEYD_F10}, 0, MAX_KEY, def_key, ss_keys},
-  {"key_pause", {&key_pause}, {KEYD_PAUSE}, 0, MAX_KEY, def_key, ss_keys},
   {"key_autorun", {&key_autorun}, {KEYD_CAPSLOCK}, 0, MAX_KEY, def_key, ss_keys},
   {"key_backspace", {&key_backspace}, {KEYD_BACKSPACE}, 0, MAX_KEY, def_key, ss_keys},
   {"key_enter", {&key_enter}, {KEYD_ENTER}, 0, MAX_KEY, def_key, ss_keys},

@@ -51,8 +51,6 @@ extern int key_autorun;
 extern int key_reverse;
 extern int key_backspace;
 extern int key_enter;
-extern int key_quit;
-extern int key_pause;
 extern int key_forward;
 extern int key_leftturn;
 extern int key_rightturn;

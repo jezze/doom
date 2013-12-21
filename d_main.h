@@ -6,7 +6,6 @@
 
 #define MAXLOADFILES 3
 
-extern boolean clnomonsters;
 extern boolean clrespawnparm;
 extern boolean clfastparm;
 extern boolean nosfxparm;
