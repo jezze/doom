@@ -18,6 +18,7 @@
 
 int realtic_clock_rate = 100;
 static int_64_t I_GetTime_Scale = 1 << 24;
+tic_vars_t tic_vars;
 
 static int gettime_scaled(void)
 {
@@ -77,7 +78,7 @@ void I_Init(void)
     if (!(nomusicparm && nosfxparm))
         I_InitSound();
 
-    R_InitInterpolation();
+    tic_vars.msec = realtic_clock_rate * TICRATE / 100000.0f;
 
 }
 

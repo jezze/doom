@@ -14,20 +14,6 @@ typedef struct
 
 } view_vars_t;
 
-typedef struct
-{
-
-    unsigned int start;
-    unsigned int next;
-    unsigned int step;
-    fixed_t frac;
-    float msec;
-
-} tic_vars_t;
-
-extern tic_vars_t tic_vars;
-
-void R_InitInterpolation(void);
 void R_InterpolateView(player_t *player, fixed_t frac);
 
 #endif
