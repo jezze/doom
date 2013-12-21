@@ -99,8 +99,6 @@
 #define ST_MAXAMMO3Y            (ST_Y+17)
 
 static player_t *plyr;
-static boolean st_firsttime;
-static int veryfirsttime = 1;
 static unsigned int st_clock;
 static int st_msgcounter=0;
 static st_chatstateenum_t st_chatstate;
@@ -491,35 +489,13 @@ static void ST_drawWidgets(boolean refresh)
 
 }
 
-static void ST_doRefresh(void)
+void ST_Drawer(void)
 {
 
-  st_firsttime = false;
+    ST_doPaletteStuff();
+    ST_refreshBackground();
+    ST_drawWidgets(true);
 
-  ST_refreshBackground();
-
-  ST_drawWidgets(true);
-
-}
-
-static void ST_diffDraw(void)
-{
-
-  ST_drawWidgets(false);
-}
-
-void ST_Drawer(boolean statusbaron, boolean refresh)
-{
-  st_firsttime = st_firsttime || refresh;
-
-  ST_doPaletteStuff();
-
-  if (statusbaron) {
-    if (st_firsttime)
-      ST_doRefresh();     /* If just after ST_Start(), refresh all */
-    else
-      ST_diffDraw();      /* Otherwise, update as little as possible */
-  }
 }
 
 static void ST_loadGraphics(boolean doload)
@@ -596,7 +572,6 @@ static void ST_initData(void)
 {
   int i;
 
-  st_firsttime = true;
   plyr = &players[displayplayer];
 
   st_clock = 0;
@@ -789,6 +764,5 @@ static void ST_Stop(void)
 
 void ST_Init(void)
 {
-  veryfirsttime = 0;
   ST_loadData();
 }

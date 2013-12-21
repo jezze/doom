@@ -72,10 +72,7 @@ extern boolean setsizeneeded;
 void D_Display (void)
 {
 
-    static boolean isborderstate = false;
-    static boolean borderwillneedredraw = false;
     static gamestate_t oldgamestate = -1;
-    boolean viewactive = false, isborder = false;
 
     if (!I_StartDisplay())
         return;
@@ -118,8 +115,6 @@ void D_Display (void)
     else if (gametic != basetic)
     {
 
-        boolean redrawborderstuff;
-
         HU_Erase();
 
         if (setsizeneeded)
@@ -130,47 +125,19 @@ void D_Display (void)
 
         }
 
-        viewactive = 1;
-        isborder = viewheight != SCREENHEIGHT;
-
         if (oldgamestate != GS_LEVEL)
-        {
-
             R_FillBackScreen();
 
-            redrawborderstuff = isborder;
-
-        }
-        
-        else
-        {
-
-            redrawborderstuff = isborder && (!isborderstate || borderwillneedredraw);
-            borderwillneedredraw = menuactive && isborder && viewactive && (viewwidth != SCREENWIDTH);
-
-        }
-
-        if (redrawborderstuff)
-            R_DrawViewBorder();
-
-        if (viewactive)
-            R_RenderPlayerView(&players[displayplayer]);
-
-        ST_Drawer(isborder, redrawborderstuff);
-        R_DrawViewBorder();
+        R_RenderPlayerView(&players[displayplayer]);
+        ST_Drawer();
         HU_Drawer();
 
     }
 
-    isborderstate = isborder;
     oldgamestate = gamestate;
 
     if (paused)
-    {
-
         V_DrawNamePatch((320 - V_NamePatchWidth("M_PAUSE")) / 2, 4, 0, "M_PAUSE", CR_DEFAULT, VPT_STRETCH);
-
-    }
 
     M_Drawer();
     D_BuildNewTiccmds();

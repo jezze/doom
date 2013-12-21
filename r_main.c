@@ -432,7 +432,6 @@ void R_RenderPlayerView (player_t* player)
     {
       unsigned char color=(gametic % 20) < 9 ? 0xb0 : 0;
       V_FillRect(0, viewwindowx, viewwindowy, viewwidth, viewheight, color);
-      R_DrawViewBorder();
     }
 
   R_RenderBSPNode (numnodes-1);

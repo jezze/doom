@@ -14,7 +14,7 @@
 boolean ST_Responder(event_t *ev);
 
 void ST_Ticker(void);
-void ST_Drawer(boolean st_statusbaron, boolean refresh);
+void ST_Drawer(void);
 void ST_Start(void);
 void ST_Init(void);
 
