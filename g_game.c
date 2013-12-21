@@ -31,312 +31,357 @@
 #include "r_fps.h"
 #include "z_zone.h"
 
-static short consistancy[MAXPLAYERS][BACKUPTICS];
 static int ticdup = 1;
 
-gameaction_t    gameaction;
-gamestate_t     gamestate;
-skill_t         gameskill;
-boolean         respawnmonsters;
-int             gameepisode;
-int             gamemap;
-boolean         paused;
-
-static boolean command_loadgame = false;
-
-boolean         usergame;
-int             starttime;
-boolean         playeringame[MAXPLAYERS];
-player_t        players[MAXPLAYERS];
-int             consoleplayer;
-int             displayplayer;
-int             gametic;
-int             basetic;       /* killough 9/29/98: for demo sync */
-int             totalkills, totallive, totalitems, totalsecret;
-boolean         demoplayback;
+gameaction_t gameaction;
+gamestate_t gamestate;
+skill_t gameskill;
+boolean respawnmonsters;
+int gameepisode;
+int gamemap;
+boolean usergame;
+int starttime;
+boolean playeringame[MAXPLAYERS];
+player_t players[MAXPLAYERS];
+int consoleplayer;
+int displayplayer;
+int gametic;
+int basetic;
+int totalkills, totallive, totalitems, totalsecret;
+boolean demoplayback;
 wbstartstruct_t wminfo;
-boolean         haswolflevels = false;
-int             autorun = false;
-int             totalleveltimes;
-int        longtics;
-int     key_right;
-int     key_left;
-int     key_up;
-int     key_down;
-int     key_menu_right;
-int     key_menu_left;
-int     key_menu_up;
-int     key_menu_down;
-int     key_menu_backspace;
-int     key_menu_escape;
-int     key_menu_enter;
-int     key_strafeleft;
-int     key_straferight;
-int     key_fire;
-int     key_use;
-int     key_strafe;
-int     key_speed;
-int     key_escape = KEYD_ESCAPE;
-int     key_autorun;
-int     key_reverse;
-int     key_backspace;
-int     key_enter;
-int     key_soundvolume;
-int     key_quit;
-int     key_pause;
-int     destination_keys[MAXPLAYERS];
-int     key_weapontoggle;
-int     key_weapon1;
-int     key_weapon2;
-int     key_weapon3;
-int     key_weapon4;
-int     key_weapon5;
-int     key_weapon6;
-int     key_weapon7;
-int     key_weapon8;
-int     key_weapon9;
-int     mousebfire;
-int     mousebstrafe;
-int     mousebforward;
+boolean haswolflevels = false;
+int autorun = false;
+int totalleveltimes;
+int longtics;
+int key_right;
+int key_left;
+int key_up;
+int key_down;
+int key_menu_right;
+int key_menu_left;
+int key_menu_up;
+int key_menu_down;
+int key_menu_backspace;
+int key_menu_escape;
+int key_menu_enter;
+int key_strafeleft;
+int key_straferight;
+int key_fire;
+int key_use;
+int key_strafe;
+int key_speed;
+int key_escape = KEYD_ESCAPE;
+int key_autorun;
+int key_reverse;
+int key_backspace;
+int key_enter;
+int key_quit;
+int key_pause;
+int destination_keys[MAXPLAYERS];
+int key_weapontoggle;
+int key_weapon1;
+int key_weapon2;
+int key_weapon3;
+int key_weapon4;
+int key_weapon5;
+int key_weapon6;
+int key_weapon7;
+int key_weapon8;
+int key_weapon9;
+int mousebfire;
+int mousebstrafe;
+int mousebforward;
 
-#define MAXPLMOVE   (forwardmove[1])
-#define TURBOTHRESHOLD  0x32
-#define SLOWTURNTICS  6
-#define QUICKREVERSE (short)32768
-#define NUMKEYS   512
+#define MAXPLMOVE                       (forwardmove[1])
+#define TURBOTHRESHOLD                  0x32
+#define SLOWTURNTICS                    6
+#define QUICKREVERSE                    (short)32768
+#define NUMKEYS                         512
 
 fixed_t forwardmove[2] = {0x19, 0x32};
-fixed_t sidemove[2]    = {0x18, 0x28};
-fixed_t angleturn[3]   = {640, 1280, 320};
+fixed_t sidemove[2] = {0x18, 0x28};
+fixed_t angleturn[3] = {640, 1280, 320};
 
 static boolean gamekeydown[NUMKEYS];
-static int     turnheld;
+static int turnheld;
 static boolean mousearray[4];
 static boolean *mousebuttons = &mousearray[1];
-static int   mousex;
-static int   mousey;
-static int   dclicktime;
-static int   dclickstate;
-static int   dclicks;
-static int   dclicktime2;
-static int   dclickstate2;
-static int   dclicks2;
+static int mousex;
+static int mousey;
+static int dclicktime;
+static int dclickstate;
+static int dclicks;
+static int dclicktime2;
+static int dclickstate2;
+static int dclicks2;
 static buttoncode_t special_event;
 int defaultskill;
-int    bodyqueslot, bodyquesize;
-mobj_t **bodyque = 0;
 
-static inline signed char fudgef(signed char b)
+static inline char fudgef(char b)
 {
-  static int c;
-  if (!b || !demo_compatibility || longtics) return b;
-  if (++c & 0x1f) return b;
-  b |= 1; if (b>2) b-=2;
-  return b;
+
+    static int c;
+
+    if (!b || !demo_compatibility || longtics)
+        return b;
+        
+    if (++c & 0x1f)
+        return b;
+
+    b |= 1;
+    
+    if (b > 2)
+        b -= 2;
+
+    return b;
+
 }
 
-static inline signed short fudgea(signed short b)
+static inline short fudgea(short b)
 {
-  if (!b || !demo_compatibility || !longtics) return b;
-  b |= 1; if (b>2) b-=2;
-  return b;
+
+    if (!b || !demo_compatibility || !longtics)
+        return b;
+
+    b |= 1;
+    
+    if (b > 2)
+        b -= 2;
+
+    return b;
+
 }
 
 void G_BuildTiccmd(ticcmd_t* cmd)
 {
-  boolean strafe;
-  boolean bstrafe;
-  int speed;
-  int tspeed;
-  int forward;
-  int side;
-  int newweapon;
 
-  memset(cmd,0,sizeof*cmd);
-  cmd->consistancy = consistancy[consoleplayer][maketic%BACKUPTICS];
-  strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe];
-  speed = (gamekeydown[key_speed] ? !autorun : autorun);
-  forward = side = 0;
+    boolean strafe;
+    boolean bstrafe;
+    int speed;
+    int tspeed;
+    int forward;
+    int side;
+    int newweapon;
 
-  if (gamekeydown[key_right] || gamekeydown[key_left])
-    turnheld += ticdup;
-  else
-    turnheld = 0;
+    memset(cmd, 0, sizeof *cmd);
 
-  if (turnheld < SLOWTURNTICS)
-    tspeed = 2;
-  else
-    tspeed = speed;
+    strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe];
+    speed = (gamekeydown[key_speed] ? !autorun : autorun);
+    forward = side = 0;
 
-  if (gamekeydown[key_reverse])
+    if (gamekeydown[key_right] || gamekeydown[key_left])
+        turnheld += ticdup;
+    else
+        turnheld = 0;
+
+    if (turnheld < SLOWTURNTICS)
+        tspeed = 2;
+    else
+        tspeed = speed;
+
+    if (gamekeydown[key_reverse])
     {
-      cmd->angleturn += QUICKREVERSE;
-      gamekeydown[key_reverse] = false;
+
+        cmd->angleturn += QUICKREVERSE;
+        gamekeydown[key_reverse] = false;
+
     }
 
-  if (strafe)
+    if (strafe)
     {
-      if (gamekeydown[key_right])
+
+        if (gamekeydown[key_right])
+            side += sidemove[speed];
+
+        if (gamekeydown[key_left])
+            side -= sidemove[speed];
+
+    }
+
+    else
+    {
+
+        if (gamekeydown[key_right])
+            cmd->angleturn -= angleturn[tspeed];
+
+        if (gamekeydown[key_left])
+            cmd->angleturn += angleturn[tspeed];
+
+    }
+
+    if (gamekeydown[key_up])
+        forward += forwardmove[speed];
+
+    if (gamekeydown[key_down])
+        forward -= forwardmove[speed];
+
+    if (gamekeydown[key_straferight])
         side += sidemove[speed];
-      if (gamekeydown[key_left])
+
+    if (gamekeydown[key_strafeleft])
         side -= sidemove[speed];
-    }
-  else
+
+    if (gamekeydown[key_fire] || mousebuttons[mousebfire])
+        cmd->buttons |= BT_ATTACK;
+
+    if (gamekeydown[key_use])
     {
-      if (gamekeydown[key_right])
-        cmd->angleturn -= angleturn[tspeed];
-      if (gamekeydown[key_left])
-        cmd->angleturn += angleturn[tspeed];
-    }
 
-  if (gamekeydown[key_up])
-    forward += forwardmove[speed];
-  if (gamekeydown[key_down])
-    forward -= forwardmove[speed];
-  if (gamekeydown[key_straferight])
-    side += sidemove[speed];
-  if (gamekeydown[key_strafeleft])
-    side -= sidemove[speed];
+        cmd->buttons |= BT_USE;
+        dclicks = 0;
 
-
-  cmd->chatchar = HU_dequeueChatChar();
-
-  if (gamekeydown[key_fire] || mousebuttons[mousebfire])
-    cmd->buttons |= BT_ATTACK;
-
-  if (gamekeydown[key_use])
-    {
-      cmd->buttons |= BT_USE;
-
-      dclicks = 0;
     }
 
-  if ((!demo_compatibility && players[consoleplayer].attackdown &&
-       !P_CheckAmmo(&players[consoleplayer])) || gamekeydown[key_weapontoggle])
-    newweapon = P_SwitchWeapon(&players[consoleplayer]);
-  else
+    if ((!demo_compatibility && players[consoleplayer].attackdown && !P_CheckAmmo(&players[consoleplayer])) || gamekeydown[key_weapontoggle])
     {
-      newweapon =
-        gamekeydown[key_weapon1] ? wp_fist :
-        gamekeydown[key_weapon2] ? wp_pistol :
-        gamekeydown[key_weapon3] ? wp_shotgun :
-        gamekeydown[key_weapon4] ? wp_chaingun :
-        gamekeydown[key_weapon5] ? wp_missile :
-        gamekeydown[key_weapon6] && gamemode != shareware ? wp_plasma :
-        gamekeydown[key_weapon7] && gamemode != shareware ? wp_bfg :
-        gamekeydown[key_weapon8] ? wp_chainsaw :
-        (!demo_compatibility && gamekeydown[key_weapon9] && gamemode == commercial) ? wp_supershotgun :
-        wp_nochange;
 
-      if (!demo_compatibility)
+        newweapon = P_SwitchWeapon(&players[consoleplayer]);
+
+    }
+
+    else
+    {
+
+        newweapon = gamekeydown[key_weapon1] ? wp_fist : gamekeydown[key_weapon2] ? wp_pistol : gamekeydown[key_weapon3] ? wp_shotgun : gamekeydown[key_weapon4] ? wp_chaingun : gamekeydown[key_weapon5] ? wp_missile : gamekeydown[key_weapon6] && gamemode != shareware ? wp_plasma : gamekeydown[key_weapon7] && gamemode != shareware ? wp_bfg : gamekeydown[key_weapon8] ? wp_chainsaw : (!demo_compatibility && gamekeydown[key_weapon9] && gamemode == commercial) ? wp_supershotgun : wp_nochange;
+
+        if (!demo_compatibility)
         {
-          const player_t *player = &players[consoleplayer];
 
-          if (newweapon==wp_fist && player->weaponowned[wp_chainsaw] &&
-              player->readyweapon!=wp_chainsaw &&
-              (player->readyweapon==wp_fist ||
-               !player->powers[pw_strength] ||
-               P_WeaponPreferred(wp_chainsaw, wp_fist)))
-            newweapon = wp_chainsaw;
+            const player_t *player = &players[consoleplayer];
 
-          if (newweapon == wp_shotgun && gamemode == commercial &&
-              player->weaponowned[wp_supershotgun] &&
-              (!player->weaponowned[wp_shotgun] ||
-               player->readyweapon == wp_shotgun ||
-               (player->readyweapon != wp_supershotgun &&
-                P_WeaponPreferred(wp_supershotgun, wp_shotgun))))
-            newweapon = wp_supershotgun;
+            if (newweapon==wp_fist && player->weaponowned[wp_chainsaw] && player->readyweapon != wp_chainsaw && (player->readyweapon == wp_fist || !player->powers[pw_strength] || P_WeaponPreferred(wp_chainsaw, wp_fist)))
+                newweapon = wp_chainsaw;
+
+            if (newweapon == wp_shotgun && gamemode == commercial && player->weaponowned[wp_supershotgun] && (!player->weaponowned[wp_shotgun] || player->readyweapon == wp_shotgun || (player->readyweapon != wp_supershotgun && P_WeaponPreferred(wp_supershotgun, wp_shotgun))))
+                newweapon = wp_supershotgun;
+
         }
 
     }
 
-  if (newweapon != wp_nochange)
+    if (newweapon != wp_nochange)
     {
-      cmd->buttons |= BT_CHANGE;
-      cmd->buttons |= newweapon<<BT_WEAPONSHIFT;
+
+        cmd->buttons |= BT_CHANGE;
+        cmd->buttons |= newweapon << BT_WEAPONSHIFT;
+
     }
 
+    if (mousebuttons[mousebforward])
+        forward += forwardmove[speed];
 
-  if (mousebuttons[mousebforward])
-    forward += forwardmove[speed];
-
-
-  if (mousebuttons[mousebforward] != dclickstate && dclicktime > 1 )
+    if (mousebuttons[mousebforward] != dclickstate && dclicktime > 1 )
     {
-      dclickstate = mousebuttons[mousebforward];
-      if (dclickstate)
-        dclicks++;
-      if (dclicks == 2)
+
+        dclickstate = mousebuttons[mousebforward];
+
+        if (dclickstate)
+            dclicks++;
+
+        if (dclicks == 2)
         {
-          cmd->buttons |= BT_USE;
-          dclicks = 0;
+
+            cmd->buttons |= BT_USE;
+            dclicks = 0;
+
         }
-      else
-        dclicktime = 0;
+
+        else
+        {
+
+            dclicktime = 0;
+
+        }
+
     }
-  else
-    if ((dclicktime += ticdup) > 20)
-      {
+
+    else if ((dclicktime += ticdup) > 20)
+    {
+
         dclicks = 0;
         dclickstate = 0;
-      }
 
-  bstrafe = mousebuttons[mousebstrafe];
-
-  if (bstrafe != dclickstate2 && dclicktime2 > 1 )
-    {
-      dclickstate2 = bstrafe;
-      if (dclickstate2)
-        dclicks2++;
-      if (dclicks2 == 2)
-        {
-          cmd->buttons |= BT_USE;
-          dclicks2 = 0;
-        }
-      else
-        dclicktime2 = 0;
     }
-  else
-    if ((dclicktime2 += ticdup) > 20)
-      {
+
+    bstrafe = mousebuttons[mousebstrafe];
+
+    if (bstrafe != dclickstate2 && dclicktime2 > 1)
+    {
+
+        dclickstate2 = bstrafe;
+
+        if (dclickstate2)
+            dclicks2++;
+
+        if (dclicks2 == 2)
+        {
+
+            cmd->buttons |= BT_USE;
+            dclicks2 = 0;
+
+        }
+
+        else
+        {
+
+            dclicktime2 = 0;
+
+        }
+
+    }
+
+    else if ((dclicktime2 += ticdup) > 20)
+    {
+
         dclicks2 = 0;
         dclickstate2 = 0;
-      }
-  forward += mousey;
-  if (strafe)
-    side += mousex / 4;       /* mead  Don't want to strafe as fast as turns.*/
-  else
-    cmd->angleturn -= mousex; /* mead now have enough dynamic range 2-10-00 */
 
-  mousex = mousey = 0;
+    }
 
-  if (forward > MAXPLMOVE)
-    forward = MAXPLMOVE;
-  else if (forward < -MAXPLMOVE)
-    forward = -MAXPLMOVE;
-  if (side > MAXPLMOVE)
-    side = MAXPLMOVE;
-  else if (side < -MAXPLMOVE)
-    side = -MAXPLMOVE;
+    forward += mousey;
 
-  cmd->forwardmove += fudgef((signed char)forward);
-  cmd->sidemove += side;
-  cmd->angleturn = fudgea(cmd->angleturn);
+    if (strafe)
+        side += mousex / 4;
+    else
+        cmd->angleturn -= mousex;
 
-  if (special_event & BT_SPECIAL) {
-    cmd->buttons = special_event;
-    special_event = 0;
-  }
+    mousex = mousey = 0;
+
+    if (forward > MAXPLMOVE)
+        forward = MAXPLMOVE;
+    else if (forward < -MAXPLMOVE)
+        forward = -MAXPLMOVE;
+
+    if (side > MAXPLMOVE)
+        side = MAXPLMOVE;
+    else if (side < -MAXPLMOVE)
+        side = -MAXPLMOVE;
+
+    cmd->forwardmove += fudgef(forward);
+    cmd->sidemove += side;
+    cmd->angleturn = fudgea(cmd->angleturn);
+
+    if (special_event & BT_SPECIAL)
+    {
+
+        cmd->buttons = special_event;
+        special_event = 0;
+
+    }
+
 }
 
 void G_RestartLevel(void)
 {
-  special_event = BT_SPECIAL | (BTS_RESTARTLEVEL & BT_SPECIALMASK);
+
+    special_event = BT_SPECIAL | (BTS_RESTARTLEVEL & BT_SPECIALMASK);
+
 }
 
 #include "z_bmalloc.h"
 
-static void G_DoLoadLevel (void)
+static void G_DoLoadLevel(void)
 {
   int i;
 
@@ -395,7 +440,7 @@ static void G_DoLoadLevel (void)
 
   memset (gamekeydown, 0, sizeof(gamekeydown));
   mousex = mousey = 0;
-  special_event = 0; paused = false;
+  special_event = 0;
   memset (mousebuttons, 0, sizeof(mousebuttons));
 
 
@@ -405,21 +450,6 @@ static void G_DoLoadLevel (void)
 
 boolean G_Responder (event_t* ev)
 {
-
-  if (gameaction == ga_nothing && (demoplayback))
-    {
-
-      if (ev->type == ev_keydown && ev->data1 == key_pause)
-  {
-    if (paused ^= 2)
-      S_PauseSound();
-    else
-      S_ResumeSound();
-    return true;
-  }
-
-      return !(paused & 2) && ((ev->type == ev_keydown) || (ev->type == ev_mouse && ev->data1)) ? M_StartControlPanel(), true : false;
-    }
 
   if (gamestate == GS_FINALE && F_Responder(ev))
     return true;
@@ -495,9 +525,7 @@ void G_Ticker (void)
         }
     }
 
-  if (paused & 2 || (!demoplayback && menuactive))
-    basetic++;
-  else {
+    {
 
     int buf = (gametic/ticdup)%BACKUPTICS;
 
@@ -517,22 +545,6 @@ void G_Ticker (void)
         {
           if (players[i].cmd.buttons & BT_SPECIAL)
             {
-              switch (players[i].cmd.buttons & BT_SPECIALMASK)
-                {
-                case BTS_PAUSE:
-                  paused ^= 1;
-                  if (paused)
-                    S_PauseSound ();
-                  else
-                    S_ResumeSound ();
-                  break;
-
-                case BTS_RESTARTLEVEL:
-                  if (demoplayback || (compatibility_level < lxdoom_1_compatibility))
-                    break;
-                gameaction = ga_loadlevel;
-                break;
-                }
         players[i].cmd.buttons = 0;
             }
         }
@@ -552,7 +564,7 @@ void G_Ticker (void)
     prevgamestate = gamestate;
   }
 
-  if (paused & 2 && gamestate != GS_LEVEL)
+  if (gamestate != GS_LEVEL)
     return;
 
 
@@ -1010,73 +1022,55 @@ void G_SetFastParms(int fast_pending)
 
 void G_InitNew(skill_t skill, int episode, int map)
 {
-  int i;
 
-  if (paused)
+    int i;
+
+    if (skill > sk_nightmare)
+        skill = sk_nightmare;
+
+    if (episode < 1)
+        episode = 1;
+
+    if (gamemode == retail)
     {
-      paused = false;
-      S_ResumeSound();
+
+        if (episode > 4)
+            episode = 4;
+
     }
 
-  if (skill > sk_nightmare)
-    skill = sk_nightmare;
-
-  if (episode < 1)
-    episode = 1;
-
-  if (gamemode == retail)
+    else if (gamemode == shareware)
     {
-      if (episode > 4)
-        episode = 4;
-    }
-  else
-    if (gamemode == shareware)
-      {
+
         if (episode > 1)
           episode = 1;
-      }
-    else
-      if (episode > 3)
+
+    }
+
+    else if (episode > 3)
         episode = 3;
 
-  if (map < 1)
-    map = 1;
-  if (map > 9 && gamemode != commercial)
-    map = 9;
+    if (map < 1)
+        map = 1;
 
-  G_SetFastParms(fastparm || skill == sk_nightmare);
+    if (map > 9 && gamemode != commercial)
+        map = 9;
 
-  M_ClearRandom();
+    G_SetFastParms(fastparm || skill == sk_nightmare);
+    M_ClearRandom();
 
-  respawnmonsters = skill == sk_nightmare || respawnparm;
+    respawnmonsters = skill == sk_nightmare || respawnparm;
 
+    for (i = 0; i < MAXPLAYERS; i++)
+        players[i].playerstate = PST_REBORN;
 
-  for (i=0 ; i<MAXPLAYERS ; i++)
-    players[i].playerstate = PST_REBORN;
+    usergame = true;
+    gameepisode = episode;
+    gamemap = map;
+    gameskill = skill;
+    totalleveltimes = 0;
 
-  usergame = true;
-  paused = false;
-  gameepisode = episode;
-  gamemap = map;
-  gameskill = skill;
+    G_DoLoadLevel();
 
-  totalleveltimes = 0;
-
-  G_DoLoadLevel ();
 }
 
-#define DEMOMARKER    0x80
-
-extern int forceOldBsp;
-
-#define MAX_MESSAGE_SIZE 1024
-
-void doom_printf(const char *s, ...)
-{
-  static char msg[MAX_MESSAGE_SIZE];
-  va_list v;
-  va_start(v,s);
-  vsnprintf(msg,sizeof(msg),s,v);
-  va_end(v);
-  players[consoleplayer].message = msg;
-}

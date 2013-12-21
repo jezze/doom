@@ -60,7 +60,7 @@ boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
     } while (!mobj->tics && !seenstate[state]);
 
     if (ret && !mobj->tics)
-        doom_printf("Warning: State Cycle Detected");
+        I_Print("Warning: State Cycle Detected");
 
     if (!--recursion)
     {
@@ -930,7 +930,7 @@ void P_SpawnMapThing(const mapthing_t *mthing)
     if (i == NUMMOBJTYPES)
     {
 
-        doom_printf("Unknown Thing type %i at (%i, %i)", mthing->type, mthing->x, mthing->y);
+        I_Print("Unknown Thing type %i at (%i, %i)", mthing->type, mthing->x, mthing->y);
 
         return;
 

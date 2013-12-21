@@ -133,16 +133,10 @@ void D_Display (void)
 
     oldgamestate = gamestate;
 
-    if (paused)
-        V_DrawNamePatch((320 - V_NamePatchWidth("M_PAUSE")) / 2, 4, 0, "M_PAUSE", CR_DEFAULT, VPT_STRETCH);
-
     M_Drawer();
     D_BuildNewTiccmds();
     I_FinishUpdate();
     I_EndDisplay();
-
-    if (paused)
-        I_uSleep(1000);
 
 }
 

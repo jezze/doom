@@ -171,7 +171,7 @@ void I_StartTic(void)
 
     SDL_Event Event;
 
-    boolean should_be_grabbed = mouse_enabled && !(paused || (gamestate != GS_LEVEL) || demoplayback);
+    boolean should_be_grabbed = mouse_enabled && !(gamestate != GS_LEVEL);
 
     if (mouse_currently_grabbed != should_be_grabbed)
         SDL_WM_GrabInput((mouse_currently_grabbed = should_be_grabbed) ? SDL_GRAB_ON : SDL_GRAB_OFF);
@@ -206,8 +206,7 @@ inline static boolean I_SkipFrame(void)
     {
 
     case GS_LEVEL:
-        if (!paused)
-            return false;
+        return false;
 
     default:
         return (frameno & 1) ? true : false;

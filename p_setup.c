@@ -51,8 +51,6 @@ side_t   *sides;
 
 int     firstglvertex = 0;
 int     nodesVersion  = 0;
-boolean forceOldBsp   = false;
-
 
 typedef struct
 {
@@ -109,7 +107,7 @@ static void P_GetNodesVersion(int lumpnum, int gl_lumpnum)
   const void *data;
 
   data = W_CacheLumpNum(gl_lumpnum+ML_GL_VERTS);
-  if ( (gl_lumpnum > lumpnum) && (forceOldBsp == false) && (compatibility_level >= prboom_2_compatibility) ) {
+  if ( (gl_lumpnum > lumpnum) && (compatibility_level >= prboom_2_compatibility) ) {
     if (*(const int *)data == gNd2) {
       data = W_CacheLumpNum(gl_lumpnum+ML_GL_SEGS);
       if (*(const int *)data == gNd3) {
@@ -1208,8 +1206,6 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 
   if (compatibility_level>=lxdoom_1_compatibility)
     P_RemoveSlimeTrails();
-
-  bodyqueslot = 0;
 
   memset(playerstarts,0,sizeof(playerstarts));
   for (i = 0; i < MAXPLAYERS; i++)

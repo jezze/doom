@@ -335,7 +335,7 @@ subsector_t *R_PointInSubsector(fixed_t x, fixed_t y)
 static void R_SetupFrame (player_t *player)
 {
   int cm;
-  boolean NoInterpolate = paused || (menuactive && !demoplayback);
+  boolean NoInterpolate = (menuactive && !demoplayback);
 
   viewplayer = player;
 
@@ -398,7 +398,7 @@ static void R_ShowStats(void)
   FPS_FrameCount++;
   if(tick >= FPS_SavedTick + 1000)
   {
-    doom_printf("Frame rate %d fps\nSegs %d, Visplanes %d, Sprites %d", 1000 * FPS_FrameCount / (tick - FPS_SavedTick), rendered_segs, rendered_visplanes, rendered_vissprites);
+    I_Print("Frame rate %d fps\nSegs %d, Visplanes %d, Sprites %d", 1000 * FPS_FrameCount / (tick - FPS_SavedTick), rendered_segs, rendered_visplanes, rendered_vissprites);
     FPS_SavedTick = tick;
     FPS_FrameCount = 0;
   }
@@ -409,7 +409,7 @@ static void R_ShowStats(void)
   int now = I_GetTime();
 
   if (now - showtime > 35) {
-    doom_printf("Frame rate %d fps\nSegs %d, Visplanes %d, Sprites %d", (35*KEEPTIMES)/(now - keeptime[0]), rendered_segs, rendered_visplanes, rendered_vissprites);
+    I_Print("Frame rate %d fps\nSegs %d, Visplanes %d, Sprites %d", (35*KEEPTIMES)/(now - keeptime[0]), rendered_segs, rendered_visplanes, rendered_vissprites);
     showtime = now;
   }
   memmove(keeptime, keeptime+1, sizeof(keeptime[0]) * (KEEPTIMES-1));

@@ -897,36 +897,6 @@ void HU_Ticker(void)
 
 }
 
-#define QUEUESIZE   128
-
-static char chatchars[QUEUESIZE];
-static int head = 0;
-static int tail = 0;
-
-char HU_dequeueChatChar(void)
-{
-
-    char c;
-
-    if (head != tail)
-    {
-
-        c = chatchars[tail];
-        tail = (tail + 1) & (QUEUESIZE - 1);
-
-    }
-
-    else
-    {
-
-        c = 0;
-
-    }
-
-    return c;
-
-}
-
 boolean HU_Responder(event_t *ev)
 {
 

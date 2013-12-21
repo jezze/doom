@@ -13,10 +13,10 @@ typedef enum
 typedef struct
 {
 
-    evtype_t  type;
-    int       data1;
-    int       data2;
-    int       data3;
+    evtype_t type;
+    int data1;
+    int data2;
+    int data3;
 
 } event_t;
 
@@ -38,19 +38,15 @@ typedef enum
 typedef enum
 {
 
-  BT_ATTACK       = 1,
-  BT_USE          = 2,
-  BT_SPECIAL      = 128,
-  BT_SPECIALMASK  = 3,
-  BT_CHANGE       = 4,
-  BT_WEAPONMASK   = (8 + 16 + 32 + 64),
-  BT_WEAPONSHIFT  = 3,
-  BTS_LOADGAME    = 0,
-  BTS_PAUSE       = 1,
-  BTS_SAVEGAME    = 2,
-  BTS_RESTARTLEVEL= 3,
-  BTS_SAVEMASK    = (4 + 8 + 16),
-  BTS_SAVESHIFT   = 2
+    BT_ATTACK = 1,
+    BT_USE = 2,
+    BT_SPECIAL = 128,
+    BT_SPECIALMASK = 3,
+    BT_CHANGE = 4,
+    BT_WEAPONMASK = (8 + 16 + 32 + 64),
+    BT_WEAPONSHIFT = 3,
+    BTS_PAUSE = 1,
+    BTS_RESTARTLEVEL = 3
 
 } buttoncode_t;
 

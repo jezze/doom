@@ -4,11 +4,9 @@
 typedef struct
 {
 
-    signed char forwardmove;
-    signed char sidemove;
-    signed short  angleturn;
-    short consistancy;
-    byte chatchar;
+    char forwardmove;
+    char sidemove;
+    short angleturn;
     byte buttons;
 
 } ticcmd_t;
