@@ -95,7 +95,6 @@ void TryRunTics(void)
     {
 
         M_Ticker();
-        I_GetTime_SaveMS();
         G_Ticker ();
 
         gametic++;

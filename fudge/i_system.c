@@ -42,22 +42,10 @@ void I_uSleep(unsigned long usecs)
 
 }
 
-int I_GetTime_RealTime(void)
+fixed_t I_GetTimeFrac(void)
 {
 
     return 0;
-
-}
-
-fixed_t I_GetTimeFrac (void)
-{
-
-    return 0;
-
-}
-
-void I_GetTime_SaveMS(void)
-{
 
 }
 

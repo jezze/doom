@@ -76,7 +76,7 @@ void I_uSleep(unsigned long usecs)
 
 }
 
-int I_GetTime_RealTime (void)
+int I_GetTime(void)
 {
 
     int t = SDL_GetTicks();
@@ -91,7 +91,7 @@ int I_GetTime_RealTime (void)
 
 }
 
-fixed_t I_GetTimeFrac (void)
+fixed_t I_GetTimeFrac(void)
 {
 
     unsigned long now = SDL_GetTicks();
@@ -109,11 +109,6 @@ fixed_t I_GetTimeFrac (void)
         frac = FRACUNIT;
 
     return frac;
-
-}
-
-void I_GetTime_SaveMS(void)
-{
 
 }
 

@@ -20,22 +20,6 @@ int realtic_clock_rate = 100;
 static int_64_t I_GetTime_Scale = 1 << 24;
 tic_vars_t tic_vars;
 
-static int gettime_scaled(void)
-{
-
-    return (int)((int_64_t)I_GetTime_RealTime() * I_GetTime_Scale >> 24);
-
-}
-
-static int gettime_error(void)
-{
-
-    I_Error("GetTime() used before initialization");
-
-    return 0;
-
-}
-
 static void handle_signal(int s)
 {
 
@@ -48,8 +32,6 @@ static void handle_signal(int s)
 
 }
 
-int (*I_GetTime)(void) = gettime_error;
-
 void I_SafeExit(int rc)
 {
 
@@ -59,21 +41,6 @@ void I_SafeExit(int rc)
 
 void I_Init(void)
 {
-
-    if (realtic_clock_rate != 100)
-    {
-
-        I_GetTime_Scale = ((int_64_t)realtic_clock_rate << 24) / 100;
-        I_GetTime = gettime_scaled;
-
-    }
-
-    else
-    {
-
-        I_GetTime = I_GetTime_RealTime;
-
-    }
 
     if (!(nomusicparm && nosfxparm))
         I_InitSound();

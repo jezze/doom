@@ -14,7 +14,7 @@ typedef struct
 
 extern tic_vars_t tic_vars;
 
-extern int (*I_GetTime)(void);
+int I_GetTime(void);
 void I_SafeExit(int rc);
 void I_Init(void);
 

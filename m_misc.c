@@ -69,14 +69,12 @@ extern int mousebstrafe;
 extern int mousebforward;
 extern int viewwidth;
 extern int viewheight;
-extern int realtic_clock_rate;
 int mus_pause_opt;
 int endoom_mode;
 extern const char* S_music_files[];
 
 struct setting defaults[] = {
   {"default_compatibility_level", {(int*)&default_compatibility_level}, {-1}, -1, MAX_COMPATIBILITY_LEVEL - 1, def_int,ss_none},
-  {"realtic_clock_rate", {&realtic_clock_rate}, {100}, 0, UL, def_int, ss_none},
   {"endoom_mode", {&endoom_mode},{5},0,7, def_hex, ss_none},
   {"default_skill", {&defaultskill}, {3}, 1, 5, def_int, ss_none},
   {"weapon_recoil", {&default_weapon_recoil}, {0}, 0, 1, def_bool, ss_weap, &weapon_recoil},
