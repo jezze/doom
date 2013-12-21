@@ -220,109 +220,88 @@ static void D_AddFile(const char *file, wad_source_t source)
 
 }
 
-static void CheckIWAD(const char *iwadname,GameMode_t *gmode,boolean *hassec)
+static void CheckIWAD(const char *iwadname, GameMode_t *gmode, boolean *hassec)
 {
 
-    if (!access(iwadname, R_OK))
+    int ud = 0, rg = 0, sw = 0, cm = 0, sc = 0;
+    FILE* fp;
+    wadinfo_t header;
+    size_t length;
+    filelump_t *fileinfo;
+
+    if (!(fp = fopen(iwadname, "rb")))
+        I_Error("CheckIWAD: could not open %s", iwadname);
+
+    if (fread(&header, sizeof (header), 1, fp) != 1)
+        I_Error("CheckIWAD: could not read %s", iwadname);
+
+    if (strncmp(header.identification, "IWAD", 4))
+        I_Error("CheckIWAD: identification failed");
+
+    header.numlumps = header.numlumps;
+    header.infotableofs = header.infotableofs;
+    length = header.numlumps;
+    fileinfo = malloc(length * sizeof (filelump_t));
+
+    if (fseek(fp, header.infotableofs, SEEK_SET))
+        I_Error("CheckIWAD: failed to seek");
+
+    if (fread(fileinfo, sizeof (filelump_t), length, fp) != length)
+        I_Error("CheckIWAD: failed to read");
+
+    while (length--)
     {
 
-        int ud = 0, rg = 0, sw = 0, cm = 0, sc = 0;
-        FILE* fp;
-
-        if ((fp = fopen(iwadname, "rb")))
+        if (fileinfo[length].name[0] == 'E' && fileinfo[length].name[2] == 'M' && fileinfo[length].name[4] == 0)
         {
 
-            wadinfo_t header;
+            if (fileinfo[length].name[1] == '4')
+                ++ud;
+            else if (fileinfo[length].name[1] == '3')
+                ++rg;
+            else if (fileinfo[length].name[1] == '2')
+                ++rg;
+            else if (fileinfo[length].name[1] == '1')
+                ++sw;
 
-            if (fread(&header, sizeof(header), 1, fp) == 1 && !strncmp(header.identification, "IWAD", 4))
+        }
+
+        else if (fileinfo[length].name[0] == 'M' && fileinfo[length].name[1] == 'A' && fileinfo[length].name[2] == 'P' && fileinfo[length].name[5] == 0)
+        {
+
+            ++cm;
+
+            if (fileinfo[length].name[3] == '3')
             {
 
-                size_t length;
-                filelump_t *fileinfo;
-
-                header.numlumps = header.numlumps;
-                header.infotableofs = header.infotableofs;
-                length = header.numlumps;
-                fileinfo = malloc(length * sizeof(filelump_t));
-
-                if (fseek (fp, header.infotableofs, SEEK_SET) || fread(fileinfo, sizeof(filelump_t), length, fp) != length || fclose(fp))
-                    I_Error("CheckIWAD: failed to read directory %s", iwadname);
-
-                while (length--)
-                {
-
-                    if (fileinfo[length].name[0] == 'E' && fileinfo[length].name[2] == 'M' && fileinfo[length].name[4] == 0)
-                    {
-
-                        if (fileinfo[length].name[1] == '4')
-                            ++ud;
-                        else if (fileinfo[length].name[1] == '3')
-                            ++rg;
-                        else if (fileinfo[length].name[1] == '2')
-                            ++rg;
-                        else if (fileinfo[length].name[1] == '1')
-                            ++sw;
-                    }
-
-                    else if (fileinfo[length].name[0] == 'M' && fileinfo[length].name[1] == 'A' && fileinfo[length].name[2] == 'P' && fileinfo[length].name[5] == 0)
-                    {
-
-                        ++cm;
-
-                        if (fileinfo[length].name[3] == '3')
-                            if (fileinfo[length].name[4] == '1' || fileinfo[length].name[4] == '2')
-                                ++sc;
-
-                    }
-
-                }
-
-                free(fileinfo);
-
-            }
-
-            else
-            {
-
-                I_Error("CheckIWAD: IWAD tag %s not present", iwadname);
+                if (fileinfo[length].name[4] == '1' || fileinfo[length].name[4] == '2')
+                    ++sc;
 
             }
 
         }
 
-        else
-        {
-
-            I_Error("CheckIWAD: Can't open IWAD %s", iwadname);
-
-        }
-
-        *gmode = indetermined;
-        *hassec = false;
-
-        if (cm >= 30)
-        {
-
-            *gmode = commercial;
-            *hassec = sc >= 2;
-
-        }
-
-        else if (ud >= 9)
-            *gmode = retail;
-        else if (rg >= 18)
-            *gmode = registered;
-        else if (sw >= 9)
-            *gmode = shareware;
-
     }
 
-    else
+    free(fileinfo);
+
+    *gmode = indetermined;
+    *hassec = false;
+
+    if (cm >= 30)
     {
 
-        I_Error("CheckIWAD: IWAD %s not readable", iwadname);
+        *gmode = commercial;
+        *hassec = sc >= 2;
 
     }
+
+    else if (ud >= 9)
+        *gmode = retail;
+    else if (rg >= 18)
+        *gmode = registered;
+    else if (sw >= 9)
+        *gmode = shareware;
 
 }
 
@@ -339,7 +318,7 @@ static char *FindIWADFile(void)
 
 }
 
-static void IdentifyVersion (void)
+static void IdentifyVersion(void)
 {
 
     int i;
@@ -420,9 +399,7 @@ static void D_DoomMainSetup(void)
     nosfxparm = 0;
 
     G_ReloadDefaults();
-
     I_CalculateRes(desired_screenwidth, desired_screenheight);
-
     lprintf(LO_INFO,"V_Init: allocate screens.\n");
     V_Init();
 
@@ -455,12 +432,13 @@ static void D_DoomMainSetup(void)
                 free(fpath);
 
             }
+
         }
+
     }
 
     lprintf(LO_INFO,"D_InitNetGame: Checking for network game.\n");
     D_InitNetGame();
-
     lprintf(LO_INFO,"W_Init: Init WADfiles.\n");
     W_Init();
     lprintf(LO_INFO,"M_Init: Init miscellaneous info.\n");
@@ -475,9 +453,7 @@ static void D_DoomMainSetup(void)
     S_Init(snd_SfxVolume, snd_MusicVolume);
     lprintf(LO_INFO,"HU_Init: Setting up heads up display.\n");
     HU_Init();
-
     I_InitGraphics();
-
     lprintf(LO_INFO,"ST_Init: Init status bar.\n");
     ST_Init();
 
