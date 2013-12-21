@@ -942,10 +942,9 @@ void G_ReloadDefaults(void)
   weapon_recoil = default_weapon_recoil;
   player_bobbing = default_player_bobbing;
   variable_friction = default_variable_friction;
-  allow_pushers     = default_allow_pushers;
+  allow_pushers = default_allow_pushers;
   monsters_remember = default_monsters_remember;
   monster_infighting = default_monster_infighting;
-  distfriend = default_distfriend;
   monster_backing = default_monster_backing;
   monster_avoid_hazards = default_monster_avoid_hazards;
   monster_friction = default_monster_friction;

@@ -443,76 +443,52 @@ static fixed_t P_AvoidDropoff(mobj_t *actor)
 
 static void P_NewChaseDir(mobj_t *actor)
 {
-  mobj_t *target = actor->target;
-  fixed_t deltax = target->x - actor->x;
-  fixed_t deltay = target->y - actor->y;
 
-  actor->strafecount = 0;
+    mobj_t *target = actor->target;
+    fixed_t deltax = target->x - actor->x;
+    fixed_t deltay = target->y - actor->y;
 
-  if (mbf_features) {
-    if (actor->floorz - actor->dropoffz > FRACUNIT*24 &&
-  actor->z <= actor->floorz &&
-  !(actor->flags & (MF_DROPOFF|MF_FLOAT)) &&
-  !comp[comp_dropoff] &&
-  P_AvoidDropoff(actor)) /* Move away from dropoff */
-      {
-  P_DoNewChaseDir(actor, dropoff_deltax, dropoff_deltay);
+    actor->strafecount = 0;
 
-  actor->movecount = 1;
-  return;
-      }
-    else
-      {
-  fixed_t dist = P_AproxDistance(deltax, deltay);
-
-  if (actor->flags & target->flags & MF_FRIEND &&
-      distfriend << FRACBITS > dist &&
-      !P_IsOnLift(target) && !P_IsUnderDamage(actor))
-  {
-    deltax = -deltax, deltay = -deltay;
-  } else
-    if (target->health > 0 && (actor->flags ^ target->flags) & MF_FRIEND)
-      {
-        if (monster_backing &&
-      actor->info->missilestate && actor->type != MT_SKULL &&
-      ((!target->info->missilestate && dist < MELEERANGE*2) ||
-       (target->player && dist < MELEERANGE*3 &&
-        (target->player->readyweapon == wp_fist ||
-         target->player->readyweapon == wp_chainsaw))))
+    if (mbf_features)
     {
-      actor->strafecount = P_Random(pr_enemystrafe) & 15;
-      deltax = -deltax, deltay = -deltay;
+
+        if (actor->floorz - actor->dropoffz > FRACUNIT*24 && actor->z <= actor->floorz && !(actor->flags & (MF_DROPOFF|MF_FLOAT)) && !comp[comp_dropoff] && P_AvoidDropoff(actor))
+        {
+
+            P_DoNewChaseDir(actor, dropoff_deltax, dropoff_deltay);
+
+            actor->movecount = 1;
+
+            return;
+
+        }
+
     }
-      }
-      }
-  }
 
-  P_DoNewChaseDir(actor, deltax, deltay);
+    P_DoNewChaseDir(actor, deltax, deltay);
 
-  if (actor->strafecount)
-    actor->movecount = actor->strafecount;
+    if (actor->strafecount)
+        actor->movecount = actor->strafecount;
+
 }
 
 static boolean P_IsVisible(mobj_t *actor, mobj_t *mo, boolean allaround)
 {
-  if (!allaround)
+
+    if (!allaround)
     {
-      angle_t an = R_PointToAngle2(actor->x, actor->y,
-           mo->x, mo->y) - actor->angle;
-      if (an > ANG90 && an < ANG270 &&
-    P_AproxDistance(mo->x-actor->x, mo->y-actor->y) > MELEERANGE)
-  return false;
+
+        angle_t an = R_PointToAngle2(actor->x, actor->y, mo->x, mo->y) - actor->angle;
+
+        if (an > ANG90 && an < ANG270 && P_AproxDistance(mo->x-actor->x, mo->y-actor->y) > MELEERANGE)
+            return false;
+
     }
-  return P_CheckSight(actor, mo);
+
+    return P_CheckSight(actor, mo);
+
 }
-
-
-
-
-
-
-
-
 
 static int current_allaround;
 
