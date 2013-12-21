@@ -43,8 +43,6 @@ skill_t startskill;
 int startepisode;
 int startmap;
 
-char wadfile[PATH_MAX + 1];
-
 const char *const standard_iwads[] = {
     "doom2.wad",
     "plutonia.wad",
