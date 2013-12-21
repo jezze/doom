@@ -1212,28 +1212,19 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
     players[i].mo = NULL;
 
   P_MapStart();
-
   P_LoadThings(lumpnum+ML_THINGS);
 
     for (i=0; i<MAXPLAYERS; i++)
       if (playeringame[i] && !players[i].mo)
         I_Error("P_SetupLevel: missing player %d start\n", i+1);
 
-
   if (gamemode==commercial)
     P_SpawnBrainTargets();
 
-
   iquehead = iquetail = 0;
 
-
   P_SpawnSpecials();
-
   P_MapEnd();
-
-
-  if (precache)
-    R_PrecacheLevel();
 
 }
 

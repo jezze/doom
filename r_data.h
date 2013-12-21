@@ -30,7 +30,6 @@ extern texture_t **textures;
 
 const byte *R_GetTextureColumn(const rpatch_t *texpatch, int col);
 void R_InitData(void);
-void R_PrecacheLevel(void);
 int R_FlatNumForName(const char *name);
 int R_TextureNumForName(const char *name);
 int R_SafeTextureNumForName(const char *name, int snum);
