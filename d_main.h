@@ -14,7 +14,6 @@ extern boolean nomusicparm;
 extern const char *wad_files[MAXLOADFILES];
 
 void D_PostEvent(event_t* ev);
-void D_Display(void);
 void D_DoomMain(void);
 
 #endif

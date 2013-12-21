@@ -60,9 +60,7 @@ void D_PostEvent(event_t *ev)
 
 }
 
-extern boolean setsizeneeded;
-
-void D_Display(void)
+static void D_Display(void)
 {
 
     if (!I_StartDisplay())
