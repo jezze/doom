@@ -8,7 +8,6 @@
 #include "s_sound.h"
 #include "sounds.h"
 #include "p_user.h"
-#include "r_fps.h"
 
 static mobj_t* P_TeleportDestination(line_t* line)
 {

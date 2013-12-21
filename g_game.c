@@ -28,7 +28,6 @@
 #include "g_game.h"
 #include "i_main.h"
 #include "i_system.h"
-#include "r_fps.h"
 #include "z_zone.h"
 
 static int ticdup = 1;

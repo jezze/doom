@@ -14,7 +14,7 @@
 #include "m_misc.h"
 #include "i_sound.h"
 #include "i_main.h"
-#include "r_fps.h"
+#include "r_main.h"
 
 int realtic_clock_rate = 100;
 static int_64_t I_GetTime_Scale = 1 << 24;

@@ -5,7 +5,6 @@
 #include "r_segs.h"
 #include "r_draw.h"
 #include "r_things.h"
-#include "r_fps.h"
 #include "v_video.h"
 #include "i_system.h"
 #include "z_zone.h"

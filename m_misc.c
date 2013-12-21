@@ -18,7 +18,7 @@
 #include "sounds.h"
 #include "d_main.h"
 #include "r_draw.h"
-#include "r_fps.h"
+#include "r_main.h"
 #include "z_zone.h"
 
 #define MAX_KEY                         65536

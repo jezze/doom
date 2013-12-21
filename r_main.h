@@ -12,6 +12,17 @@
 #define LIGHTZSHIFT                     20
 #define NUMCOLORMAPS                    32
 
+typedef struct
+{
+
+    fixed_t viewx;
+    fixed_t viewy;
+    fixed_t viewz;
+    angle_t viewangle;
+    angle_t viewpitch;
+
+} view_vars_t;
+
 extern fixed_t viewcos;
 extern fixed_t viewsin;
 extern int viewwidth;
@@ -35,6 +46,7 @@ extern const lighttable_t **colormaps;
 extern int extralight;
 extern const lighttable_t *fixedcolormap;
 
+void R_InterpolateView(player_t *player, fixed_t frac);
 int R_PointOnSide(fixed_t x, fixed_t y, const node_t *node);
 int R_PointOnSegSide(fixed_t x, fixed_t y, const seg_t *line);
 angle_t R_PointToAngle(fixed_t x, fixed_t y);

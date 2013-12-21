@@ -11,7 +11,6 @@
 #include "doomtype.h"
 #include "doomdef.h"
 #include "m_fixed.h"
-#include "r_fps.h"
 #include "i_main.h"
 #include "i_system.h"
 

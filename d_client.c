@@ -9,7 +9,7 @@
 #include "i_system.h"
 #include "i_main.h"
 #include "i_video.h"
-#include "r_fps.h"
+#include "r_main.h"
 
 ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
 static ticcmd_t* localcmds;

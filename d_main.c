@@ -25,7 +25,6 @@
 #include "p_setup.h"
 #include "r_draw.h"
 #include "r_main.h"
-#include "r_fps.h"
 #include "d_main.h"
 
 boolean clrespawnparm;

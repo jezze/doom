@@ -14,7 +14,6 @@
 #include "i_main.h"
 #include "i_system.h"
 #include "g_game.h"
-#include "r_fps.h"
 
 #define FIELDOFVIEW                     2048
 #define KEEPTIMES                       10
@@ -43,6 +42,17 @@ const lighttable_t *(*zlight)[MAXLIGHTZ];
 const lighttable_t *fullcolormap;
 const lighttable_t **colormaps;
 int extralight;
+typedef fixed_t fixed2_t[2];
+
+void R_InterpolateView(player_t *player, fixed_t frac)
+{
+
+    viewx = player->mo->x;
+    viewy = player->mo->y;
+    viewz = player->viewz;
+    viewangle = player->mo->angle;
+
+}
 
 int R_PointOnSide(fixed_t x, fixed_t y, const node_t *node)
 {

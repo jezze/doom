@@ -3,7 +3,6 @@
 #include "p_spec.h"
 #include "p_tick.h"
 #include "p_map.h"
-#include "r_fps.h"
 #include "z_zone.h"
 
 int leveltime;

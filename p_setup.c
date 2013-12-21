@@ -14,7 +14,6 @@
 #include "s_sound.h"
 #include "i_system.h"
 #include "v_video.h"
-#include "r_fps.h"
 #include "z_zone.h"
 
 #define gNd2                            0x32644E67

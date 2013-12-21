@@ -17,7 +17,6 @@
 #include "i_system.h"
 #include "i_video.h"
 #include "i_sound.h"
-#include "r_fps.h"
 
 extern patchnum_t hu_font[HU_FONTSIZE];
 int mouseSensitivity_horiz;
