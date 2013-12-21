@@ -738,7 +738,7 @@ void P_RemoveMobj(mobj_t *mobj)
 
     S_StopSound(mobj);
 
-    if ((compatibility_level >= lxdoom_1_compatibility) || (!demoplayback))
+    if (compatibility_level >= lxdoom_1_compatibility)
     {
 
         P_SetTarget(&mobj->target, NULL);

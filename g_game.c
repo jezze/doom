@@ -39,7 +39,6 @@ skill_t gameskill;
 boolean respawnmonsters;
 int gameepisode;
 int gamemap;
-boolean usergame;
 int starttime;
 boolean playeringame[MAXPLAYERS];
 player_t players[MAXPLAYERS];
@@ -48,7 +47,6 @@ int displayplayer;
 int gametic;
 int basetic;
 int totalkills, totallive, totalitems, totalsecret;
-boolean demoplayback;
 wbstartstruct_t wminfo;
 boolean haswolflevels = false;
 int autorun = false;
@@ -433,10 +431,8 @@ static void G_DoLoadLevel(void)
   }
 
   P_SetupLevel (gameepisode, gamemap, 0, gameskill);
-  if (!demoplayback)
-    displayplayer = consoleplayer;
+  displayplayer = consoleplayer;
   gameaction = ga_nothing;
-
 
   memset (gamekeydown, 0, sizeof(gamekeydown));
   mousex = mousey = 0;
@@ -968,8 +964,6 @@ void G_ReloadDefaults(void)
   if (startskill==sk_none)
     startskill = (skill_t)(defaultskill-1);
 
-  demoplayback = false;
-
   memset(playeringame+1, 0, sizeof(*playeringame)*(MAXPLAYERS-1));
 
   consoleplayer = 0;
@@ -1071,7 +1065,6 @@ void G_InitNew(skill_t skill, int episode, int map)
     for (i = 0; i < MAXPLAYERS; i++)
         players[i].playerstate = PST_REBORN;
 
-    usergame = true;
     gameepisode = episode;
     gamemap = map;
     gameskill = skill;

@@ -311,16 +311,9 @@ void R_PrecacheLevel(void)
 {
   register int i;
   register byte *hitlist;
+  size_t size = numflats > numsprites  ? numflats : numsprites;
 
-  if (demoplayback)
-    return;
-
-  {
-    size_t size = numflats > numsprites  ? numflats : numsprites;
-    hitlist = malloc((size_t)numtextures > size ? numtextures : size);
-  }
-
-
+  hitlist = malloc((size_t)numtextures > size ? numtextures : size);
 
   memset(hitlist, 0, numflats);
 

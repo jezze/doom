@@ -335,7 +335,7 @@ subsector_t *R_PointInSubsector(fixed_t x, fixed_t y)
 static void R_SetupFrame (player_t *player)
 {
   int cm;
-  boolean NoInterpolate = (menuactive && !demoplayback);
+  boolean NoInterpolate = menuactive;
 
   viewplayer = player;
 

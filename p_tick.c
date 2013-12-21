@@ -140,7 +140,7 @@ void P_Ticker(void)
 
     int i;
 
-    if ((menuactive && !demoplayback && players[consoleplayer].viewz != 1))
+    if ((menuactive && players[consoleplayer].viewz != 1))
         return;
 
     R_UpdateInterpolations ();

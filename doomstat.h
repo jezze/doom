@@ -69,8 +69,6 @@ extern int totalitems;
 extern int totalsecret;
 extern int basetic;
 extern int leveltime;
-extern boolean usergame;
-extern boolean demoplayback;
 extern gamestate_t gamestate;
 extern int gametic;
 extern player_t players[MAXPLAYERS];
