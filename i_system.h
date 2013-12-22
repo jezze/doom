@@ -15,8 +15,8 @@ typedef struct
 extern tic_vars_t tic_vars;
 
 int I_GetTime(void);
-void I_SafeExit(int rc);
 void I_Init(void);
+void I_Exit(int rc);
 void I_Print(const char *s, ...) __attribute__((format(printf, 1, 2)));
 void I_Error(const char *s, ...) __attribute__((format(printf, 1, 2)));
 boolean I_StartDisplay(void);

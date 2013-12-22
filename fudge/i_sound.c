@@ -54,11 +54,6 @@ boolean I_AnySoundStillPlaying(void)
 
 }
 
-void I_ShutdownSound(void)
-{
-
-}
-
 void I_InitSound(void)
 {
 

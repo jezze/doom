@@ -259,20 +259,6 @@ static void I_UpdateSound(void *unused, Uint8 *stream, int len)
 
 }
 
-void I_ShutdownSound(void)
-{
-
-    if (!sound_inited)
-        return;
-
-    I_Print("I_ShutdownSound: ");
-    SDL_CloseAudio();
-    I_Print("\n");
-
-    sound_inited = false;
-
-}
-
 void I_InitSound(void)
 {
 
@@ -303,13 +289,7 @@ void I_InitSound(void)
     I_Print(" configured audio device with %d samples/slice\n", SAMPLECOUNT);
 
     if (first_sound_init)
-    {
-
-        atexit(I_ShutdownSound);
-
         first_sound_init = false;
-
-    }
 
     if (!nomusicparm)
         I_InitMusic();

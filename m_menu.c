@@ -211,7 +211,7 @@ void M_ChooseSkill(int choice)
 void M_QuitDOOM(int choice)
 {
 
-    exit(0);
+    I_Exit(0);
 
 }
 

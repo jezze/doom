@@ -38,13 +38,6 @@ static void handle_signal(int s)
 
 }
 
-void I_SafeExit(int rc)
-{
-
-    exit(rc);
-
-}
-
 void I_Init(void)
 {
 
@@ -52,6 +45,15 @@ void I_Init(void)
         I_InitSound();
 
     tic_vars.msec = realtic_clock_rate * TICRATE / 100000.0f;
+
+}
+
+void I_Exit(int rc)
+{
+
+    SDL_CloseAudio();
+    SDL_Quit();
+    exit(rc);
 
 }
 
@@ -78,7 +80,7 @@ void I_Error(const char *s, ...)
     vsnprintf(msg, sizeof (msg), s, v);
     va_end(v);
     fprintf(stderr, "%s\n", msg);
-    I_SafeExit(-1);
+    I_Exit(-1);
 
 }
 

@@ -16,12 +16,12 @@
 int ms_to_next_tick;
 int realtic_clock_rate = 100;
 
-void I_SafeExit(int rc)
+void I_Init(void)
 {
 
 }
 
-void I_Init(void)
+void I_Exit(int rc)
 {
 
 }

@@ -5,7 +5,6 @@
 #include "doomtype.h"
 
 void I_InitSound(void);
-void I_ShutdownSound(void);
 void I_SetChannels(void);
 int I_GetSfxLumpNum(sfxinfo_t *sfxinfo);
 int I_StartSound(int id, int channel, int vol, int sep, int pitch, int priority);

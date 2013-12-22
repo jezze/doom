@@ -144,7 +144,7 @@ static void postevent(SDL_Event *Event)
 
     case SDL_QUIT:
         S_StartSound(NULL, sfx_swtchn);
-        exit(0);
+        I_Exit(0);
 
     default:
         break;
@@ -282,22 +282,11 @@ void I_SetPalette(int pal)
 
 }
 
-static void I_ShutdownSDL(void)
-{
-
-    SDL_Quit();
-
-    return;
-
-}
-
 void I_PreInitGraphics(void)
 {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         I_Error("Could not initialize SDL [%s]", SDL_GetError());
-
-    atexit(I_ShutdownSDL);
 
 }
 
