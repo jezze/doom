@@ -4,7 +4,7 @@
 #include "d_items.h"
 #include "p_pspr.h"
 #include "p_mobj.h"
-#include "d_client.h"
+#include "d_main.h"
 
 typedef enum
 {

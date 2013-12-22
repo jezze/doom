@@ -2,8 +2,6 @@
 #define __G_GAME__
 
 #include "doomdef.h"
-#include "d_event.h"
-#include "d_client.h"
 
 #define GAME_OPTION_SIZE                64
 

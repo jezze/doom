@@ -1,6 +1,6 @@
 #include <math.h>
 #include "doomstat.h"
-#include "d_client.h"
+#include "d_main.h"
 #include "w_wad.h"
 #include "r_main.h"
 #include "r_things.h"

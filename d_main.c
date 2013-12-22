@@ -5,7 +5,6 @@
 #include "doomtype.h"
 #include "doomstat.h"
 #include "d_englsh.h"
-#include "d_client.h"
 #include "sounds.h"
 #include "z_zone.h"
 #include "w_wad.h"
@@ -36,6 +35,9 @@ boolean nomusicparm;
 skill_t startskill;
 int startepisode;
 int startmap;
+ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
+static ticcmd_t* localcmds;
+int maketic;
 
 const char *const standard_iwads[] = {
     "doom2.wad",
@@ -48,6 +50,44 @@ const char *const standard_iwads[] = {
 };
 
 static const int nstandard_iwads = sizeof standard_iwads / sizeof * standard_iwads;
+
+static void D_BuildNewTiccmds(void)
+{
+
+    static int lastmadetic;
+    int newtics = I_GetTime() - lastmadetic;
+
+    lastmadetic += newtics;
+
+    while (newtics--)
+    {
+
+        I_StartTic();
+
+        if (maketic - gametic > BACKUPTICS / 2)
+            break;
+
+        G_BuildTiccmd(&localcmds[maketic % BACKUPTICS]);
+
+        maketic++;
+
+    }
+}
+
+static void D_InitNetGame(void)
+{
+
+    int i;
+
+    localcmds = netcmds[0];
+
+    for (i = 0; i < MAXPLAYERS; i++)
+        playeringame[i] = false;
+
+    playeringame[0] = true;
+    consoleplayer = displayplayer = 0;
+
+}
 
 void D_PostEvent(event_t *ev)
 {
@@ -105,13 +145,54 @@ static void D_Display(void)
 
 }
 
+static void tryruntics(void)
+{
+
+    int runtics;
+    int entertime = I_GetTime();
+
+    while (1)
+    {
+
+        D_BuildNewTiccmds();
+
+        runtics = maketic - gametic;
+
+        if (runtics)
+            break;
+
+        I_uSleep(ms_to_next_tick * 1000);
+
+        if (I_GetTime() - entertime > 10)
+        {
+
+            M_Ticker();
+                
+            return;
+
+        }
+
+    }
+
+    while (runtics--)
+    {
+
+        M_Ticker();
+        G_Ticker();
+
+        gametic++;
+
+    }
+
+}
+
 static void D_DoomLoop(void)
 {
 
     for (;;)
     {
 
-        TryRunTics();
+        tryruntics();
 
         if (players[displayplayer].mo)
             S_UpdateSounds(players[displayplayer].mo);

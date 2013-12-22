@@ -6,6 +6,16 @@
 
 #define MAXLOADFILES 3
 
+typedef struct
+{
+
+    char forwardmove;
+    char sidemove;
+    short angleturn;
+    byte buttons;
+
+} ticcmd_t;
+
 extern boolean clrespawnparm;
 extern boolean clfastparm;
 extern boolean nosfxparm;

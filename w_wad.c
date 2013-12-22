@@ -1,6 +1,5 @@
 #include <fcntl.h>
 #include "doomstat.h"
-#include "d_client.h"
 #include "doomtype.h"
 #include "i_system.h"
 #include "w_wad.h"

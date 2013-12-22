@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include "doomstat.h"
-#include "d_client.h"
 #include "f_finale.h"
 #include "m_misc.h"
 #include "m_menu.h"
