@@ -24,7 +24,6 @@ void G_PlayerReborn(int player);
 void G_RestartLevel(void);
 void G_DoVictory(void);
 void G_BuildTiccmd (ticcmd_t* cmd);
-void G_ChangedPlayerColour(int pn, int cl);
 void G_MakeSpecialEvent(buttoncode_t bc, ...);
 
 extern int key_right;

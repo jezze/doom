@@ -27,6 +27,7 @@
 #include "g_game.h"
 #include "i_system.h"
 #include "z_zone.h"
+#include "z_bmalloc.h"
 
 static int ticdup = 1;
 
@@ -372,436 +373,585 @@ void G_RestartLevel(void)
 
 }
 
-#include "z_bmalloc.h"
-
 static void G_DoLoadLevel(void)
 {
-  int i;
 
-  skyflatnum = R_FlatNumForName ( SKYFLATNAME );
+    int i;
 
-  if (gamemode == commercial)
+    skyflatnum = R_FlatNumForName(SKYFLATNAME);
+
+    if (gamemode == commercial)
     {
-      skytexture = R_TextureNumForName ("SKY3");
-      if (gamemap < 12)
-        skytexture = R_TextureNumForName ("SKY1");
-      else
-        if (gamemap < 21)
-          skytexture = R_TextureNumForName ("SKY2");
-    }
-  else
-    switch (gameepisode)
-      {
-      case 1:
-        skytexture = R_TextureNumForName ("SKY1");
-        break;
-      case 2:
-        skytexture = R_TextureNumForName ("SKY2");
-        break;
-      case 3:
-        skytexture = R_TextureNumForName ("SKY3");
-        break;
-      case 4:
-        skytexture = R_TextureNumForName ("SKY4");
-        break;
-      }
 
-  if (!demo_compatibility && !mbf_features)
-    basetic = gametic;
+        skytexture = R_TextureNumForName("SKY3");
 
-  gamestate = GS_LEVEL;
+        if (gamemap < 12)
+            skytexture = R_TextureNumForName("SKY1");
+        else if (gamemap < 21)
+            skytexture = R_TextureNumForName("SKY2");
 
-  for (i=0 ; i<MAXPLAYERS ; i++)
-    {
-      if (playeringame[i] && players[i].playerstate == PST_DEAD)
-        players[i].playerstate = PST_REBORN;
-      memset (players[i].frags,0,sizeof(players[i].frags));
     }
 
-  {
-    DECLARE_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
-    NULL_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
-
-
-  }
-
-  P_SetupLevel (gameepisode, gamemap, 0, gameskill);
-  displayplayer = consoleplayer;
-  gameaction = ga_nothing;
-
-  memset (gamekeydown, 0, sizeof(gamekeydown));
-  mousex = mousey = 0;
-  special_event = 0;
-  memset (mousebuttons, 0, sizeof(mousebuttons));
-
-
-  ST_Start();
-  HU_Start();
-}
-
-boolean G_Responder (event_t* ev)
-{
-
-  if (gamestate == GS_FINALE && F_Responder(ev))
-    return true;
-
-  switch (ev->type)
+    else
     {
-    case ev_keydown:
-      if (ev->data1 <NUMKEYS)
-        gamekeydown[ev->data1] = true;
-      return true;
 
-    case ev_keyup:
-      if (ev->data1 <NUMKEYS)
-        gamekeydown[ev->data1] = false;
-      return false;
-
-    case ev_mouse:
-      mousebuttons[0] = ev->data1 & 1;
-      mousebuttons[1] = ev->data1 & 2;
-      mousebuttons[2] = ev->data1 & 4;
-      mousex += (ev->data2*(mouseSensitivity_horiz))/10;  /* killough */
-      mousey += (ev->data3*(mouseSensitivity_vert))/10;  /*Mead rm *4 */
-      return true;
-
-    default:
-      break;
-    }
-  return false;
-}
-
-void G_Ticker (void)
-{
-  int i;
-  static gamestate_t prevgamestate;
-
-  P_MapStart();
-
-  for (i=0 ; i<MAXPLAYERS ; i++)
-    if (playeringame[i] && players[i].playerstate == PST_REBORN)
-      G_DoReborn (i);
-  P_MapEnd();
-
-
-  while (gameaction != ga_nothing)
-    {
-      switch (gameaction)
+        switch (gameepisode)
         {
+
+        case 1:
+            skytexture = R_TextureNumForName("SKY1");
+
+            break;
+
+        case 2:
+            skytexture = R_TextureNumForName("SKY2");
+
+            break;
+
+        case 3:
+            skytexture = R_TextureNumForName("SKY3");
+
+            break;
+
+        case 4:
+            skytexture = R_TextureNumForName("SKY4");
+
+            break;
+
+        }
+
+    }
+
+    if (!demo_compatibility && !mbf_features)
+        basetic = gametic;
+
+    gamestate = GS_LEVEL;
+
+    for (i = 0; i < MAXPLAYERS; i++)
+    {
+
+        if (playeringame[i] && players[i].playerstate == PST_DEAD)
+            players[i].playerstate = PST_REBORN;
+
+        memset(players[i].frags, 0, sizeof (players[i].frags));
+
+    }
+
+    {
+
+        DECLARE_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
+        NULL_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
+
+    }
+
+    P_SetupLevel(gameepisode, gamemap, 0, gameskill);
+
+    displayplayer = consoleplayer;
+    gameaction = ga_nothing;
+
+    memset(gamekeydown, 0, sizeof (gamekeydown));
+
+    mousex = mousey = 0;
+    special_event = 0;
+
+    memset(mousebuttons, 0, sizeof (mousebuttons));
+
+    ST_Start();
+    HU_Start();
+
+}
+
+boolean G_Responder(event_t* ev)
+{
+
+    if (gamestate == GS_FINALE && F_Responder(ev))
+        return true;
+
+    switch (ev->type)
+    {
+
+        case ev_keydown:
+            if (ev->data1 < NUMKEYS)
+                gamekeydown[ev->data1] = true;
+
+            return true;
+
+        case ev_keyup:
+            if (ev->data1 < NUMKEYS)
+                gamekeydown[ev->data1] = false;
+
+            return false;
+
+        case ev_mouse:
+            mousebuttons[0] = ev->data1 & 1;
+            mousebuttons[1] = ev->data1 & 2;
+            mousebuttons[2] = ev->data1 & 4;
+            mousex += (ev->data2 * (mouseSensitivity_horiz)) / 10;
+            mousey += (ev->data3 * (mouseSensitivity_vert)) / 10;
+
+            return true;
+
+        default:
+            break;
+
+    }
+
+    return false;
+
+}
+
+void G_Ticker(void)
+{
+
+    int i;
+    static gamestate_t prevgamestate;
+
+    P_MapStart();
+
+    for (i = 0; i < MAXPLAYERS; i++)
+    {
+
+        if (playeringame[i] && players[i].playerstate == PST_REBORN)
+            G_DoReborn(i);
+
+    }
+
+    P_MapEnd();
+
+    while (gameaction != ga_nothing)
+    {
+
+        switch (gameaction)
+        {
+
         case ga_loadlevel:
+            for (i = 0; i < MAXPLAYERS; i++)
+                players[i].playerstate = PST_REBORN;
 
-    for (i=0 ; i<MAXPLAYERS ; i++)
-      players[i].playerstate = PST_REBORN;
-          G_DoLoadLevel ();
-          break;
+            G_DoLoadLevel();
+
+            break;
+
         case ga_newgame:
-          G_DoNewGame ();
-          break;
+            G_DoNewGame();
+
+            break;
+
         case ga_completed:
-          G_DoCompleted ();
-          break;
+            G_DoCompleted();
+
+            break;
+
         case ga_victory:
-          F_StartFinale ();
-          break;
+            F_StartFinale();
+
+            break;
+
         case ga_worlddone:
-          G_DoWorldDone ();
-          break;
+            G_DoWorldDone();
+
+            break;
+
         case ga_nothing:
-          break;
+            break;
+
         }
+
     }
 
     {
 
-    int buf = (gametic/ticdup)%BACKUPTICS;
+        int buf = (gametic / ticdup) % BACKUPTICS;
 
-    for (i=0 ; i<MAXPLAYERS ; i++) {
-      if (playeringame[i])
+        for (i = 0; i < MAXPLAYERS; i++)
         {
-          ticcmd_t *cmd = &players[i].cmd;
 
-          memcpy(cmd, &netcmds[i][buf], sizeof *cmd);
-
-        }
-    }
-
-
-    for (i=0; i<MAXPLAYERS; i++) {
-      if (playeringame[i])
-        {
-          if (players[i].cmd.buttons & BT_SPECIAL)
+            if (playeringame[i])
             {
-        players[i].cmd.buttons = 0;
+
+                ticcmd_t *cmd = &players[i].cmd;
+
+                memcpy(cmd, &netcmds[i][buf], sizeof *cmd);
+
             }
+
         }
+
+        for (i = 0; i < MAXPLAYERS; i++)
+        {
+
+            if (playeringame[i])
+            {
+
+                if (players[i].cmd.buttons & BT_SPECIAL)
+                    players[i].cmd.buttons = 0;
+
+            }
+
+        }
+
     }
-  }
 
-  if (gamestate != prevgamestate) {
-    switch (prevgamestate) {
-    case GS_LEVEL:
-
-      break;
-    case GS_INTERMISSION:
-      WI_End();
-    default:
-      break;
-    }
-    prevgamestate = gamestate;
-  }
-
-  switch (gamestate)
+    if (gamestate != prevgamestate)
     {
+
+        switch (prevgamestate)
+        {
+
+        case GS_LEVEL:
+            break;
+
+        case GS_INTERMISSION:
+            WI_End();
+
+        default:
+            break;
+
+        }
+
+        prevgamestate = gamestate;
+
+    }
+
+    switch (gamestate)
+    {
+
     case GS_LEVEL:
-      P_Ticker ();
-      ST_Ticker ();
-      HU_Ticker ();
-      break;
+        P_Ticker();
+        ST_Ticker();
+        HU_Ticker();
+
+        break;
 
     case GS_INTERMISSION:
-      WI_Ticker ();
-      break;
+        WI_Ticker();
+
+        break;
 
     case GS_FINALE:
-      F_Ticker ();
-      break;
+        F_Ticker();
+
+        break;
 
     }
+
 }
 
 static void G_PlayerFinishLevel(int player)
 {
-  player_t *p = &players[player];
-  memset(p->powers, 0, sizeof p->powers);
-  memset(p->cards, 0, sizeof p->cards);
-  p->mo = NULL;
-  p->extralight = 0;
-  p->fixedcolormap = 0;
-  p->damagecount = 0;
-  p->bonuscount = 0;
-}
 
-#include "r_draw.h"
+    player_t *p = &players[player];
 
-void G_ChangedPlayerColour(int pn, int cl)
-{
+    memset(p->powers, 0, sizeof p->powers);
+    memset(p->cards, 0, sizeof p->cards);
+
+    p->mo = NULL;
+    p->extralight = 0;
+    p->fixedcolormap = 0;
+    p->damagecount = 0;
+    p->bonuscount = 0;
 
 }
 
-void G_PlayerReborn (int player)
+void G_PlayerReborn(int player)
 {
-  player_t *p;
-  int i;
-  int frags[MAXPLAYERS];
-  int killcount;
-  int itemcount;
-  int secretcount;
 
-  memcpy (frags, players[player].frags, sizeof frags);
-  killcount = players[player].killcount;
-  itemcount = players[player].itemcount;
-  secretcount = players[player].secretcount;
+    player_t *p;
+    int i;
+    int frags[MAXPLAYERS];
+    int killcount;
+    int itemcount;
+    int secretcount;
 
-  p = &players[player];
+    memcpy(frags, players[player].frags, sizeof frags);
 
+    killcount = players[player].killcount;
+    itemcount = players[player].itemcount;
+    secretcount = players[player].secretcount;
+    p = &players[player];
 
-  {
-    int cheats = p->cheats;
-    memset (p, 0, sizeof(*p));
-    p->cheats = cheats;
-  }
+    {
 
-  memcpy(players[player].frags, frags, sizeof(players[player].frags));
-  players[player].killcount = killcount;
-  players[player].itemcount = itemcount;
-  players[player].secretcount = secretcount;
+        int cheats = p->cheats;
 
-  p->usedown = p->attackdown = true;
-  p->playerstate = PST_LIVE;
-  p->health = initial_health;
-  p->readyweapon = p->pendingweapon = wp_pistol;
-  p->weaponowned[wp_fist] = true;
-  p->weaponowned[wp_pistol] = true;
-  p->ammo[am_clip] = initial_bullets;
+        memset(p, 0, sizeof(*p));
 
-  for (i=0 ; i<NUMAMMO ; i++)
-    p->maxammo[i] = maxammo[i];
+        p->cheats = cheats;
+
+    }
+
+    memcpy(players[player].frags, frags, sizeof (players[player].frags));
+
+    players[player].killcount = killcount;
+    players[player].itemcount = itemcount;
+    players[player].secretcount = secretcount;
+    p->usedown = p->attackdown = true;
+    p->playerstate = PST_LIVE;
+    p->health = initial_health;
+    p->readyweapon = p->pendingweapon = wp_pistol;
+    p->weaponowned[wp_fist] = true;
+    p->weaponowned[wp_pistol] = true;
+    p->ammo[am_clip] = initial_bullets;
+
+    for (i = 0; i < NUMAMMO; i++)
+        p->maxammo[i] = maxammo[i];
+
 }
 
-void G_DoReborn (int playernum)
+void G_DoReborn(int playernum)
 {
+
     gameaction = ga_loadlevel;
-}
 
+}
 
 int pars[4][10] = {
-  {0},
-  {0,30,75,120,90,165,180,180,30,165},
-  {0,90,90,90,120,90,360,240,30,170},
-  {0,90,45,90,150,90,90,165,30,135}
+    {0},
+    {0,30,75,120,90,165,180,180,30,165},
+    {0,90,90,90,120,90,360,240,30,170},
+    {0,90,45,90,150,90,90,165,30,135}
 };
 
 
 int cpars[32] = {
-  30,90,120,120,90,150,120,120,270,90,
-  210,150,150,150,210,150,420,150,210,150,
-  240,150,180,150,150,300,330,420,300,180,
-  120,30
+    30,90,120,120,90,150,120,120,270,90,
+    210,150,150,150,210,150,420,150,210,150,
+    240,150,180,150,150,300,330,420,300,180,
+    120,30
 };
 
 static boolean secretexit;
 
 void G_ExitLevel (void)
 {
-  secretexit = false;
-  gameaction = ga_completed;
-}
 
-void G_SecretExitLevel (void)
-{
-  if (gamemode!=commercial || haswolflevels)
-    secretexit = true;
-  else
     secretexit = false;
-  gameaction = ga_completed;
+    gameaction = ga_completed;
+
 }
 
-void G_DoCompleted (void)
+void G_SecretExitLevel(void)
 {
-  int i;
 
-  gameaction = ga_nothing;
+    if (gamemode != commercial || haswolflevels)
+        secretexit = true;
+    else
+        secretexit = false;
 
-  for (i=0; i<MAXPLAYERS; i++)
-    if (playeringame[i])
-      G_PlayerFinishLevel(i);
+    gameaction = ga_completed;
 
-  if (gamemode != commercial)
-    switch(gamemap)
-      {
+}
 
-      case 9:
-        for (i=0 ; i<MAXPLAYERS ; i++)
-          players[i].didsecret = true;
-        break;
-      }
+void G_DoCompleted(void)
+{
 
-  wminfo.didsecret = players[consoleplayer].didsecret;
-  wminfo.epsd = gameepisode -1;
-  wminfo.last = gamemap -1;
+    int i;
 
-  if (gamemode == commercial)
+    gameaction = ga_nothing;
+
+    for (i = 0; i < MAXPLAYERS; i++)
     {
-      if (secretexit)
-        switch(gamemap)
-          {
-          case 15:
-            wminfo.next = 30; break;
-          case 31:
-            wminfo.next = 31; break;
-          }
-      else
-        switch(gamemap)
-          {
-          case 31:
-          case 32:
-            wminfo.next = 15; break;
-          default:
-            wminfo.next = gamemap;
-          }
+
+        if (playeringame[i])
+            G_PlayerFinishLevel(i);
+
     }
-  else
+
+    if (gamemode != commercial)
     {
-      if (secretexit)
-        wminfo.next = 8;
-      else
-        if (gamemap == 9)
-          {
+
+        switch (gamemap)
+        {
+
+        case 9:
+            for (i = 0; i < MAXPLAYERS; i++)
+                players[i].didsecret = true;
+
+            break;
+
+        }
+
+    }
+
+    wminfo.didsecret = players[consoleplayer].didsecret;
+    wminfo.epsd = gameepisode -1;
+    wminfo.last = gamemap -1;
+
+    if (gamemode == commercial)
+    {
+
+        if (secretexit)
+        {
+
+            switch (gamemap)
+            {
+
+            case 15:
+                wminfo.next = 30;
+
+                break;
+
+            case 31:
+                wminfo.next = 31;
+
+                break;
+
+            }
+
+        }
+
+        else
+        {
+
+            switch(gamemap)
+            {
+
+            case 31:
+            case 32:
+                wminfo.next = 15;
+
+                break;
+
+            default:
+                wminfo.next = gamemap;
+
+            }
+
+        }
+
+    }
+
+    else
+    {
+
+        if (secretexit)
+        {
+
+            wminfo.next = 8;
+
+        }
+
+        else if (gamemap == 9)
+        {
 
             switch (gameepisode)
-              {
-              case 1:
+            {
+
+            case 1:
                 wminfo.next = 3;
+
                 break;
-              case 2:
+
+            case 2:
                 wminfo.next = 5;
+
                 break;
-              case 3:
+
+            case 3:
                 wminfo.next = 6;
+
                 break;
-              case 4:
+
+            case 4:
                 wminfo.next = 2;
+
                 break;
-              }
-          }
+
+            }
+
+        }
+
         else
-          wminfo.next = gamemap;
+        {
+
+            wminfo.next = gamemap;
+
+        }
+
     }
 
-  wminfo.maxkills = totalkills;
-  wminfo.maxitems = totalitems;
-  wminfo.maxsecret = totalsecret;
-  wminfo.maxfrags = 0;
+    wminfo.maxkills = totalkills;
+    wminfo.maxitems = totalitems;
+    wminfo.maxsecret = totalsecret;
+    wminfo.maxfrags = 0;
 
-  if ( gamemode == commercial )
-    wminfo.partime = TICRATE*cpars[gamemap-1];
-  else
-    wminfo.partime = TICRATE*pars[gameepisode][gamemap];
+    if (gamemode == commercial)
+        wminfo.partime = TICRATE * cpars[gamemap - 1];
+    else
+        wminfo.partime = TICRATE * pars[gameepisode][gamemap];
 
-  wminfo.pnum = consoleplayer;
+    wminfo.pnum = consoleplayer;
 
-  for (i=0 ; i<MAXPLAYERS ; i++)
+    for (i = 0; i < MAXPLAYERS; i++)
     {
-      wminfo.plyr[i].in = playeringame[i];
-      wminfo.plyr[i].skills = players[i].killcount;
-      wminfo.plyr[i].sitems = players[i].itemcount;
-      wminfo.plyr[i].ssecret = players[i].secretcount;
-      wminfo.plyr[i].stime = leveltime;
-      memcpy (wminfo.plyr[i].frags, players[i].frags,
-              sizeof(wminfo.plyr[i].frags));
+
+        wminfo.plyr[i].in = playeringame[i];
+        wminfo.plyr[i].skills = players[i].killcount;
+        wminfo.plyr[i].sitems = players[i].itemcount;
+        wminfo.plyr[i].ssecret = players[i].secretcount;
+        wminfo.plyr[i].stime = leveltime;
+        memcpy(wminfo.plyr[i].frags, players[i].frags, sizeof (wminfo.plyr[i].frags));
+
     }
 
-  wminfo.totaltimes = (totalleveltimes += (leveltime - leveltime%35));
+    wminfo.totaltimes = (totalleveltimes += (leveltime - leveltime % 35));
+    gamestate = GS_INTERMISSION;
 
-  gamestate = GS_INTERMISSION;
+    WI_Start(&wminfo);
 
-  WI_Start (&wminfo);
 }
 
-void G_WorldDone (void)
+void G_WorldDone(void)
 {
-  gameaction = ga_worlddone;
 
-  if (secretexit)
-    players[consoleplayer].didsecret = true;
+    gameaction = ga_worlddone;
 
-  if (gamemode == commercial)
+    if (secretexit)
+        players[consoleplayer].didsecret = true;
+
+    if (gamemode == commercial)
     {
-      switch (gamemap)
+
+        switch (gamemap)
         {
+
         case 15:
         case 31:
-          if (!secretexit)
-            break;
+            if (!secretexit)
+                break;
+
         case 6:
         case 11:
         case 20:
         case 30:
-          F_StartFinale ();
-          break;
+            F_StartFinale();
+
+            break;
+
         }
+
     }
-  else if (gamemap == 8)
-    gameaction = ga_victory;
+
+    else if (gamemap == 8)
+    {
+
+        gameaction = ga_victory;
+
+    }
+
 }
 
-void G_DoWorldDone (void)
+void G_DoWorldDone(void)
 {
-  idmusnum = -1;
-  gamestate = GS_LEVEL;
-  gamemap = wminfo.next+1;
-  G_DoLoadLevel();
-  gameaction = ga_nothing;
+
+    idmusnum = -1;
+    gamestate = GS_LEVEL;
+    gamemap = wminfo.next + 1;
+
+    G_DoLoadLevel();
+
+    gameaction = ga_nothing;
+
 }
 
 #define MIN_MAXPLAYERS 32
@@ -832,138 +982,124 @@ static byte map_old_comp_levels[] = {
     0, 1, 2, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 };
 
-static const struct {
-  int comp_level;
-  const char* ver_printf;
-  int version;
+static const struct
+{
+
+    int comp_level;
+    const char* ver_printf;
+    int version;
 } version_headers[] = {
-  { prboom_3_compatibility, "PrBoom %d", 210},
-  { prboom_5_compatibility, "PrBoom %d", 211},
-  { prboom_6_compatibility, "PrBoom %d", 212}
+    {prboom_3_compatibility, "PrBoom %d", 210},
+    {prboom_5_compatibility, "PrBoom %d", 211},
+    {prboom_6_compatibility, "PrBoom %d", 212}
 };
 
-static const size_t num_version_headers = sizeof(version_headers) / sizeof(version_headers[0]);
+static const size_t num_version_headers = sizeof (version_headers) / sizeof (version_headers[0]);
 
 static skill_t d_skill;
-static int     d_episode;
-static int     d_map;
+static int d_episode;
+static int d_map;
 
 void G_DeferedInitNew(skill_t skill, int episode, int map)
 {
-  d_skill = skill;
-  d_episode = episode;
-  d_map = map;
-  gameaction = ga_newgame;
+
+    d_skill = skill;
+    d_episode = episode;
+    d_map = map;
+    gameaction = ga_newgame;
+
 }
 
 void G_Compatibility(void)
 {
-  static const struct {
-    complevel_t fix;
-    complevel_t opt;
-  } levels[] = {
 
-    { mbf_compatibility, mbf_compatibility },
+    static const struct
+    {
 
-    { mbf_compatibility, mbf_compatibility },
+        complevel_t fix;
+        complevel_t opt;
 
-    { boom_compatibility, mbf_compatibility },
+    } levels[] = {
+        { mbf_compatibility, mbf_compatibility },
+        { mbf_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { mbf_compatibility, mbf_compatibility },
+        { boom_compatibility_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { mbf_compatibility, mbf_compatibility },
+        { boom_202_compatibility, mbf_compatibility },
+        { mbf_compatibility, mbf_compatibility },
+        { lxdoom_1_compatibility, mbf_compatibility },
+        { boom_compatibility_compatibility, mbf_compatibility },
+        { mbf_compatibility, mbf_compatibility },
+        { boom_compatibility, mbf_compatibility },
+        { lxdoom_1_compatibility, prboom_2_compatibility },
+        { prboom_2_compatibility, prboom_2_compatibility },
+        { boom_compatibility_compatibility, prboom_3_compatibility },
+        { ultdoom_compatibility, prboom_4_compatibility },
+        { prboom_4_compatibility, prboom_4_compatibility },
+        { doom_1666_compatibility, prboom_4_compatibility },
+    };
+    int i;
 
-    { boom_compatibility, mbf_compatibility },
+    if (sizeof (levels) / sizeof (*levels) != COMP_NUM)
+        I_Error("G_Compatibility: consistency error");
 
-    { boom_compatibility, mbf_compatibility },
+    for (i = 0; i < sizeof (levels) / sizeof (*levels); i++)
+        if (compatibility_level < levels[i].opt)
+            comp[i] = (compatibility_level < levels[i].fix);
 
-    { boom_compatibility, mbf_compatibility },
+    if (!mbf_features)
+    {
 
+        monster_infighting = 1;
+        monster_backing = 0;
+        monster_avoid_hazards = 0;
+        monster_friction = 0;
 
+    }
 
-    { boom_compatibility, mbf_compatibility },
-
-    { boom_compatibility, mbf_compatibility },
-
-    { boom_compatibility, mbf_compatibility },
-
-    { mbf_compatibility, mbf_compatibility },
-
-    { boom_compatibility_compatibility, mbf_compatibility },
-
-    { boom_compatibility, mbf_compatibility },
-
-    { mbf_compatibility, mbf_compatibility },
-
-    { boom_202_compatibility, mbf_compatibility },
-
-    { mbf_compatibility, mbf_compatibility },
-
-    { lxdoom_1_compatibility, mbf_compatibility },
-
-    { boom_compatibility_compatibility, mbf_compatibility },
-
-    { mbf_compatibility, mbf_compatibility },
-
-    { boom_compatibility, mbf_compatibility },
-
-    { lxdoom_1_compatibility, prboom_2_compatibility },
-
-    { prboom_2_compatibility, prboom_2_compatibility },
-
-    { boom_compatibility_compatibility, prboom_3_compatibility },
-
-    { ultdoom_compatibility, prboom_4_compatibility },
-
-    { prboom_4_compatibility, prboom_4_compatibility },
-
-    { doom_1666_compatibility, prboom_4_compatibility },
-  };
-  int i;
-
-  if (sizeof(levels)/sizeof(*levels) != COMP_NUM)
-    I_Error("G_Compatibility: consistency error");
-
-  for (i = 0; i < sizeof(levels)/sizeof(*levels); i++)
-    if (compatibility_level < levels[i].opt)
-      comp[i] = (compatibility_level < levels[i].fix);
-
-  if (!mbf_features) {
-    monster_infighting = 1;
-    monster_backing = 0;
-    monster_avoid_hazards = 0;
-    monster_friction = 0;
-  }
 }
 
 void G_ReloadDefaults(void)
 {
 
-  weapon_recoil = default_weapon_recoil;
-  player_bobbing = default_player_bobbing;
-  variable_friction = default_variable_friction;
-  allow_pushers = default_allow_pushers;
-  monsters_remember = default_monsters_remember;
-  monster_infighting = default_monster_infighting;
-  monster_backing = default_monster_backing;
-  monster_avoid_hazards = default_monster_avoid_hazards;
-  monster_friction = default_monster_friction;
-  respawnparm = clrespawnparm;
-  fastparm = clfastparm;
+    weapon_recoil = default_weapon_recoil;
+    player_bobbing = default_player_bobbing;
+    variable_friction = default_variable_friction;
+    allow_pushers = default_allow_pushers;
+    monsters_remember = default_monsters_remember;
+    monster_infighting = default_monster_infighting;
+    monster_backing = default_monster_backing;
+    monster_avoid_hazards = default_monster_avoid_hazards;
+    monster_friction = default_monster_friction;
+    respawnparm = clrespawnparm;
+    fastparm = clfastparm;
 
-  if (startskill==sk_none)
-    startskill = (skill_t)(defaultskill-1);
+    if (startskill == sk_none)
+        startskill = (skill_t)(defaultskill-1);
 
-  memset(playeringame+1, 0, sizeof(*playeringame)*(MAXPLAYERS-1));
+    memset(playeringame + 1, 0, sizeof (*playeringame) * (MAXPLAYERS - 1));
 
-  consoleplayer = 0;
+    consoleplayer = 0;
+    compatibility_level = default_compatibility_level;
 
-  compatibility_level = default_compatibility_level;
+    if (compatibility_level == -1)
+        compatibility_level = best_compatibility;
 
-  if (compatibility_level == -1)
-    compatibility_level = best_compatibility;
+    if (mbf_features)
+        memcpy(comp, default_comp, sizeof comp);
 
-  if (mbf_features)
-    memcpy(comp, default_comp, sizeof comp);
-  G_Compatibility();
+    G_Compatibility();
 
-  rngseed += I_GetRandomTimeSeed() + gametic;
+    rngseed += I_GetRandomTimeSeed() + gametic;
+
 }
 
 void G_DoNewGame (void)
@@ -972,36 +1108,46 @@ void G_DoNewGame (void)
   G_InitNew (d_skill, d_episode, d_map);
   gameaction = ga_nothing;
 
-
   ST_Start();
+
 }
-
-
-
 
 void G_SetFastParms(int fast_pending)
 {
-  static int fast = 0;
-  int i;
-  if (fast != fast_pending) {     /* only change if necessary */
-    if ((fast = fast_pending))
-      {
-        for (i=S_SARG_RUN1; i<=S_SARG_PAIN2; i++)
-          if (states[i].tics != 1 || demo_compatibility)
-            states[i].tics >>= 1;
-        mobjinfo[MT_BRUISERSHOT].speed = 20*FRACUNIT;
-        mobjinfo[MT_HEADSHOT].speed = 20*FRACUNIT;
-        mobjinfo[MT_TROOPSHOT].speed = 20*FRACUNIT;
-      }
-    else
-      {
-        for (i=S_SARG_RUN1; i<=S_SARG_PAIN2; i++)
-          states[i].tics <<= 1;
-        mobjinfo[MT_BRUISERSHOT].speed = 15*FRACUNIT;
-        mobjinfo[MT_HEADSHOT].speed = 10*FRACUNIT;
-        mobjinfo[MT_TROOPSHOT].speed = 10*FRACUNIT;
-      }
-  }
+
+    static int fast = 0;
+    int i;
+
+    if (fast != fast_pending)
+    {
+
+        if ((fast = fast_pending))
+        {
+
+            for (i=S_SARG_RUN1; i<=S_SARG_PAIN2; i++)
+                if (states[i].tics != 1 || demo_compatibility)
+                    states[i].tics >>= 1;
+
+            mobjinfo[MT_BRUISERSHOT].speed = 20*FRACUNIT;
+            mobjinfo[MT_HEADSHOT].speed = 20*FRACUNIT;
+            mobjinfo[MT_TROOPSHOT].speed = 20*FRACUNIT;
+
+        }
+
+        else
+        {
+
+            for (i=S_SARG_RUN1; i<=S_SARG_PAIN2; i++)
+                states[i].tics <<= 1;
+
+            mobjinfo[MT_BRUISERSHOT].speed = 15*FRACUNIT;
+            mobjinfo[MT_HEADSHOT].speed = 10*FRACUNIT;
+            mobjinfo[MT_TROOPSHOT].speed = 10*FRACUNIT;
+
+        }
+
+    }
+
 }
 
 void G_InitNew(skill_t skill, int episode, int map)
