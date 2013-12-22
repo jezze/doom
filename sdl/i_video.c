@@ -18,7 +18,6 @@
 #define NO_PALETTE_CHANGE 1000
 
 static SDL_Surface *screen;
-int leds_always_off = 0;
 static int newpal = 0;
 
 static int getkey(SDL_keysym *key)
@@ -98,7 +97,7 @@ static int getmouse(Uint8 buttonstate)
 
 }
 
-static void I_GetEvent(SDL_Event *Event)
+static void postevent(SDL_Event *Event)
 {
 
     event_t event;
@@ -126,7 +125,8 @@ static void I_GetEvent(SDL_Event *Event)
     case SDL_MOUSEBUTTONUP:
         event.type = ev_mouse;
         event.data1 = getmouse(SDL_GetMouseState(NULL, NULL));
-        event.data2 = event.data3 = 0;
+        event.data2 = 0;
+        event.data3 = 0;
 
         D_PostEvent(&event);
 
@@ -153,17 +153,7 @@ static void I_GetEvent(SDL_Event *Event)
 
 }
 
-void I_StartTic(void)
-{
-
-    SDL_Event Event;
-
-    while (SDL_PollEvent(&Event))
-        I_GetEvent(&Event);
-
-}
-
-inline static boolean I_SkipFrame(void)
+static boolean skipframe(void)
 {
 
     static int frameno;
@@ -183,7 +173,7 @@ inline static boolean I_SkipFrame(void)
 
 }
 
-static void I_UploadNewPalette(int pal)
+static void setpalette(int pal)
 {
 
     static SDL_Color* colours;
@@ -222,10 +212,20 @@ static void I_UploadNewPalette(int pal)
 
 }
 
+void I_StartTic(void)
+{
+
+    SDL_Event Event;
+
+    while (SDL_PollEvent(&Event))
+        postevent(&Event);
+
+}
+
 void I_FinishUpdate(void)
 {
 
-    if (I_SkipFrame())
+    if (skipframe())
         return;
 
     if (SDL_MUSTLOCK(screen))
@@ -265,7 +265,7 @@ void I_FinishUpdate(void)
     if (newpal != NO_PALETTE_CHANGE)
     {
 
-        I_UploadNewPalette(newpal);
+        setpalette(newpal);
 
         newpal = NO_PALETTE_CHANGE;
 
