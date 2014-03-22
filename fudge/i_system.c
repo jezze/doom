@@ -10,11 +10,11 @@
 #include "doomtype.h"
 #include "doomdef.h"
 #include "m_fixed.h"
-#include "r_fps.h"
 #include "i_system.h"
 
 int ms_to_next_tick;
 int realtic_clock_rate = 100;
+tic_vars_t tic_vars;
 
 void I_Init(void)
 {
@@ -50,6 +50,13 @@ void I_EndDisplay(void)
 
 void I_uSleep(unsigned long usecs)
 {
+
+}
+
+int I_GetTime(void)
+{
+
+    return 0;
 
 }
 

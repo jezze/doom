@@ -1,5 +1,4 @@
 #include "z_zone.h"
-#include "m_swap.h"
 #include "i_sound.h"
 #include "m_misc.h"
 #include "w_wad.h"
