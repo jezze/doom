@@ -40,6 +40,7 @@ static ticcmd_t* localcmds;
 int maketic;
 
 const char *const standard_iwads[] = {
+    "chex.wad",
     "doom2.wad",
     "plutonia.wad",
     "tnt.wad",
@@ -251,7 +252,7 @@ static void CheckIWAD(const char *iwadname, GameMode_t *gmode, boolean *hassec)
     if (fread(&header, sizeof (header), 1, fp) != 1)
         I_Error("CheckIWAD: could not read %s", iwadname);
 
-    if (strncmp(header.identification, "IWAD", 4))
+    if (!(strncmp(header.identification, "IWAD", 4) == 0 || strncmp(header.identification, "PWAD", 4) == 0))
         I_Error("CheckIWAD: identification failed");
 
     header.numlumps = header.numlumps;
