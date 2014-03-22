@@ -206,10 +206,10 @@ static void D_AddFile(const char *file, wad_source_t source)
     char *gwa_filename = NULL;
 
     wadfiles = realloc(wadfiles, sizeof(*wadfiles) * (numwadfiles + 1));
-    wadfiles[numwadfiles].name = AddDefaultExtension(strcpy(malloc(strlen(file) + 5), file), ".wad");
+    wadfiles[numwadfiles].name = strcpy(malloc(strlen(file) + 5), file);
     wadfiles[numwadfiles].src = source;
     numwadfiles++;
-    gwa_filename = AddDefaultExtension(strcpy(malloc(strlen(file) + 5), file), ".wad");
+    gwa_filename = strcpy(malloc(strlen(file) + 5), file);
 
     if (strlen(gwa_filename) > 4)
     {

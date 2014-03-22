@@ -29,28 +29,6 @@ static void ExtractFileBase(const char *path, char *dest)
 
 }
 
-char *AddDefaultExtension(char *path, const char *ext)
-{
-
-    char *p = path;
-
-    while (*p++);
-
-    while (p-->path && *p != '/' && *p != '\\')
-    {
-
-        if (*p == '.')
-            return path;
-
-    }
-
-    if (*ext != '.')
-        strcat(path, ".");
-
-    return strcat(path, ext);
-
-}
-
 static void W_AddFile(wadfile_info_t *wadfile) 
 {
 
