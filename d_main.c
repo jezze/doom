@@ -266,6 +266,8 @@ static void CheckIWAD(const char *iwadname, GameMode_t *gmode, boolean *hassec)
     if (fread(fileinfo, sizeof (filelump_t), length, fp) != length)
         I_Error("CheckIWAD: failed to read");
 
+    fclose(fp);
+
     while (length--)
     {
 
@@ -358,14 +360,8 @@ static void IdentifyVersion(void)
             break;
 
         case commercial:
-            i = strlen(iwad);
             gamemission = doom2;
 
-            if (i >= 7 && !strncasecmp(iwad + i - 7, "tnt.wad", 7))
-                gamemission = pack_tnt;
-            else if (i >= 12 && !strncasecmp(iwad + i - 12, "plutonia.wad", 12))
-                gamemission = pack_plut;
-                
             break;
 
         default:

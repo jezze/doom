@@ -95,37 +95,37 @@ void F_StartFinale(void)
 
         case 6:
              finaleflat = bgflat06;
-             finaletext = (gamemission == pack_tnt) ? T1TEXT : (gamemission == pack_plut) ? P1TEXT : C1TEXT;
+             finaletext = C1TEXT;
 
              break;
 
         case 11:
              finaleflat = bgflat11;
-             finaletext = (gamemission == pack_tnt) ? T2TEXT : (gamemission == pack_plut) ? P2TEXT : C2TEXT;
+             finaletext = C2TEXT;
 
              break;
 
         case 20:
              finaleflat = bgflat20;
-             finaletext = (gamemission == pack_tnt) ? T3TEXT : (gamemission == pack_plut) ? P3TEXT : C3TEXT;
+             finaletext = C3TEXT;
 
              break;
 
         case 30:
              finaleflat = bgflat30;
-             finaletext = (gamemission == pack_tnt) ? T4TEXT : (gamemission == pack_plut) ? P4TEXT : C4TEXT;
+             finaletext = C4TEXT;
 
              break;
 
         case 15:
              finaleflat = bgflat15;
-             finaletext = (gamemission == pack_tnt) ? T5TEXT : (gamemission == pack_plut) ? P5TEXT : C5TEXT;
+             finaletext = C5TEXT;
 
              break;
 
         case 31:
              finaleflat = bgflat31;
-             finaletext = (gamemission == pack_tnt) ? T6TEXT : (gamemission == pack_plut) ? P6TEXT : C6TEXT;
+             finaletext = C6TEXT;
 
              break;
 

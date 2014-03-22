@@ -111,8 +111,6 @@ typedef enum
 
     doom,
     doom2,
-    pack_tnt,
-    pack_plut,
     none
 
 } GameMission_t;

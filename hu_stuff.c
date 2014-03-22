@@ -391,7 +391,7 @@ void HU_Start(void)
 
         case commercial:
         default:
-            s = (gamemission == pack_tnt) ? HU_TITLET : (gamemission == pack_plut) ? HU_TITLEP : HU_TITLE2;
+            s = HU_TITLE2;
 
             break;
 
