@@ -83,8 +83,7 @@ static void P_BringUpWeapon(player_t *player)
 
   player->pendingweapon = wp_nochange;
 
-  player->psprites[ps_weapon].sy =
-    mbf_features ? WEAPONBOTTOM+FRACUNIT*2 : WEAPONBOTTOM;
+  player->psprites[ps_weapon].sy = WEAPONBOTTOM+FRACUNIT * 2;
 
   P_SetPsprite(player, ps_weapon, newstate);
 }
@@ -343,9 +342,7 @@ void A_Punch(player_t *player, pspdef_t *psp)
   t = P_Random(pr_punchangle);
   angle += (t - P_Random(pr_punchangle))<<18;
 
-  if (!mbf_features ||
-      (slope = P_AimLineAttack(player->mo, angle, MELEERANGE, MF_FRIEND),
-       !linetarget))
+  if ((slope = P_AimLineAttack(player->mo, angle, MELEERANGE, MF_FRIEND), !linetarget))
     slope = P_AimLineAttack(player->mo, angle, MELEERANGE, 0);
 
   P_LineAttack(player->mo, angle, MELEERANGE, slope, damage);
@@ -368,9 +365,7 @@ void A_Saw(player_t *player, pspdef_t *psp)
   int t = P_Random(pr_saw);
   angle += (t - P_Random(pr_saw))<<18;
 
-  if (!mbf_features ||
-      (slope = P_AimLineAttack(player->mo, angle, MELEERANGE+1, MF_FRIEND),
-       !linetarget))
+  if ((slope = P_AimLineAttack(player->mo, angle, MELEERANGE+1, MF_FRIEND), !linetarget))
     slope = P_AimLineAttack(player->mo, angle, MELEERANGE+1, 0);
 
   P_LineAttack(player->mo, angle, MELEERANGE+1, slope, damage);
@@ -426,7 +421,7 @@ static void P_BulletSlope(mobj_t *mo)
 {
   angle_t an = mo->angle;
 
-  uint_64_t mask = mbf_features ? MF_FRIEND : 0;
+  uint_64_t mask = MF_FRIEND;
 
   do
     {
@@ -549,9 +544,7 @@ void A_BFGSpray(mobj_t *mo)
       int j, damage;
       angle_t an = mo->angle - ANG90/2 + ANG90/40*i;
 
-      if (!mbf_features ||
-         (P_AimLineAttack(mo->target, an, 16*64*FRACUNIT, MF_FRIEND),
-         !linetarget))
+      if ((P_AimLineAttack(mo->target, an, 16*64*FRACUNIT, MF_FRIEND), !linetarget))
         P_AimLineAttack(mo->target, an, 16*64*FRACUNIT, 0);
 
       if (!linetarget)

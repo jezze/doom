@@ -22,9 +22,6 @@ void P_Thrust(player_t *player, angle_t angle, fixed_t move)
 static void P_Bob(player_t *player, angle_t angle, fixed_t move)
 {
 
-    if (!mbf_features)
-        return;
-
     player->momx += FixedMul(move, finecosine[angle >>= ANGLETOFINESHIFT]);
     player->momy += FixedMul(move, finesine[angle]);
 
@@ -36,7 +33,7 @@ void P_CalcHeight(player_t *player)
     int angle;
     fixed_t bob;
 
-    player->bob = !mbf_features ? (FixedMul(player->mo->momx, player->mo->momx) + FixedMul(player->mo->momy,player->mo->momy)) >> 2 : player_bobbing ? (FixedMul(player->momx, player->momx) + FixedMul(player->momy, player->momy)) >> 2 : 0;
+    player->bob = false ? (FixedMul(player->mo->momx, player->mo->momx) + FixedMul(player->mo->momy,player->mo->momy)) >> 2 : player_bobbing ? (FixedMul(player->momx, player->momx) + FixedMul(player->momy, player->momy)) >> 2 : 0;
 
     if (player->bob > MAXBOB)
     {
@@ -110,7 +107,7 @@ void P_MovePlayer(player_t *player)
     mo->angle += cmd->angleturn << 16;
     onground = mo->z <= mo->floorz;
 
-    if ((!mbf_features) || (cmd->forwardmove | cmd->sidemove))
+    if ((cmd->forwardmove | cmd->sidemove))
     {
 
         if (onground || mo->flags & MF_BOUNCES)

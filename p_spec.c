@@ -2254,17 +2254,6 @@ static void P_SpawnScrollers(void)
     }
 }
 
-static void Add_Friction(int friction, int movefactor, int affectee)
-    {
-    friction_t *f = Z_Malloc(sizeof *f, PU_LEVSPEC, 0);
-
-    f->thinker.function = T_Friction;
-    f->friction = friction;
-    f->movefactor = movefactor;
-    f->affectee = affectee;
-    P_AddThinker(&f->thinker);
-    }
-
 void T_Friction(friction_t *f)
     {
     sector_t *sec;
@@ -2322,21 +2311,15 @@ static void P_SpawnFriction(void)
         else
           movefactor = ((friction - 0xDB34)*(0xA))/0x80;
 
-        if (mbf_features)
-          {
             if (friction > FRACUNIT)
               friction = FRACUNIT;
             if (friction < 0)
               friction = 0;
             if (movefactor < 32)
               movefactor = 32;
-          }
 
         for (s = -1; (s = P_FindSectorFromLineTag(l,s)) >= 0 ; )
           {
-
-            if (!mbf_features)
-              Add_Friction(friction,movefactor,s);
 
             sectors[s].friction = friction;
             sectors[s].movefactor = movefactor;
@@ -2370,10 +2353,7 @@ pusher_t* tmpusher;
 
 static boolean PIT_PushThing(mobj_t* thing)
 {
-  if (!mbf_features ?
-      thing->player && !(thing->flags & (MF_NOCLIP | MF_NOGRAVITY)) :
-      (sentient(thing) || thing->flags & MF_SHOOTABLE) &&
-      !(thing->flags & MF_NOCLIP))
+  if ((sentient(thing) || thing->flags & MF_SHOOTABLE) && !(thing->flags & MF_NOCLIP))
     {
       angle_t pushangle;
       fixed_t speed;
@@ -2385,7 +2365,7 @@ static boolean PIT_PushThing(mobj_t* thing)
                  >>FRACBITS)>>1))<<(FRACBITS-PUSH_FACTOR-1);
 
 
-      if (speed > 0 && mbf_features)
+      if (speed > 0)
         {
           int x = (thing->x-sx) >> FRACBITS;
           int y = (thing->y-sy) >> FRACBITS;

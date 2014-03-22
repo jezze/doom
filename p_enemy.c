@@ -245,55 +245,64 @@ static boolean P_Move(mobj_t *actor, boolean dropoff) /* killough 9/12/98 */
 
 
 
-  if (try_ok && friction > ORIG_FRICTION)
+    if (try_ok && friction > ORIG_FRICTION)
     {
-      actor->x = origx;
-      actor->y = origy;
-      movefactor *= FRACUNIT / ORIG_FRICTION_FACTOR / 4;
-      actor->momx += FixedMul(deltax, movefactor);
-      actor->momy += FixedMul(deltay, movefactor);
+
+        actor->x = origx;
+        actor->y = origy;
+        movefactor *= FRACUNIT / ORIG_FRICTION_FACTOR / 4;
+        actor->momx += FixedMul(deltax, movefactor);
+        actor->momy += FixedMul(deltay, movefactor);
+
     }
 
-  if (!try_ok)
+    if (!try_ok)
     {
-      int good;
 
-      if (actor->flags & MF_FLOAT && floatok)
+        int good;
+
+        if (actor->flags & MF_FLOAT && floatok)
         {
-          if (actor->z < tmfloorz)
-            actor->z += FLOATSPEED;
-          else
-            actor->z -= FLOATSPEED;
 
-          actor->flags |= MF_INFLOAT;
+            if (actor->z < tmfloorz)
+                actor->z += FLOATSPEED;
+            else
+                actor->z -= FLOATSPEED;
 
-    return true;
+            actor->flags |= MF_INFLOAT;
+
+            return true;
+
         }
 
-      if (!numspechit)
-        return false;
+        if (!numspechit)
+            return false;
 
-      actor->movedir = DI_NODIR;
+        actor->movedir = DI_NODIR;
 
-      for (good = false; numspechit--; )
-        if (P_UseSpecialLine(actor, spechit[numspechit], 0))
-    good |= spechit[numspechit] == blockline ? 1 : 2;
+        for (good = false; numspechit--; )
+            if (P_UseSpecialLine(actor, spechit[numspechit], 0))
+                good |= spechit[numspechit] == blockline ? 1 : 2;
 
-      if (!good || comp[comp_doorstuck]) return good;
-      if (!mbf_features)
-  return (P_Random(pr_trywalk)&3); /* jff 8/13/98 */
-      else /* finally, MBF code */
-  return ((P_Random(pr_opendoor) >= 230) ^ (good & 1));
+        if (!good || comp[comp_doorstuck])
+            return good;
+
+        return ((P_Random(pr_opendoor) >= 230) ^ (good & 1));
+
     }
-  else
-    actor->flags &= ~MF_INFLOAT;
 
-  /* killough 11/98: fall more slowly, under gravity, if felldown==true */
-  if (!(actor->flags & MF_FLOAT) &&
-      (!felldown || !mbf_features))
-    actor->z = actor->floorz;
+    else
+    {
 
-  return true;
+        actor->flags &= ~MF_INFLOAT;
+
+    }
+
+    if (!(actor->flags & MF_FLOAT) && !felldown)
+        actor->z = actor->floorz;
+
+    return true;
+
 }
 
 static boolean P_SmartMove(mobj_t *actor)
@@ -449,19 +458,14 @@ static void P_NewChaseDir(mobj_t *actor)
 
     actor->strafecount = 0;
 
-    if (mbf_features)
+    if (actor->floorz - actor->dropoffz > FRACUNIT*24 && actor->z <= actor->floorz && !(actor->flags & (MF_DROPOFF|MF_FLOAT)) && !comp[comp_dropoff] && P_AvoidDropoff(actor))
     {
 
-        if (actor->floorz - actor->dropoffz > FRACUNIT*24 && actor->z <= actor->floorz && !(actor->flags & (MF_DROPOFF|MF_FLOAT)) && !comp[comp_dropoff] && P_AvoidDropoff(actor))
-        {
+        P_DoNewChaseDir(actor, dropoff_deltax, dropoff_deltay);
 
-            P_DoNewChaseDir(actor, dropoff_deltax, dropoff_deltay);
+        actor->movecount = 1;
 
-            actor->movecount = 1;
-
-            return;
-
-        }
+        return;
 
     }
 
@@ -573,7 +577,7 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 
   c = 0;
 
-  stopc = !mbf_features && monsters_remember ? MAXPLAYERS : 2;
+  stopc = 2;
 
   for (;; actor->lastlook = (actor->lastlook+1)&(MAXPLAYERS-1))
     {
@@ -582,17 +586,6 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 
       if (c++ == stopc || actor->lastlook == stop)
       {
-
-        if (!mbf_features && monsters_remember)
-        {
-          if (actor->lastenemy && actor->lastenemy->health > 0)
-          {
-            actor->target = actor->lastenemy;
-            actor->lastenemy = NULL;
-            return true;
-          }
-        }
-
         return false;
       }
 
@@ -624,9 +617,6 @@ static boolean P_LookForMonsters(mobj_t *actor, boolean allaround)
       P_SetTarget(&actor->lastenemy, NULL);
       return true;
     }
-
-  if (!mbf_features)
-    return false;
 
   cap = &thinkerclasscap[actor->flags & MF_FRIEND ? th_enemies : th_friends];
 
@@ -1240,12 +1230,8 @@ void A_VileChase(mobj_t* actor)
           
                   corpsehit->health = info->spawnhealth;
       P_SetTarget(&corpsehit->target, NULL);
-
-      if (mbf_features)
-        {         /* kilough 9/9/98 */
-          P_SetTarget(&corpsehit->lastenemy, NULL);
-          corpsehit->flags &= ~MF_JUSTHIT;
-        }
+      P_SetTarget(&corpsehit->lastenemy, NULL);
+      corpsehit->flags &= ~MF_JUSTHIT;
 
       P_UpdateThinker(&corpsehit->thinker);
 

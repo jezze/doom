@@ -420,9 +420,6 @@ static void G_DoLoadLevel(void)
 
     }
 
-    if (!mbf_features)
-        basetic = gametic;
-
     gamestate = GS_LEVEL;
 
     for (i = 0; i < MAXPLAYERS; i++)
@@ -1010,16 +1007,6 @@ static void G_Compatibility(void)
         if (compatibility_level < levels[i].opt)
             comp[i] = (compatibility_level < levels[i].fix);
 
-    if (!mbf_features)
-    {
-
-        monster_infighting = 1;
-        monster_backing = 0;
-        monster_avoid_hazards = 0;
-        monster_friction = 0;
-
-    }
-
 }
 
 void G_ReloadDefaults(void)
@@ -1043,8 +1030,7 @@ void G_ReloadDefaults(void)
     consoleplayer = 0;
     compatibility_level = best_compatibility;
 
-    if (mbf_features)
-        memcpy(comp, default_comp, sizeof comp);
+    memcpy(comp, default_comp, sizeof comp);
 
     G_Compatibility();
 

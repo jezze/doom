@@ -68,9 +68,9 @@ int P_GetFriction(const mobj_t *mo, int *frictionfactor)
     const msecnode_t *m;
     const sector_t *sec;
 
-    if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY)) && (mbf_features || (mo->player && !compatibility)) && variable_friction)
+    if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY)) && ((mo->player && !compatibility)) && variable_friction)
         for (m = mo->touching_sectorlist; m; m = m->m_tnext)
-            if ((sec = m->m_sector)->special & FRICTION_MASK && (sec->friction < friction || friction == ORIG_FRICTION) && (mo->z <= sec->floorheight || (sec->heightsec != -1 && mo->z <= sectors[sec->heightsec].floorheight && mbf_features)))
+            if ((sec = m->m_sector)->special & FRICTION_MASK && (sec->friction < friction || friction == ORIG_FRICTION) && (mo->z <= sec->floorheight || (sec->heightsec != -1 && mo->z <= sectors[sec->heightsec].floorheight)))
                 friction = sec->friction, movefactor = sec->movefactor;
 
     if (frictionfactor)
@@ -85,56 +85,6 @@ int P_GetMoveFactor(const mobj_t *mo, int *frictionp)
 
     int movefactor, friction;
     
-    if (!mbf_features)
-    {
-
-        int momentum;
-
-        movefactor = ORIG_FRICTION_FACTOR;
-
-        if (!compatibility && variable_friction && !(mo->flags & (MF_NOGRAVITY | MF_NOCLIP)))
-        {
-
-            friction = mo->friction;
-
-            if (friction == ORIG_FRICTION)
-            {
-
-            }
-
-            else if (friction > ORIG_FRICTION)
-            {
-
-                movefactor = mo->movefactor;
-                ((mobj_t*)mo)->movefactor = ORIG_FRICTION_FACTOR;
-
-            }
-
-            else
-            {
-
-                momentum = (P_AproxDistance(mo->momx, mo->momy));
-                movefactor = mo->movefactor;
-
-                if (momentum > MORE_FRICTION_MOMENTUM<<2)
-                    movefactor <<= 3;
-
-                else if (momentum > MORE_FRICTION_MOMENTUM<<1)
-                    movefactor <<= 2;
-
-                else if (momentum > MORE_FRICTION_MOMENTUM)
-                    movefactor <<= 1;
-
-                ((mobj_t*)mo)->movefactor = ORIG_FRICTION_FACTOR;
-
-            }
-
-        }
-
-        return movefactor;
-
-    }
-
     if ((friction = P_GetFriction(mo, &movefactor)) < ORIG_FRICTION)
     {
 
@@ -466,7 +416,7 @@ boolean P_CheckPosition (mobj_t* thing, fixed_t x, fixed_t y)
     tmbbox[BOXLEFT] = x - tmthing->radius;
     newsubsec = R_PointInSubsector(x, y);
     floorline = blockline = ceilingline = NULL;
-    tmunstuck = thing->player && thing->player->mo == thing && mbf_features;
+    tmunstuck = thing->player && thing->player->mo == thing;
     tmfloorz = tmdropoffz = newsubsec->sector->floorheight;
     tmceilingz = newsubsec->sector->ceilingheight;
     validcount++;
@@ -529,7 +479,7 @@ boolean P_TryMove(mobj_t* thing, fixed_t x, fixed_t y, boolean dropoff)
             else if (!dropoff || (dropoff == 2 && (tmfloorz-tmdropoffz > 128 * FRACUNIT || !thing->target || thing->target->z >tmdropoffz)))
             {
 
-                if (!mbf_features ? tmfloorz - tmdropoffz > 24 * FRACUNIT : thing->floorz  - tmfloorz > 24 * FRACUNIT || thing->dropoffz - tmdropoffz > 24 * FRACUNIT)
+                if (thing->floorz  - tmfloorz > 24 * FRACUNIT || thing->dropoffz - tmdropoffz > 24 * FRACUNIT)
                     return false;
 
             }
@@ -710,19 +660,7 @@ void P_HitSlideLine (line_t* ld)
   fixed_t newlen;
   boolean icyfloor;
 
-  if (mbf_features)
-  {
-    icyfloor =
-    P_AproxDistance(tmxmove, tmymove) > 4*FRACUNIT &&
-    variable_friction &&
-    slidemo->z <= slidemo->floorz &&
-    P_GetFriction(slidemo, NULL) > ORIG_FRICTION;
-  }
-  else
-  {
-    extern boolean onground;
-    icyfloor = !compatibility && variable_friction && slidemo->player && onground && slidemo->friction > ORIG_FRICTION;
-  }
+  icyfloor = P_AproxDistance(tmxmove, tmymove) > 4*FRACUNIT && variable_friction && slidemo->z <= slidemo->floorz && P_GetFriction(slidemo, NULL) > ORIG_FRICTION;
 
   if (ld->slopetype == ST_HORIZONTAL)
     {

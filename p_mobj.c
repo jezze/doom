@@ -161,7 +161,7 @@ static void P_XYMovement(mobj_t *mo)
         if (!P_TryMove(mo, ptryx, ptryy, true))
         {
 
-            if (!(mo->flags & MF_MISSILE) && mbf_features && (mo->flags & MF_BOUNCES || (!player && blockline && variable_friction && mo->z <= mo->floorz && P_GetFriction(mo, NULL) > ORIG_FRICTION)))
+            if (!(mo->flags & MF_MISSILE) && (mo->flags & MF_BOUNCES || (!player && blockline && variable_friction && mo->z <= mo->floorz && P_GetFriction(mo, NULL) > ORIG_FRICTION)))
             {
 
                 if (blockline)
@@ -626,9 +626,7 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
     mobj->height = info->height;
     mobj->flags  = info->flags;
 
-    if (!mbf_features)
-        mobj->flags &= ~(MF_BOUNCES | MF_FRIEND | MF_TOUCHY);
-    else if (type == MT_PLAYER)
+    if (type == MT_PLAYER)
         mobj->flags |= MF_FRIEND;
 
     mobj->health = info->spawnhealth;
@@ -970,7 +968,7 @@ void P_CheckMissileSpawn (mobj_t* th)
     th->y += (th->momy >> 1);
     th->z += (th->momz >> 1);
 
-    if (!(th->flags & MF_MISSILE) && mbf_features)
+    if (!(th->flags & MF_MISSILE))
         return;
 
     if (!P_TryMove(th, th->x, th->y, false))
@@ -1025,7 +1023,7 @@ void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
     mobj_t *th;
     fixed_t x, y, z, slope = 0;
     angle_t an = source->angle;
-    uint_64_t mask = mbf_features ? MF_FRIEND : 0;
+    uint_64_t mask = MF_FRIEND;
 
     do
     {

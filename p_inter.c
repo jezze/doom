@@ -796,8 +796,6 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
 
     }
 
-    if (mbf_features)
-    {
 
         if (player)
             P_SetTarget(&target->target, source);
@@ -812,15 +810,10 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
 
         }
 
-    }
-
     if (P_Random (pr_painchance) < target->info->painchance && !(target->flags & MF_SKULLFLY))
     {
 
-        if (mbf_features)
-            justhit = true;
-        else
-            target->flags |= MF_JUSTHIT;
+        justhit = true;
 
         P_SetMobjState(target, target->info->painstate);
 
@@ -828,10 +821,10 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
 
     target->reactiontime = 0;
 
-    if (source && source != target && source->type != MT_VILE && (!target->threshold || target->type == MT_VILE) && ((source->flags ^ target->flags) & MF_FRIEND || monster_infighting || !mbf_features))
+    if (source && source != target && source->type != MT_VILE && (!target->threshold || target->type == MT_VILE) && ((source->flags ^ target->flags) & MF_FRIEND || monster_infighting))
     {
 
-        if (!target->lastenemy || target->lastenemy->health <= 0 || (!mbf_features ? !target->lastenemy->player : !((target->flags ^ target->lastenemy->flags) & MF_FRIEND) && target->target != source))
+        if (!target->lastenemy || target->lastenemy->health <= 0 || (!((target->flags ^ target->lastenemy->flags) & MF_FRIEND) && target->target != source))
             P_SetTarget(&target->lastenemy, target->target);
 
         P_SetTarget(&target->target, source);
