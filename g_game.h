@@ -19,7 +19,6 @@ void G_DoNewGame(void);
 void G_DoReborn(int playernum);
 void G_DoCompleted(void);
 void G_DoWorldDone(void);
-void G_Compatibility(void);
 void G_PlayerReborn(int player);
 void G_RestartLevel(void);
 void G_DoVictory(void);
@@ -68,6 +67,5 @@ extern int defaultskill;
 extern boolean haswolflevels;
 extern int pars[4][10];
 extern int cpars[32];
-extern const char *comp_lev_str[];
 
 #endif

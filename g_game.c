@@ -951,45 +951,6 @@ void G_DoWorldDone(void)
 #define MIN_MAXPLAYERS 32
 #define VERSIONSIZE   16
 
-const char * comp_lev_str[MAX_COMPATIBILITY_LEVEL] = {
-    "doom v1.2",
-    "doom v1.666",
-    "doom/doom2 v1.9",
-    "ultimate doom",
-    "final doom",
-    "dosdoom compatibility",
-    "tasdoom compatibility",
-    "\"boom compatibility\"",
-    "boom v2.01",
-    "boom v2.02",
-    "lxdoom v1.3.2+",
-    "MBF",
-    "PrBoom 2.03beta",
-    "PrBoom v2.1.0-2.1.1",
-    "PrBoom v2.1.2-v2.2.6",
-    "PrBoom v2.3.x",
-    "PrBoom 2.4.0",
-    "Current PrBoom"
-};
-
-static byte map_old_comp_levels[] = {
-    0, 1, 2, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
-};
-
-static const struct
-{
-
-    int comp_level;
-    const char* ver_printf;
-    int version;
-} version_headers[] = {
-    {prboom_3_compatibility, "PrBoom %d", 210},
-    {prboom_5_compatibility, "PrBoom %d", 211},
-    {prboom_6_compatibility, "PrBoom %d", 212}
-};
-
-static const size_t num_version_headers = sizeof (version_headers) / sizeof (version_headers[0]);
-
 static skill_t d_skill;
 static int d_episode;
 static int d_map;
@@ -1004,7 +965,7 @@ void G_DeferedInitNew(skill_t skill, int episode, int map)
 
 }
 
-void G_Compatibility(void)
+static void G_Compatibility(void)
 {
 
     static const struct

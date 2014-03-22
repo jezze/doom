@@ -87,7 +87,7 @@ static boolean P_CrossSubsector(int num)
 
         {
 
-            fixed_t frac = (compatibility_level == prboom_5_compatibility || compatibility_level == prboom_6_compatibility) ? P_InterceptVector2(&los.strace, &divl) : P_InterceptVector(&los.strace, &divl);
+            fixed_t frac = P_InterceptVector2(&los.strace, &divl);
 
             if (front->floorheight != back->floorheight)
             {
@@ -158,7 +158,7 @@ boolean P_CheckSight(mobj_t *t1, mobj_t *t2)
     if ((s1->heightsec != -1 && ((t1->z + t1->height <= sectors[s1->heightsec].floorheight && t2->z >= sectors[s1->heightsec].floorheight) || (t1->z >= sectors[s1->heightsec].ceilingheight && t2->z + t1->height <= sectors[s1->heightsec].ceilingheight))) || (s2->heightsec != -1 && ((t2->z + t2->height <= sectors[s2->heightsec].floorheight && t1->z >= sectors[s2->heightsec].floorheight) || (t2->z >= sectors[s2->heightsec].ceilingheight && t1->z + t2->height <= sectors[s2->heightsec].ceilingheight))))
         return false;
 
-    if ((t1->subsector == t2->subsector) && (compatibility_level >= mbf_compatibility))
+    if (t1->subsector == t2->subsector)
         return true;
 
     validcount++;

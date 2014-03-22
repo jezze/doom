@@ -666,14 +666,13 @@ int EV_BuildStairs
         if (tsec->floorpic != texture)
           continue;
 
-        if (comp[comp_stairs] || (compatibility_level == mbf_compatibility))
+        if (comp[comp_stairs])
           height += stairsize;
-
 
         if (P_SectorActive(floor_special,tsec))
           continue;
 
-        if (!comp[comp_stairs] && (compatibility_level != mbf_compatibility))
+        if (!comp[comp_stairs])
           height += stairsize;
 
         sec = tsec;
@@ -698,13 +697,14 @@ int EV_BuildStairs
     } while(ok);
 
    }
-   if (comp[comp_stairs]) {
-     if ((compatibility_level >= mbf_compatibility) && (compatibility_level <
-           prboom_3_compatibility)) ssec = secnum; /* Trash outer loop index */
-     else {
-       ssec = -1; minssec = secnum;
-     }
+   if (comp[comp_stairs])
+   {
+
+        ssec = -1;
+        minssec = secnum;
+
    }
+
   }
   return rtn;
 }
