@@ -238,10 +238,10 @@ static void P_XYMovement(mobj_t *mo)
     if (((mo->flags & MF_BOUNCES && mo->z > mo->dropoffz) || mo->flags & MF_CORPSE || mo->intflags & MIF_FALLING) && (mo->momx > FRACUNIT / 4 || mo->momx < -FRACUNIT / 4 || mo->momy > FRACUNIT / 4 || mo->momy < -FRACUNIT / 4) && mo->floorz != mo->subsector->sector->floorheight)
         return;
 
-    if (mo->momx > -STOPSPEED && mo->momx < STOPSPEED && mo->momy > -STOPSPEED && mo->momy < STOPSPEED && (!player || !(player->cmd.forwardmove | player->cmd.sidemove) || (player->mo != mo && compatibility_level >= lxdoom_1_compatibility)))
+    if (mo->momx > -STOPSPEED && mo->momx < STOPSPEED && mo->momy > -STOPSPEED && mo->momy < STOPSPEED && (!player || !(player->cmd.forwardmove | player->cmd.sidemove) || (player->mo != mo)))
     {
 
-        if (player && (unsigned)(player->mo->state - states - S_PLAY_RUN1) < 4 && (player->mo == mo || compatibility_level >= lxdoom_1_compatibility))
+        if (player && (unsigned)(player->mo->state - states - S_PLAY_RUN1) < 4)
             P_SetMobjState(player->mo, S_PLAY);
 
         mo->momx = mo->momy = 0;
@@ -254,52 +254,16 @@ static void P_XYMovement(mobj_t *mo)
     else
     {
 
-        if (compatibility_level <= boom_201_compatibility)
+        fixed_t friction = P_GetFriction(mo, NULL);
+
+        mo->momx = FixedMul(mo->momx, friction);
+        mo->momy = FixedMul(mo->momy, friction);
+
+        if (player && player->mo == mo)
         {
 
-            mo->momx = FixedMul(mo->momx, mo->friction);
-            mo->momy = FixedMul(mo->momy, mo->friction);
-            mo->friction = ORIG_FRICTION;
-
-        }
-
-        else if (compatibility_level <= lxdoom_1_compatibility)
-        {
-
-            if ((oldx == mo->x) && (oldy == mo->y))
-            {
-
-                mo->momx = FixedMul(mo->momx, ORIG_FRICTION);
-                mo->momy = FixedMul(mo->momy, ORIG_FRICTION);
-
-            }
-
-            else
-            {
-
-                mo->momx = FixedMul(mo->momx, mo->friction);
-                mo->momy = FixedMul(mo->momy, mo->friction);
-
-            }
-
-            mo->friction = ORIG_FRICTION;
-
-        }
-
-        else
-        {
-
-            fixed_t friction = P_GetFriction(mo, NULL);
-            mo->momx = FixedMul(mo->momx, friction);
-            mo->momy = FixedMul(mo->momy, friction);
-
-            if (player && player->mo == mo)
-            {
-
-                player->momx = FixedMul(player->momx, ORIG_FRICTION);
-                player->momy = FixedMul(player->momy, ORIG_FRICTION);
-
-            }
+            player->momx = FixedMul(player->momx, ORIG_FRICTION);
+            player->momy = FixedMul(player->momy, ORIG_FRICTION);
 
         }
 
@@ -431,7 +395,7 @@ floater:
     if (mo->z <= mo->floorz)
     {
 
-        if (mo->flags & MF_SKULLFLY && (!comp[comp_soul] || (compatibility_level > doom2_19_compatibility && compatibility_level < prboom_4_compatibility)))
+        if (mo->flags & MF_SKULLFLY && (!comp[comp_soul]))
             mo->momz = -mo->momz;
 
         if (mo->momz < 0)
@@ -459,9 +423,6 @@ floater:
         }
 
         mo->z = mo->floorz;
-
-        if (mo->flags & MF_SKULLFLY && compatibility_level <= doom2_19_compatibility)
-            mo->momz = -mo->momz;
 
         if ((mo->flags & MF_MISSILE) && !(mo->flags & MF_NOCLIP))
         {
@@ -737,16 +698,9 @@ void P_RemoveMobj(mobj_t *mobj)
     }
 
     S_StopSound(mobj);
-
-    if (compatibility_level >= lxdoom_1_compatibility)
-    {
-
-        P_SetTarget(&mobj->target, NULL);
-        P_SetTarget(&mobj->tracer, NULL);
-        P_SetTarget(&mobj->lastenemy, NULL);
-
-    }
-
+    P_SetTarget(&mobj->target, NULL);
+    P_SetTarget(&mobj->tracer, NULL);
+    P_SetTarget(&mobj->lastenemy, NULL);
     P_RemoveThinker(&mobj->thinker);
 
 }
@@ -894,7 +848,7 @@ void P_SpawnMapThing(const mapthing_t *mthing)
 
     }
 
-    if ((compatibility_level >= lxdoom_1_compatibility && options & MTF_RESERVED))
+    if ((options & MTF_RESERVED))
     {
 
         I_Print("P_SpawnMapThing: correcting bad flags (%u) (thing type %d)\n", options, mthing->type);

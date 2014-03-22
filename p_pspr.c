@@ -258,9 +258,10 @@ void A_ReFire(player_t *player, pspdef_t *psp)
 
 void A_CheckReload(player_t *player, pspdef_t *psp)
 {
-  if (!P_CheckAmmo(player) && compatibility_level >= prboom_4_compatibility) {
-    P_SetPsprite(player,ps_weapon,weaponinfo[player->readyweapon].downstate);
-  }
+
+    if (!P_CheckAmmo(player))
+        P_SetPsprite(player,ps_weapon,weaponinfo[player->readyweapon].downstate);
+
 }
 
 void A_Lower(player_t *player, pspdef_t *psp)
@@ -291,30 +292,34 @@ void A_Lower(player_t *player, pspdef_t *psp)
 
 void A_Raise(player_t *player, pspdef_t *psp)
 {
-  statenum_t newstate;
 
-  psp->sy -= RAISESPEED;
+    statenum_t newstate;
 
-  if (psp->sy > WEAPONTOP)
-    return;
+    psp->sy -= RAISESPEED;
 
-  psp->sy = WEAPONTOP;
-  newstate = weaponinfo[player->readyweapon].readystate;
+    if (psp->sy > WEAPONTOP)
+        return;
 
-  P_SetPsprite(player, ps_weapon, newstate);
+    psp->sy = WEAPONTOP;
+    newstate = weaponinfo[player->readyweapon].readystate;
+
+    P_SetPsprite(player, ps_weapon, newstate);
+
 }
 
 static void A_FireSomething(player_t* player,int adder)
 {
-  P_SetPsprite(player, ps_flash,
-               weaponinfo[player->readyweapon].flashstate+adder);
 
+    P_SetPsprite(player, ps_flash, weaponinfo[player->readyweapon].flashstate + adder);
 
-  if (!(player->mo->flags & MF_NOCLIP))
-    if (!compatibility && weapon_recoil)
-      P_Thrust(player,
-               ANG180+player->mo->angle,
-               2048*recoil_values[player->readyweapon]);
+    if (!(player->mo->flags & MF_NOCLIP))
+    {
+
+        if (!compatibility && weapon_recoil)
+            P_Thrust(player, ANG180 + player->mo->angle, 2048 * recoil_values[player->readyweapon]);
+
+    }
+
 }
 
 void A_GunFlash(player_t *player, pspdef_t *psp)

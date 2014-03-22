@@ -38,15 +38,7 @@ void P_CalcHeight(player_t *player)
 
     player->bob = !mbf_features ? (FixedMul(player->mo->momx, player->mo->momx) + FixedMul(player->mo->momy,player->mo->momy)) >> 2 : player_bobbing ? (FixedMul(player->momx, player->momx) + FixedMul(player->momy, player->momy)) >> 2 : 0;
 
-    if (compatibility_level >= boom_202_compatibility && compatibility_level <= lxdoom_1_compatibility && player->mo->friction > ORIG_FRICTION)
-    {
-
-        if (player->bob > (MAXBOB >> 2))
-            player->bob = MAXBOB >> 2;
-
-    }
-
-    else if (player->bob > MAXBOB)
+    if (player->bob > MAXBOB)
     {
 
         player->bob = MAXBOB;

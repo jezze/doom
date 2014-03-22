@@ -672,18 +672,10 @@ manual_stair:
         if (!Igno && tsec->floorpic != texture)
           continue;
 
-        /* jff 6/19/98 prevent double stepsize */
-        if (compatibility_level < boom_202_compatibility)
-          height += floor->direction * stairsize;
-
-
         if (P_SectorActive(floor_special,tsec) || tsec->stairlock)
           continue;
 
-        /* jff 6/19/98 increase height AFTER continue */
-        if (compatibility_level >= boom_202_compatibility)
-          height += floor->direction * stairsize;
-
+        height += floor->direction * stairsize;
         sec->nextsec = newsecnum;
         tsec->prevsec = secnum;
         tsec->nextsec = -1;

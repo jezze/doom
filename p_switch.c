@@ -143,7 +143,7 @@ void P_ChangeSwitchTexture(line_t*       line,  int           useAgain )
   sound = sfx_swtchn;
   soundorg = (mobj_t *)&line->soundorg;
 
-  if (comp[comp_sound] || compatibility_level < prboom_6_compatibility) {
+  if (comp[comp_sound]) {
     soundorg = buttonlist->soundorg;
   } 
 
@@ -175,12 +175,10 @@ void P_ChangeSwitchTexture(line_t*       line,  int           useAgain )
 boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
 {
 
-  if (compatibility_level != boom_201_compatibility)
     if (side)
         return false;
 
-  {
-
+    {
 
     int (*linefunc)(line_t *line)=NULL;
 

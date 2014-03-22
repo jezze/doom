@@ -151,7 +151,7 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
     if (!snd_card || nosfxparm)
         return;
 
-    is_pickup = sfx_id & PICKUP_SOUND || sfx_id == sfx_oof || (compatibility_level >= prboom_2_compatibility && sfx_id == sfx_noway);
+    is_pickup = sfx_id & PICKUP_SOUND || sfx_id == sfx_oof || sfx_id == sfx_noway;
     sfx_id &= ~PICKUP_SOUND;
 
     if (sfx_id < 1 || sfx_id > NUMSFX)

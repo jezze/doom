@@ -129,7 +129,7 @@ static void P_GetNodesVersion(int lumpnum, int gl_lumpnum)
 
     data = W_CacheLumpNum(gl_lumpnum + ML_GL_VERTS);
 
-    if ((gl_lumpnum > lumpnum) && (compatibility_level >= prboom_2_compatibility))
+    if (gl_lumpnum > lumpnum)
     {
 
         if (*(const int *)data == gNd2)
@@ -1437,9 +1437,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
     }
 
     P_LoadReject(lumpnum, P_GroupLines());
-
-    if (compatibility_level >= lxdoom_1_compatibility)
-        P_RemoveSlimeTrails();
+    P_RemoveSlimeTrails();
 
     memset(playerstarts, 0, sizeof (playerstarts));
 

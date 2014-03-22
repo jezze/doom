@@ -506,11 +506,7 @@ static void WI_initShowNextLoc(void)
 
   state = ShowNextLoc;
   acceleratestage = 0;
-  
-  if (compatibility_level == tasdoom_compatibility)
-    cnt = 60;
-  else
-    cnt = SHOWNEXTLOCDELAY * TICRATE;
+  cnt = SHOWNEXTLOCDELAY * TICRATE;
 
   WI_initAnimatedBack();
 }
@@ -645,9 +641,7 @@ static void WI_updateStats(void)
     if (!(bcnt&3))
       S_StartSound(0, sfx_pistol);
 
-    if ((!wbs->maxsecret && compatibility_level < lxdoom_1_compatibility) ||
-    cnt_secret[0] >= (wbs->maxsecret ?
-      (plrs[me].ssecret * 100) / wbs->maxsecret : 100))
+    if (cnt_secret[0] >= (wbs->maxsecret ? (plrs[me].ssecret * 100) / wbs->maxsecret : 100))
     {
       cnt_secret[0] = (wbs->maxsecret ?
         (plrs[me].ssecret * 100) / wbs->maxsecret : 100);
@@ -676,7 +670,7 @@ static void WI_updateStats(void)
     {
       cnt_par = wbs->partime / TICRATE;
 
-      if ((cnt_time >= plrs[me].stime / TICRATE) && (compatibility_level < lxdoom_1_compatibility || cnt_total_time >= wbs->totaltimes / TICRATE))
+      if ((cnt_time >= plrs[me].stime / TICRATE) && (cnt_total_time >= wbs->totaltimes / TICRATE))
       {
         S_StartSound(0, sfx_barexp);
         sp_state++;

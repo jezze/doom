@@ -1304,10 +1304,7 @@ void A_VileTarget(mobj_t *actor)
 
   A_FaceTarget(actor);
 
-
-  fog = P_SpawnMobj(actor->target->x,
-    (compatibility_level < lxdoom_1_compatibility) ? actor->target->x : actor->target->y,
-                    actor->target->z,MT_FIRE);
+  fog = P_SpawnMobj(actor->target->x, actor->target->y, actor->target->z, MT_FIRE);
 
   P_SetTarget(&actor->tracer, fog);
   P_SetTarget(&fog->target, actor);

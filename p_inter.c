@@ -622,14 +622,13 @@ static void P_KillMobj(mobj_t *source, mobj_t *target)
     else if (target->flags & MF_COUNTKILL)
     {
 
-        if ((compatibility_level < lxdoom_1_compatibility))
+        if (target->lastenemy && target->lastenemy->health > 0 && target->lastenemy->player)
         {
 
-            players[0].killcount++;
-        }
-        
-        else if (target->lastenemy && target->lastenemy->health > 0 && target->lastenemy->player)
             target->lastenemy->player->killcount++;
+
+        }
+
         else
         {
 

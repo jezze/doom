@@ -228,7 +228,7 @@ fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight)
           height = other->floorheight;
       return height;
     }
-  return (compatibility_level < doom_1666_compatibility ? 0 : currentheight);
+  return currentheight;
 }
 
 fixed_t P_FindNextLowestFloor(sector_t *sec, int currentheight)
@@ -662,8 +662,6 @@ boolean P_SectorActive(special_e t, const sector_t *sec)
 
 int P_CheckTag(line_t *line)
 {
-  /* tag not zero, allowed, or
-   * killough 11/98: compatibility option */
   if (comp[comp_zerotags] || line->tag)
     return 1;
 
@@ -1945,7 +1943,7 @@ void P_UpdateSpecials (void)
         }
         {
           mobj_t *so = (mobj_t *)buttonlist[i].soundorg;
-          if (comp[comp_sound] || compatibility_level < prboom_6_compatibility)
+          if (comp[comp_sound])
             so = (mobj_t *)&buttonlist[i].soundorg;
           S_StartSound(so, sfx_swtchn);
         }
@@ -2166,26 +2164,22 @@ static void Add_Scroller(int type, fixed_t dx, fixed_t dy, int control, int affe
 
 static void Add_WallScroller(fixed_t dx, fixed_t dy, const line_t *l, int control, int accel)
 {
-  fixed_t x = D_abs(l->dx), y = D_abs(l->dy), d;
-  if (y > x)
-    d = x, x = y, y = d;
-  d = FixedDiv(x, finesine[(tantoangle[FixedDiv(y,x) >> DBITS] + ANG90) >> ANGLETOFINESHIFT]);
 
+    fixed_t x = D_abs(l->dx), y = D_abs(l->dy), d;
 
-  if (compatibility_level >= lxdoom_1_compatibility) {
+    if (y > x)
+        d = x, x = y, y = d;
+
+    d = FixedDiv(x, finesine[(tantoangle[FixedDiv(y,x) >> DBITS] + ANG90) >> ANGLETOFINESHIFT]);
     x = (fixed_t)(((int_64_t)dy * -(int_64_t)l->dy - (int_64_t)dx * (int_64_t)l->dx) / (int_64_t)d);
     y = (fixed_t)(((int_64_t)dy * (int_64_t)l->dx - (int_64_t)dx * (int_64_t)l->dy) / (int_64_t)d);
-  } else {
-    x = -FixedDiv(FixedMul(dy, l->dy) + FixedMul(dx, l->dx), d);
-    y = -FixedDiv(FixedMul(dx, l->dy) - FixedMul(dy, l->dx), d);
-  }
-  Add_Scroller(sc_side, x, y, control, *l->sidenum, accel);
-}
 
+    Add_Scroller(sc_side, x, y, control, *l->sidenum, accel);
+
+}
 
 #define SCROLL_SHIFT 5
 #define CARRYFACTOR ((fixed_t)(FRACUNIT*.09375))
-
 
 static void P_SpawnScrollers(void)
 {

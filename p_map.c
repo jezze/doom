@@ -522,7 +522,7 @@ boolean P_TryMove(mobj_t* thing, fixed_t x, fixed_t y, boolean dropoff)
             if (comp[comp_dropoff])
             {
 
-                if ((compatibility || !dropoff || (mbf_features && compatibility_level <= prboom_2_compatibility)) && (tmfloorz - tmdropoffz > 24 * FRACUNIT))
+                if ((compatibility || !dropoff) && (tmfloorz - tmdropoffz > 24 * FRACUNIT))
                     return false;
             }
 
@@ -721,11 +721,7 @@ void P_HitSlideLine (line_t* ld)
   else
   {
     extern boolean onground;
-    icyfloor = !compatibility &&
-    variable_friction &&
-    slidemo->player &&
-    onground && 
-    slidemo->friction > ORIG_FRICTION;
+    icyfloor = !compatibility && variable_friction && slidemo->player && onground && slidemo->friction > ORIG_FRICTION;
   }
 
   if (ld->slopetype == ST_HORIZONTAL)
@@ -873,7 +869,7 @@ void P_SlideMove(mobj_t *mo)
     if (!P_TryMove(mo, mo->x, mo->y + mo->momy, true))
       if (!P_TryMove(mo, mo->x + mo->momx, mo->y, true))
         if (compatibility_level == boom_201_compatibility)
-    mo->momx = mo->momy = 0;
+            mo->momx = mo->momy = 0;
 
     break;
   }
@@ -1550,18 +1546,8 @@ void P_CreateSecNodeList(mobj_t* thing,fixed_t x,fixed_t y)
       node = node->m_tnext;
     }
 
-  if ((compatibility_level < boom_compatibility_compatibility) ||
-      (compatibility_level >= prboom_3_compatibility))
-    tmthing = saved_tmthing;
-  if ((compatibility_level < boom_compatibility_compatibility)) {
-    tmx = saved_tmx, tmy = saved_tmy;
-    if (tmthing) {
-      tmbbox[BOXTOP]  = tmy + tmthing->radius;
-      tmbbox[BOXBOTTOM] = tmy - tmthing->radius;
-      tmbbox[BOXRIGHT]  = tmx + tmthing->radius;
-      tmbbox[BOXLEFT]   = tmx - tmthing->radius;
-    }
-  }
+  tmthing = saved_tmthing;
+
 }
 
 void P_MapStart(void) {

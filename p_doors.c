@@ -89,7 +89,7 @@ void T_VerticalDoor (vldoor_t *door)
     case -1:
         res = T_MovePlane(door->sector, door->speed, door->sector->floorheight, false, 1, door->direction);
 
-        if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level >= mbf_compatibility)
+        if (door->lighttag && door->topheight - door->sector->floorheight)
             EV_LightTurnOnPartway(door->line, FixedDiv(door->sector->ceilingheight - door->sector->floorheight, door->topheight - door->sector->floorheight));
 
         if (res == pastdest)
@@ -139,9 +139,6 @@ void T_VerticalDoor (vldoor_t *door)
 
             }
 
-            if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level < mbf_compatibility)
-                EV_LightTurnOnPartway(door->line, 0);
-
         }
 
         else if (res == crushed)
@@ -184,7 +181,7 @@ void T_VerticalDoor (vldoor_t *door)
     case 1:
         res = T_MovePlane(door->sector, door->speed, door->topheight, false, 1, door->direction);
 
-        if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level >= mbf_compatibility)
+        if (door->lighttag && door->topheight - door->sector->floorheight)
             EV_LightTurnOnPartway(door->line, FixedDiv(door->sector->ceilingheight - door->sector->floorheight, door->topheight - door->sector->floorheight));
 
         if (res == pastdest)
@@ -219,9 +216,6 @@ void T_VerticalDoor (vldoor_t *door)
                 break;
 
             }
-
-            if (door->lighttag && door->topheight - door->sector->floorheight && compatibility_level < mbf_compatibility)
-                EV_LightTurnOnPartway(door->line, FRACUNIT);
 
         }
 
@@ -468,10 +462,10 @@ int EV_VerticalDoor(line_t *line, mobj_t *thing)
     sec = sides[line->sidenum[1]].sector;
     door = sec->ceilingdata;
 
-    if (door && ((compatibility_level == prboom_4_compatibility) || (line->special == 1) || (line->special == 117) || (line->special == 26) || (line->special == 27) || (line->special == 28)))
+    if (door && ((line->special == 1) || (line->special == 117) || (line->special == 26) || (line->special == 27) || (line->special == 28)))
     {
 
-        if (compatibility_level < prboom_4_compatibility || door->thinker.function == T_VerticalDoor)
+        if (door->thinker.function == T_VerticalDoor)
         {
 
             int outval = 0;
