@@ -436,12 +436,8 @@ static void G_DoLoadLevel(void)
 
     }
 
-    {
-
-        DECLARE_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
-        NULL_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
-
-    }
+    DECLARE_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
+    NULL_BLOCK_MEMORY_ALLOC_ZONE(secnodezone);
 
     P_SetupLevel(gameepisode, gamemap, 0, gameskill);
 
@@ -1085,10 +1081,7 @@ void G_ReloadDefaults(void)
     memset(playeringame + 1, 0, sizeof (*playeringame) * (MAXPLAYERS - 1));
 
     consoleplayer = 0;
-    compatibility_level = default_compatibility_level;
-
-    if (compatibility_level == -1)
-        compatibility_level = best_compatibility;
+    compatibility_level = best_compatibility;
 
     if (mbf_features)
         memcpy(comp, default_comp, sizeof comp);
@@ -1099,13 +1092,15 @@ void G_ReloadDefaults(void)
 
 }
 
-void G_DoNewGame (void)
+void G_DoNewGame(void)
 {
-  G_ReloadDefaults();
-  G_InitNew (d_skill, d_episode, d_map);
-  gameaction = ga_nothing;
 
-  ST_Start();
+    G_ReloadDefaults();
+    G_InitNew (d_skill, d_episode, d_map);
+
+    gameaction = ga_nothing;
+
+    ST_Start();
 
 }
 
@@ -1121,25 +1116,29 @@ void G_SetFastParms(int fast_pending)
         if ((fast = fast_pending))
         {
 
-            for (i=S_SARG_RUN1; i<=S_SARG_PAIN2; i++)
+            for (i = S_SARG_RUN1; i <= S_SARG_PAIN2; i++)
+            {
+
                 if (states[i].tics != 1 || demo_compatibility)
                     states[i].tics >>= 1;
 
-            mobjinfo[MT_BRUISERSHOT].speed = 20*FRACUNIT;
-            mobjinfo[MT_HEADSHOT].speed = 20*FRACUNIT;
-            mobjinfo[MT_TROOPSHOT].speed = 20*FRACUNIT;
+            }
+
+            mobjinfo[MT_BRUISERSHOT].speed = 20 * FRACUNIT;
+            mobjinfo[MT_HEADSHOT].speed = 20 * FRACUNIT;
+            mobjinfo[MT_TROOPSHOT].speed = 20 * FRACUNIT;
 
         }
 
         else
         {
 
-            for (i=S_SARG_RUN1; i<=S_SARG_PAIN2; i++)
+            for (i = S_SARG_RUN1; i <= S_SARG_PAIN2; i++)
                 states[i].tics <<= 1;
 
-            mobjinfo[MT_BRUISERSHOT].speed = 15*FRACUNIT;
-            mobjinfo[MT_HEADSHOT].speed = 10*FRACUNIT;
-            mobjinfo[MT_TROOPSHOT].speed = 10*FRACUNIT;
+            mobjinfo[MT_BRUISERSHOT].speed = 15 * FRACUNIT;
+            mobjinfo[MT_HEADSHOT].speed = 10 * FRACUNIT;
+            mobjinfo[MT_TROOPSHOT].speed = 10 * FRACUNIT;
 
         }
 
@@ -1186,8 +1185,6 @@ void G_InitNew(skill_t skill, int episode, int map)
     G_SetFastParms(skill == sk_nightmare);
     M_ClearRandom();
 
-    respawnmonsters = skill == sk_nightmare;
-
     for (i = 0; i < MAXPLAYERS; i++)
         players[i].playerstate = PST_REBORN;
 
@@ -1195,6 +1192,7 @@ void G_InitNew(skill_t skill, int episode, int map)
     gamemap = map;
     gameskill = skill;
     totalleveltimes = 0;
+    respawnmonsters = skill == sk_nightmare;
 
     G_DoLoadLevel();
 
