@@ -3,7 +3,6 @@
 #include "p_map.h"
 #include "p_maputl.h"
 #include "p_setup.h"
-#include "m_bbox.h"
 
 typedef struct {
   fixed_t sightzstart, t2x, t2y;

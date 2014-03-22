@@ -12,7 +12,6 @@
 #include "p_inter.h"
 #include "s_sound.h"
 #include "sounds.h"
-#include "m_bbox.h"
 #include "r_plane.h"
 #include "i_system.h"
 #include "z_zone.h"

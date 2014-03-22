@@ -1,7 +1,6 @@
 #include "doomdef.h"
 #include "r_main.h"
 #include "r_draw.h"
-#include "m_bbox.h"
 #include "w_wad.h"
 #include "v_video.h"
 #include "i_video.h"

@@ -7,7 +7,6 @@
 #include "r_plane.h"
 #include "r_bsp.h"
 #include "r_draw.h"
-#include "m_bbox.h"
 #include "r_sky.h"
 #include "v_video.h"
 #include "st_stuff.h"

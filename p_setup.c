@@ -1,6 +1,5 @@
 #include <math.h>
 #include "doomstat.h"
-#include "m_bbox.h"
 #include "g_game.h"
 #include "w_wad.h"
 #include "r_main.h"
@@ -89,6 +88,20 @@ mobj_t **blocklinks;
 static int rejectlump = -1;
 const byte *rejectmatrix;
 mapthing_t playerstarts[MAXPLAYERS];
+
+static void P_AddToBox(fixed_t* box, fixed_t x, fixed_t y)
+{
+
+    if (x < box[BOXLEFT])
+        box[BOXLEFT] = x;
+    else if (x > box[BOXRIGHT])
+        box[BOXRIGHT] = x;
+    if (y < box[BOXBOTTOM])
+        box[BOXBOTTOM] = y;
+    else if (y > box[BOXTOP])
+        box[BOXTOP] = y;
+
+}
 
 static boolean P_CheckForZDoomNodes(int lumpnum, int gl_lumpnum)
 {
@@ -437,7 +450,7 @@ static void P_LoadGLSegs(int lump)
 
 }
 
-static void P_LoadSubsectors (int lump)
+static void P_LoadSubsectors(int lump)
 {
 
     const mapsubsector_t *data;
@@ -462,7 +475,7 @@ static void P_LoadSubsectors (int lump)
 
 }
 
-static void P_LoadSectors (int lump)
+static void P_LoadSectors(int lump)
 {
 
     const byte *data;
@@ -507,7 +520,7 @@ static void P_LoadSectors (int lump)
 
 }
 
-static void P_LoadNodes (int lump)
+static void P_LoadNodes(int lump)
 {
 
     const byte *data;
@@ -557,7 +570,7 @@ static void P_LoadNodes (int lump)
 
 }
 
-static void P_LoadThings (int lump)
+static void P_LoadThings(int lump)
 {
 
     int i, numthings = W_LumpLength (lump) / sizeof (mapthing_t);
@@ -1078,7 +1091,7 @@ static void P_CreateBlockMap(void)
 
 }
 
-static void P_LoadBlockMap (int lump)
+static void P_LoadBlockMap(int lump)
 {
 
     long count;
@@ -1180,16 +1193,14 @@ static void P_LoadReject(int lumpnum, int totallines)
 static void P_AddLineToSector(line_t *li, sector_t *sector)
 {
 
-    fixed_t *bbox = (void *)sector->blockbox;
-
     sector->lines[sector->linecount++] = li;
 
-    M_AddToBox(bbox, li->v1->x, li->v1->y);
-    M_AddToBox(bbox, li->v2->x, li->v2->y);
+    P_AddToBox(sector->blockbox, li->v1->x, li->v1->y);
+    P_AddToBox(sector->blockbox, li->v2->x, li->v2->y);
 
 }
 
-static int P_GroupLines (void)
+static int P_GroupLines(void)
 {
 
     register line_t *li;
@@ -1243,14 +1254,14 @@ static int P_GroupLines (void)
 
         line_t **linebuffer = Z_Malloc(total * sizeof (line_t *), PU_LEVEL, 0);
 
-        for (i = 0, sector = sectors; i<numsectors; i++, sector++)
+        for (i = 0, sector = sectors; i < numsectors; i++, sector++)
         {
 
             sector->lines = linebuffer;
             linebuffer += sector->linecount;
             sector->linecount = 0;
-
-            M_ClearBox(sector->blockbox);
+            sector->blockbox[BOXTOP] = sector->blockbox[BOXRIGHT] = INT_MIN;
+            sector->blockbox[BOXBOTTOM] = sector->blockbox[BOXLEFT] = INT_MAX;
 
         }
 

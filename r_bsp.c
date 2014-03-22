@@ -1,11 +1,11 @@
 #include "doomstat.h"
-#include "m_bbox.h"
 #include "r_main.h"
 #include "r_segs.h"
 #include "r_plane.h"
 #include "r_things.h"
 #include "r_bsp.h"
 #include "v_video.h"
+#include "p_map.h"
 
 seg_t     *curline;
 side_t    *sidedef;

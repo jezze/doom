@@ -9,6 +9,16 @@
 #define MISSILERANGE                    (32 * 64 * FRACUNIT)
 #define MAXRADIUS                       (32 * FRACUNIT)
 
+enum
+{
+
+    BOXTOP,
+    BOXBOTTOM,
+    BOXLEFT,
+    BOXRIGHT
+
+};
+
 boolean P_TryMove(mobj_t *thing, fixed_t x, fixed_t y, boolean dropoff);
 boolean P_TeleportMove(mobj_t *thing, fixed_t x, fixed_t y,boolean boss);
 void P_SlideMove(mobj_t *mo);
