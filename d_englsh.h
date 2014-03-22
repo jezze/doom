@@ -1,26 +1,6 @@
 #ifndef __D_ENGLSH__
 #define __D_ENGLSH__
 
-#define DEVMAPS "devmaps"
-#define DEVDATA "devdata"
-
-#define PRESSKEY    "press a key."
-#define PRESSYN     "press y or n."
-#define QUITMSG     "are you sure you want to\nquit this great game?"
-#define LOADNET     "you can't do load while in a net game!\n\n"PRESSKEY
-#define QSAVESPOT   "you haven't picked a quicksave slot yet!\n\n"PRESSKEY
-#define SAVEDEAD    "you can't save if you aren't playing!\n\n"PRESSKEY
-#define QSPROMPT    "quicksave over your game named\n\n'%s'?\n\n"PRESSYN
-#define QLPROMPT    "do you want to quickload the game named\n\n'%s'?\n\n"PRESSYN
-
-#define NEWGAME     "you can't start a new game\nwhile in a network game.\n\n"PRESSKEY
-#define NIGHTMARE   "are you sure? this skill level\nisn't even remotely fair.\n\n"PRESSYN
-
-#define MSGOFF      "Messages OFF"
-#define MSGON       "Messages ON"
-
-#define EMPTYSTRING "empty slot"
-
 #define GOTARMOR    "Picked up the armor."
 #define GOTMEGA     "Picked up the MegaArmor!"
 #define GOTHTHBONUS "Picked up a health bonus."
@@ -78,10 +58,6 @@
 #define PD_ANY      "Any key will open this door"
 #define PD_ALL3     "You need all three keys to open this door"
 #define PD_ALL6     "You need all six keys to open this door"
-
-#define GGSAVED     "game saved."
-
-#define HUSTR_MSGU  "[Message unsent]"
 
 #define HUSTR_E1M1  "E1M1: Hangar"
 #define HUSTR_E1M2  "E1M2: Nuclear Plant"
@@ -260,23 +236,6 @@
 #define HUSTR_KEYBROWN    'b'
 #define HUSTR_KEYRED      'r'
 
-#define AMSTR_FOLLOWON    "Follow Mode ON"
-#define AMSTR_FOLLOWOFF   "Follow Mode OFF"
-
-#define AMSTR_GRIDON      "Grid ON"
-#define AMSTR_GRIDOFF     "Grid OFF"
-
-#define AMSTR_MARKEDSPOT  "Marked Spot"
-#define AMSTR_MARKSCLEARED  "All Marks Cleared"
-
-#define AMSTR_ROTATEON    "Rotate Mode ON"
-#define AMSTR_ROTATEOFF   "Rotate Mode OFF"
-
-#define AMSTR_OVERLAYON    "Overlay Mode ON"
-#define AMSTR_OVERLAYOFF   "Overlay Mode OFF"
-
-#define STSTR_MUS       "Music Change"
-#define STSTR_NOMUS     "IMPOSSIBLE SELECTION"
 #define STSTR_DQDON     "Degreelessness Mode On"
 #define STSTR_DQDOFF    "Degreelessness Mode Off"
 
