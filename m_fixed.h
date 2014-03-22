@@ -8,7 +8,7 @@
 
 typedef int fixed_t;
 
-#define D_abs(x) ({fixed_t _t = (x), _s = _t >> (8*sizeof _t-1); (_t^_s)-_s;})
+#define D_abs(x) ({fixed_t _t = (x), _s = _t >> (8 * sizeof _t - 1); (_t^_s) - _s;})
 
 inline static fixed_t FixedMul(fixed_t a, fixed_t b)
 {
@@ -31,6 +31,7 @@ inline static fixed_t FixedMod(fixed_t a, fixed_t b)
     {
 
         fixed_t r = a % b;
+
         return ((r < 0) ? r + b : r);
 
     }
