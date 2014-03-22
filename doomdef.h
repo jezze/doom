@@ -109,15 +109,6 @@ typedef enum
 typedef enum
 {
 
-    doom,
-    doom2,
-    none
-
-} GameMission_t;
-
-typedef enum
-{
-
     GS_LEVEL,
     GS_INTERMISSION,
     GS_FINALE,

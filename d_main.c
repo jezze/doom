@@ -344,32 +344,6 @@ static void IdentifyVersion(void)
 
         I_Print("IWAD found: %s\n", iwad);
         CheckIWAD(iwad, &gamemode, &haswolflevels);
-
-        switch (gamemode)
-        {
-
-        case retail:
-        case registered:
-        case shareware:
-            gamemission = doom;
-
-            break;
-
-        case commercial:
-            gamemission = doom2;
-
-            break;
-
-        default:
-            gamemission = none;
-
-            break;
-
-        }
-
-        if (gamemode == indetermined)
-            I_Print("Unknown Game Version, may not work\n");
-
         D_AddFile(iwad,source_iwad);
         free(iwad);
 

@@ -1,7 +1,6 @@
 #include "doomstat.h"
 
 GameMode_t gamemode = indetermined;
-GameMission_t gamemission = doom;
 complevel_t compatibility_level;
 int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
 int allow_pushers = 1;
