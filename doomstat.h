@@ -41,8 +41,6 @@ enum
 
 };
 
-extern boolean respawnparm;
-extern boolean fastparm;
 extern GameMode_t gamemode;
 extern GameMission_t gamemission;
 extern complevel_t compatibility_level, default_compatibility_level;

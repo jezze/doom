@@ -30,7 +30,6 @@
 #include "z_bmalloc.h"
 
 static int ticdup = 1;
-
 gameaction_t gameaction;
 gamestate_t gamestate;
 skill_t gameskill;
@@ -1079,8 +1078,6 @@ void G_ReloadDefaults(void)
     monster_backing = default_monster_backing;
     monster_avoid_hazards = default_monster_avoid_hazards;
     monster_friction = default_monster_friction;
-    respawnparm = clrespawnparm;
-    fastparm = clfastparm;
 
     if (startskill == sk_none)
         startskill = (skill_t)(defaultskill-1);
@@ -1186,10 +1183,10 @@ void G_InitNew(skill_t skill, int episode, int map)
     if (map > 9 && gamemode != commercial)
         map = 9;
 
-    G_SetFastParms(fastparm || skill == sk_nightmare);
+    G_SetFastParms(skill == sk_nightmare);
     M_ClearRandom();
 
-    respawnmonsters = skill == sk_nightmare || respawnparm;
+    respawnmonsters = skill == sk_nightmare;
 
     for (i = 0; i < MAXPLAYERS; i++)
         players[i].playerstate = PST_REBORN;

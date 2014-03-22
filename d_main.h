@@ -16,8 +16,6 @@ typedef struct
 
 } ticcmd_t;
 
-extern boolean clrespawnparm;
-extern boolean clfastparm;
 extern boolean nosfxparm;
 extern boolean nomusicparm;
 

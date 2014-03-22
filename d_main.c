@@ -25,10 +25,6 @@
 #include "r_main.h"
 #include "d_main.h"
 
-boolean clrespawnparm;
-boolean clfastparm;
-boolean respawnparm;
-boolean fastparm;
 boolean nosfxparm;
 boolean nomusicparm;
 
@@ -400,9 +396,6 @@ static void D_DoomMainSetup(void)
     M_LoadDefaults();
 
     IdentifyVersion();
-
-    respawnparm = clrespawnparm = 0;
-    fastparm = clfastparm = 0;
 
     startskill = sk_none;
     startepisode = 1;

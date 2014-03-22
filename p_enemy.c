@@ -792,7 +792,7 @@ void A_Chase(mobj_t *actor)
   if (actor->flags & MF_JUSTATTACKED)
     {
       actor->flags &= ~MF_JUSTATTACKED;
-      if (gameskill != sk_nightmare && !fastparm)
+      if (gameskill != sk_nightmare)
         P_NewChaseDir(actor);
       return;
     }
@@ -810,7 +810,7 @@ void A_Chase(mobj_t *actor)
 
 
   if (actor->info->missilestate)
-    if (!(gameskill < sk_nightmare && !fastparm && actor->movecount))
+    if (!(gameskill < sk_nightmare && actor->movecount))
       if (P_CheckMissileRange(actor))
         {
           P_SetMobjState(actor, actor->info->missilestate);
