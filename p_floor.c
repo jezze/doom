@@ -627,14 +627,12 @@ int EV_BuildStairs
       case build8:
         speed = FLOORSPEED/4;
         stairsize = 8*FRACUNIT;
-        if (!demo_compatibility)
-          floor->crush = false;
+        floor->crush = false;
         break;
       case turbo16:
         speed = FLOORSPEED*4;
         stairsize = 16*FRACUNIT;
-        if (!demo_compatibility)
-          floor->crush = true;
+        floor->crush = true;
         break;
     }
     floor->speed = speed;
@@ -693,9 +691,7 @@ int EV_BuildStairs
         floor->speed = speed;
         floor->floordestheight = height;
         floor->type = buildStair;
-
-        if (!demo_compatibility)
-          floor->crush = type==build8? false : true;
+        floor->crush = type==build8? false : true;
         ok = 1;
         break;
       }

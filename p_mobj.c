@@ -206,7 +206,7 @@ static void P_XYMovement(mobj_t *mo)
                 if (ceilingline && ceilingline->backsector && ceilingline->backsector->ceilingpic == skyflatnum)
                 {
 
-                    if (demo_compatibility || mo->z > ceilingline->backsector->ceilingheight)
+                    if (mo->z > ceilingline->backsector->ceilingheight)
                     {
 
                         P_RemoveMobj(mo);
@@ -894,11 +894,10 @@ void P_SpawnMapThing(const mapthing_t *mthing)
 
     }
 
-    if (demo_compatibility || (compatibility_level >= lxdoom_1_compatibility && options & MTF_RESERVED))
+    if ((compatibility_level >= lxdoom_1_compatibility && options & MTF_RESERVED))
     {
 
-        if (!demo_compatibility)
-            I_Print("P_SpawnMapThing: correcting bad flags (%u) (thing type %d)\n", options, mthing->type);
+        I_Print("P_SpawnMapThing: correcting bad flags (%u) (thing type %d)\n", options, mthing->type);
 
         options &= MTF_EASY | MTF_NORMAL | MTF_HARD | MTF_AMBUSH | MTF_NOTSINGLE;
 

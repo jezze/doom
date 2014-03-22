@@ -96,7 +96,7 @@ int weapon_preferences[2][NUMWEAPONS+1] = {
 
 int P_SwitchWeapon(player_t *player)
 {
-  int *prefer = weapon_preferences[demo_compatibility!=0];
+  int *prefer = weapon_preferences[1];
   int currentweapon = player->readyweapon;
   int newweapon = currentweapon;
   int i = NUMWEAPONS+1;
@@ -133,7 +133,7 @@ int P_SwitchWeapon(player_t *player)
         break;
       case 7:
         if (player->weaponowned[wp_bfg] && gamemode != shareware &&
-            player->ammo[am_cell] >= (demo_compatibility ? 41 : 40))
+            player->ammo[am_cell] >= 40)
           newweapon = wp_bfg;
         break;
       case 8:
@@ -142,7 +142,7 @@ int P_SwitchWeapon(player_t *player)
         break;
       case 9:
         if (player->weaponowned[wp_supershotgun] && gamemode == commercial &&
-            player->ammo[am_shell] >= (demo_compatibility ? 3 : 2))
+            player->ammo[am_shell] >= 2)
           newweapon = wp_supershotgun;
         break;
       }
@@ -178,13 +178,6 @@ boolean P_CheckAmmo(player_t *player)
 
   if (ammo == am_noammo || player->ammo[ammo] >= count)
     return true;
-
-  if (demo_compatibility)
-    {
-      player->pendingweapon = P_SwitchWeapon(player);
-
-      P_SetPsprite(player,ps_weapon,weaponinfo[player->readyweapon].downstate);
-    }
 
   return false;
 }

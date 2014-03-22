@@ -45,16 +45,10 @@ static boolean P_CrossSubsector(int num)
 
     line->validcount = validcount;
 
-    if (!demo_compatibility)
-    if (line->bbox[BOXLEFT  ] > los.bbox[BOXRIGHT ] ||
-  line->bbox[BOXRIGHT ] < los.bbox[BOXLEFT  ] ||
-  line->bbox[BOXBOTTOM] > los.bbox[BOXTOP   ] ||
-  line->bbox[BOXTOP]    < los.bbox[BOXBOTTOM])
-      continue;
-
+    if (line->bbox[BOXLEFT] > los.bbox[BOXRIGHT] || line->bbox[BOXRIGHT] < los.bbox[BOXLEFT] || line->bbox[BOXBOTTOM] > los.bbox[BOXTOP] || line->bbox[BOXTOP] < los.bbox[BOXBOTTOM])
+        continue;
 
     if (line->flags & ML_TWOSIDED) {
-
 
       if ((front = seg->frontsector)->floorheight ==
     (back = seg->backsector)->floorheight   &&

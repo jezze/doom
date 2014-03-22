@@ -34,10 +34,6 @@ int (P_Random)(pr_class_t pr_class)
 
     boom = rng.seed[pr_class];
     rng.seed[pr_class] = boom * 1664525ul + 221297ul + pr_class * 2;
-
-    if (demo_compatibility)
-        return rndtable[compat];
-
     boom >>= 20;
 
     return boom & 255;

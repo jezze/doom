@@ -468,17 +468,6 @@ int EV_VerticalDoor(line_t *line, mobj_t *thing)
     sec = sides[line->sidenum[1]].sector;
     door = sec->ceilingdata;
 
-    if (demo_compatibility)
-    {
-
-        if (!door)
-            door = sec->floordata;
-
-        if (!door)
-            door = sec->lightingdata;
-
-    }
-
     if (door && ((compatibility_level == prboom_4_compatibility) || (line->special == 1) || (line->special == 117) || (line->special == 26) || (line->special == 27) || (line->special == 28)))
     {
 

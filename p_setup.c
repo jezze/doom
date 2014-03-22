@@ -1164,28 +1164,6 @@ static void P_LoadReject(int lumpnum, int totallines)
 
     rejectlump = -1;
 
-    if (demo_compatibility)
-    {
-
-        unsigned int rejectpad[4] = {0, 0, 50, 0x1d4a11};
-        unsigned int i, pad = 0, *src = rejectpad;
-        byte *dest = newreject + length;
-
-        rejectpad[0] = ((totallines*4+3)&~3)+24;
-
-        for (i = 0; i < required - length && i < 16; i++)
-        {
-
-            if (!(i & 3))
-                pad = *src++;
-
-            *dest++ = pad & 0xff;
-            pad >>= 8;
-
-        }
-
-    }
-
     I_Print("P_LoadReject: REJECT too short (%u<%u) - padded\n", length, required);
 
 }

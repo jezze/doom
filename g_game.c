@@ -116,7 +116,7 @@ static inline char fudgef(char b)
 
     static int c;
 
-    if (!b || !demo_compatibility || longtics)
+    if (!b || longtics)
         return b;
         
     if (++c & 0x1f)
@@ -134,7 +134,7 @@ static inline char fudgef(char b)
 static inline short fudgea(short b)
 {
 
-    if (!b || !demo_compatibility || !longtics)
+    if (!b || !longtics)
         return b;
 
     b |= 1;
@@ -226,7 +226,7 @@ void G_BuildTiccmd(ticcmd_t* cmd)
 
     }
 
-    if ((!demo_compatibility && players[consoleplayer].attackdown && !P_CheckAmmo(&players[consoleplayer])) || gamekeydown[key_weapontoggle])
+    if ((players[consoleplayer].attackdown && !P_CheckAmmo(&players[consoleplayer])) || gamekeydown[key_weapontoggle])
     {
 
         newweapon = P_SwitchWeapon(&players[consoleplayer]);
@@ -236,9 +236,8 @@ void G_BuildTiccmd(ticcmd_t* cmd)
     else
     {
 
-        newweapon = gamekeydown[key_weapon1] ? wp_fist : gamekeydown[key_weapon2] ? wp_pistol : gamekeydown[key_weapon3] ? wp_shotgun : gamekeydown[key_weapon4] ? wp_chaingun : gamekeydown[key_weapon5] ? wp_missile : gamekeydown[key_weapon6] && gamemode != shareware ? wp_plasma : gamekeydown[key_weapon7] && gamemode != shareware ? wp_bfg : gamekeydown[key_weapon8] ? wp_chainsaw : (!demo_compatibility && gamekeydown[key_weapon9] && gamemode == commercial) ? wp_supershotgun : wp_nochange;
+        newweapon = gamekeydown[key_weapon1] ? wp_fist : gamekeydown[key_weapon2] ? wp_pistol : gamekeydown[key_weapon3] ? wp_shotgun : gamekeydown[key_weapon4] ? wp_chaingun : gamekeydown[key_weapon5] ? wp_missile : gamekeydown[key_weapon6] && gamemode != shareware ? wp_plasma : gamekeydown[key_weapon7] && gamemode != shareware ? wp_bfg : gamekeydown[key_weapon8] ? wp_chainsaw : (gamekeydown[key_weapon9] && gamemode == commercial) ? wp_supershotgun : wp_nochange;
 
-        if (!demo_compatibility)
         {
 
             const player_t *player = &players[consoleplayer];
@@ -421,7 +420,7 @@ static void G_DoLoadLevel(void)
 
     }
 
-    if (!demo_compatibility && !mbf_features)
+    if (!mbf_features)
         basetic = gametic;
 
     gamestate = GS_LEVEL;
@@ -1119,7 +1118,7 @@ void G_SetFastParms(int fast_pending)
             for (i = S_SARG_RUN1; i <= S_SARG_PAIN2; i++)
             {
 
-                if (states[i].tics != 1 || demo_compatibility)
+                if (states[i].tics != 1)
                     states[i].tics >>= 1;
 
             }

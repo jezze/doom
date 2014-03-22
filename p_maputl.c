@@ -194,9 +194,8 @@ boolean P_BlockLinesIterator(int x, int y, boolean func(line_t*))
   offset = y*bmapwidth+x;
   offset = *(blockmap+offset);
   list = blockmaplump+offset;
+  list++;
 
-  if (!demo_compatibility)
-    list++;
   for ( ; *list != -1 ; list++)
     {
       line_t *ld = &lines[*list];

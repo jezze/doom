@@ -395,14 +395,10 @@ sector_t *P_FindModelFloorSector(fixed_t floordestheight,int secnum)
 {
   int i;
   sector_t *sec=NULL;
-  int linecount;
 
   sec = &sectors[secnum];
 
-
-  linecount = sec->linecount;
-  for (i = 0; i < (demo_compatibility && sec->linecount<linecount?
-                   sec->linecount : linecount); i++)
+  for (i = 0; i < sec->linecount; i++)
   {
     if ( twoSided(secnum, i) )
     {
@@ -422,14 +418,10 @@ sector_t *P_FindModelCeilingSector(fixed_t ceildestheight,int secnum)
 {
   int i;
   sector_t *sec=NULL;
-  int linecount;
 
   sec = &sectors[secnum];
 
-
-  linecount = sec->linecount;
-  for (i = 0; i < (demo_compatibility && sec->linecount<linecount?
-                   sec->linecount : linecount); i++)
+  for (i = 0; i < sec->linecount; i++)
   {
     if ( twoSided(secnum, i) )
     {
@@ -656,9 +648,6 @@ boolean P_CanUnlockGenDoor
 
 boolean P_SectorActive(special_e t, const sector_t *sec)
 {
-  if (demo_compatibility)
-    return sec->floordata != NULL || sec->ceilingdata != NULL || sec->lightingdata != NULL;
-  else
     switch (t)
     {
       case floor_special:
@@ -774,7 +763,6 @@ void P_CrossSpecialLine(line_t *line, int side, mobj_t *thing)
   }
 
 
-  if (!demo_compatibility)
   {
 
 
@@ -907,141 +895,134 @@ void P_CrossSpecialLine(line_t *line, int side, mobj_t *thing)
 
     case 2:
 
-      if (EV_DoDoor(line,open) || demo_compatibility)
+      if (EV_DoDoor(line,open))
         line->special = 0;
       break;
 
     case 3:
 
-      if (EV_DoDoor(line,close) || demo_compatibility)
+      if (EV_DoDoor(line,close))
         line->special = 0;
       break;
 
     case 4:
 
-      if (EV_DoDoor(line,normal) || demo_compatibility)
+      if (EV_DoDoor(line,normal))
         line->special = 0;
       break;
 
     case 5:
 
-      if (EV_DoFloor(line,raiseFloor) || demo_compatibility)
+      if (EV_DoFloor(line,raiseFloor))
         line->special = 0;
       break;
 
     case 6:
 
-      if (EV_DoCeiling(line,fastCrushAndRaise) || demo_compatibility)
+      if (EV_DoCeiling(line,fastCrushAndRaise))
         line->special = 0;
       break;
 
     case 8:
 
-      if (EV_BuildStairs(line,build8) || demo_compatibility)
+      if (EV_BuildStairs(line,build8))
         line->special = 0;
       break;
 
     case 10:
 
-      if (EV_DoPlat(line,downWaitUpStay,0) || demo_compatibility)
+      if (EV_DoPlat(line,downWaitUpStay,0))
         line->special = 0;
       break;
 
     case 12:
 
-      if (EV_LightTurnOn(line,0) || demo_compatibility)
+      if (EV_LightTurnOn(line,0))
         line->special = 0;
       break;
 
     case 13:
 
-      if (EV_LightTurnOn(line,255) || demo_compatibility)
+      if (EV_LightTurnOn(line,255))
         line->special = 0;
       break;
 
     case 16:
 
-      if (EV_DoDoor(line,close30ThenOpen) || demo_compatibility)
+      if (EV_DoDoor(line,close30ThenOpen))
         line->special = 0;
       break;
 
     case 17:
 
-      if (EV_StartLightStrobing(line) || demo_compatibility)
+      if (EV_StartLightStrobing(line))
         line->special = 0;
       break;
 
     case 19:
 
-      if (EV_DoFloor(line,lowerFloor) || demo_compatibility)
+      if (EV_DoFloor(line,lowerFloor))
         line->special = 0;
       break;
 
     case 22:
 
-      if (EV_DoPlat(line,raiseToNearestAndChange,0) || demo_compatibility)
+      if (EV_DoPlat(line,raiseToNearestAndChange,0))
         line->special = 0;
       break;
 
     case 25:
 
-      if (EV_DoCeiling(line,crushAndRaise) || demo_compatibility)
+      if (EV_DoCeiling(line,crushAndRaise))
         line->special = 0;
       break;
 
     case 30:
 
 
-      if (EV_DoFloor(line,raiseToTexture) || demo_compatibility)
+      if (EV_DoFloor(line,raiseToTexture))
         line->special = 0;
       break;
 
     case 35:
 
-      if (EV_LightTurnOn(line,35) || demo_compatibility)
+      if (EV_LightTurnOn(line,35))
         line->special = 0;
       break;
 
     case 36:
 
-      if (EV_DoFloor(line,turboLower) || demo_compatibility)
+      if (EV_DoFloor(line,turboLower))
         line->special = 0;
       break;
 
     case 37:
 
-      if (EV_DoFloor(line,lowerAndChange) || demo_compatibility)
+      if (EV_DoFloor(line,lowerAndChange))
         line->special = 0;
       break;
 
     case 38:
 
-      if (EV_DoFloor(line, lowerFloorToLowest) || demo_compatibility)
+      if (EV_DoFloor(line, lowerFloorToLowest))
         line->special = 0;
       break;
 
     case 39:
 
-      if (EV_Teleport(line, side, thing) || demo_compatibility)
+      if (EV_Teleport(line, side, thing))
         line->special = 0;
       break;
 
     case 40:
 
-      if (demo_compatibility)
-      {
-        EV_DoCeiling( line, raiseToHighest );
-        EV_DoFloor( line, lowerFloorToLowest );
-        line->special = 0;
-      }
-      else
-        if (EV_DoCeiling(line, raiseToHighest))
+      if (EV_DoCeiling(line, raiseToHighest))
           line->special = 0;
       break;
 
     case 44:
 
-      if (EV_DoCeiling(line, lowerAndCrush) || demo_compatibility)
+      if (EV_DoCeiling(line, lowerAndCrush))
         line->special = 0;
       break;
 
@@ -1054,79 +1035,79 @@ void P_CrossSpecialLine(line_t *line, int side, mobj_t *thing)
 
     case 53:
 
-      if (EV_DoPlat(line,perpetualRaise,0) || demo_compatibility)
+      if (EV_DoPlat(line,perpetualRaise,0))
         line->special = 0;
       break;
 
     case 54:
 
-      if (EV_StopPlat(line) || demo_compatibility)
+      if (EV_StopPlat(line))
         line->special = 0;
       break;
 
     case 56:
 
-      if (EV_DoFloor(line,raiseFloorCrush) || demo_compatibility)
+      if (EV_DoFloor(line,raiseFloorCrush))
         line->special = 0;
       break;
 
     case 57:
 
-      if (EV_CeilingCrushStop(line) || demo_compatibility)
+      if (EV_CeilingCrushStop(line))
         line->special = 0;
       break;
 
     case 58:
 
-      if (EV_DoFloor(line,raiseFloor24) || demo_compatibility)
+      if (EV_DoFloor(line,raiseFloor24))
         line->special = 0;
       break;
 
     case 59:
 
-      if (EV_DoFloor(line,raiseFloor24AndChange) || demo_compatibility)
+      if (EV_DoFloor(line,raiseFloor24AndChange))
         line->special = 0;
       break;
 
     case 100:
 
-      if (EV_BuildStairs(line,turbo16) || demo_compatibility)
+      if (EV_BuildStairs(line,turbo16))
         line->special = 0;
       break;
 
     case 104:
 
-      if (EV_TurnTagLightsOff(line) || demo_compatibility)
+      if (EV_TurnTagLightsOff(line))
         line->special = 0;
       break;
 
     case 108:
 
-      if (EV_DoDoor(line,blazeRaise) || demo_compatibility)
+      if (EV_DoDoor(line,blazeRaise))
         line->special = 0;
       break;
 
     case 109:
 
-      if (EV_DoDoor (line,blazeOpen) || demo_compatibility)
+      if (EV_DoDoor (line,blazeOpen))
         line->special = 0;
       break;
 
     case 110:
 
-      if (EV_DoDoor (line,blazeClose) || demo_compatibility)
+      if (EV_DoDoor (line,blazeClose))
         line->special = 0;
       break;
 
     case 119:
 
-      if (EV_DoFloor(line,raiseFloorToNearest) || demo_compatibility)
+      if (EV_DoFloor(line,raiseFloorToNearest))
         line->special = 0;
       break;
 
     case 121:
 
-      if (EV_DoPlat(line,blazeDWUS,0) || demo_compatibility)
+      if (EV_DoPlat(line,blazeDWUS,0))
         line->special = 0;
       break;
 
@@ -1141,19 +1122,19 @@ void P_CrossSpecialLine(line_t *line, int side, mobj_t *thing)
     case 125:
 
       if (!thing->player &&
-          (EV_Teleport(line, side, thing) || demo_compatibility))
+          (EV_Teleport(line, side, thing)))
         line->special = 0;
       break;
 
     case 130:
 
-      if (EV_DoFloor(line,raiseFloorTurbo) || demo_compatibility)
+      if (EV_DoFloor(line,raiseFloorTurbo))
         line->special = 0;
       break;
 
     case 141:
 
-      if (EV_DoCeiling(line,silentCrushAndRaise) || demo_compatibility)
+      if (EV_DoCeiling(line,silentCrushAndRaise))
         line->special = 0;
       break;
 
@@ -1323,7 +1304,6 @@ void P_CrossSpecialLine(line_t *line, int side, mobj_t *thing)
       break;
 
     default:
-      if (!demo_compatibility)
         switch (line->special)
         {
 
@@ -1619,7 +1599,6 @@ void P_ShootSpecialLine
   line_t*       line )
 {
 
-  if (!demo_compatibility)
   {
 
 
@@ -1742,7 +1721,7 @@ void P_ShootSpecialLine
   {
     case 24:
 
-      if (EV_DoFloor(line,raiseFloor) || demo_compatibility)
+      if (EV_DoFloor(line,raiseFloor))
         P_ChangeSwitchTexture(line,0);
       break;
 
@@ -1754,7 +1733,7 @@ void P_ShootSpecialLine
 
     case 47:
 
-      if (EV_DoPlat(line,raiseToNearestAndChange,0) || demo_compatibility)
+      if (EV_DoPlat(line,raiseToNearestAndChange,0))
         P_ChangeSwitchTexture(line,0);
       break;
 
@@ -1762,7 +1741,6 @@ void P_ShootSpecialLine
 
 
     default:
-      if (!demo_compatibility)
         switch (line->special)
         {
           case 197:
@@ -2363,7 +2341,7 @@ static void P_SpawnFriction(void)
         for (s = -1; (s = P_FindSectorFromLineTag(l,s)) >= 0 ; )
           {
 
-            if (!demo_compatibility && !mbf_features)
+            if (!mbf_features)
               Add_Friction(friction,movefactor,s);
 
             sectors[s].friction = friction;

@@ -118,7 +118,7 @@ void P_MovePlayer(player_t *player)
     mo->angle += cmd->angleturn << 16;
     onground = mo->z <= mo->floorz;
 
-    if ((!demo_compatibility && !mbf_features) || (cmd->forwardmove | cmd->sidemove))
+    if ((!mbf_features) || (cmd->forwardmove | cmd->sidemove))
     {
 
         if (onground || mo->flags & MF_BOUNCES)
@@ -262,17 +262,6 @@ void P_PlayerThink(player_t *player)
     {
 
         newweapon = (cmd->buttons & BT_WEAPONMASK) >> BT_WEAPONSHIFT;
-
-        if (demo_compatibility)
-        {
-
-            if (newweapon == wp_fist && player->weaponowned[wp_chainsaw] && (player->readyweapon != wp_chainsaw || !player->powers[pw_strength]))
-                newweapon = wp_chainsaw;
-
-            if (gamemode == commercial && newweapon == wp_shotgun && player->weaponowned[wp_supershotgun] && player->readyweapon != wp_supershotgun)
-                newweapon = wp_supershotgun;
-
-        }
 
         if (player->weaponowned[newweapon] && newweapon != player->readyweapon)
             if ((newweapon != wp_plasma && newweapon != wp_bfg) || (gamemode != shareware))

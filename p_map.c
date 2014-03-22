@@ -209,8 +209,6 @@ boolean P_TeleportMove (mobj_t* thing,fixed_t x,fixed_t y, boolean boss)
 
 }
 
-static void SpechitOverrun(line_t *ld);
-
 static boolean PIT_CrossLine(line_t* ld)
 {
 
@@ -296,9 +294,6 @@ static boolean PIT_CheckLine(line_t *ld)
         }
 
         spechit[numspechit++] = ld;
-
-        if (numspechit >= 8 && demo_compatibility)
-            SpechitOverrun(ld);
 
     }
 
@@ -420,7 +415,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 
     }
 
-    return !(thing->flags & MF_SOLID) || (!demo_compatibility && (thing->flags & MF_NOCLIP || !(tmthing->flags & MF_SOLID)));
+    return !(thing->flags & MF_SOLID) || ((thing->flags & MF_NOCLIP || !(tmthing->flags & MF_SOLID)));
 
 }
 
@@ -764,10 +759,9 @@ void P_HitSlideLine (line_t* ld)
   lineangle = R_PointToAngle2 (0,0, ld->dx, ld->dy);
   if (side == 1)
     lineangle += ANG180;
-  moveangle = R_PointToAngle2 (0,0, tmxmove, tmymove);
 
-  if (!demo_compatibility)
-    moveangle += 10;
+  moveangle = R_PointToAngle2 (0,0, tmxmove, tmymove);
+  moveangle += 10;
 
   deltaangle = moveangle-lineangle;
   movelen = P_AproxDistance (tmxmove, tmymove);
@@ -1056,7 +1050,7 @@ boolean PTR_ShootTraverse (intercept_t* in)
 
       if  (li->backsector && li->backsector->ceilingpic == skyflatnum)
 
-      if (demo_compatibility || li->backsector->ceilingheight < z)
+      if (li->backsector->ceilingheight < z)
         return false;
       }
 
@@ -1180,7 +1174,7 @@ boolean PTR_UseTraverse (intercept_t* in)
 
   P_UseSpecialLine (usething, in->d.line, side);
 
-  return (!demo_compatibility && (in->d.line->flags&ML_PASSUSE))?
+  return ((in->d.line->flags&ML_PASSUSE))?
           true : false;
 }
 
@@ -1577,51 +1571,3 @@ void P_MapEnd(void) {
     tmthing = NULL;
 }
 
-static void SpechitOverrun(line_t *ld)
-{
-
-  int addr = 0x00C09C98 + (ld - lines) * 0x3E;
-
-  if (compatibility_level == dosdoom_compatibility || compatibility_level == tasdoom_compatibility)
-  {
-
-    switch(numspechit)
-    {
-    case 8: break; /* strange cph's code */
-    case 9: 
-      tmfloorz = addr;
-      break;
-    case 10:
-      tmceilingz = addr;
-      break;
-      
-    default:
-        I_Print("SpechitOverrun: Warning: unable to emulate an overrun where numspechit=%i\n", numspechit);
-      break;
-    }
-  }
-  else
-  {
-    switch(numspechit)
-    {
-      case 8: break; /* numspechit, not significant it seems - cph */
-      case 9: 
-      case 10:
-      case 11:
-      case 12:
-        tmbbox[numspechit-9] = addr;
-        break;
-      case 13: 
-        nofit = addr;
-        break;
-      case 14: 
-        crushchange = addr;
-        break;
-      default:
-        I_Print("SpechitOverrun: Warning: unable to emulate"
-                          " an overrun where numspechit=%i\n",
-                          numspechit);
-        break;
-    }
-  }
-}

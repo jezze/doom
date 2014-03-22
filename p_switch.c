@@ -179,7 +179,6 @@ boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
     if (side)
         return false;
 
-  if (!demo_compatibility)
   {
 
 
@@ -511,7 +510,6 @@ boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
       break;
 
     default:
-      if (!demo_compatibility)
         switch (line->special)
         {
 

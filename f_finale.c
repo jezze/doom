@@ -173,14 +173,9 @@ void F_Ticker(void)
 
     int i;
 
-    if (!demo_compatibility)
-    {
+    WI_checkForAccelerate();
 
-        WI_checkForAccelerate();
-
-    }
-
-    else if (gamemode == commercial && finalecount > 50)
+    if (gamemode == commercial && finalecount > 50)
     {
 
         for (i = 0; i < MAXPLAYERS; i++)
@@ -201,7 +196,7 @@ void F_Ticker(void)
     if (!finalestage)
     {
 
-        float speed = demo_compatibility ? TEXTSPEED : Get_TextSpeed();
+        float speed = Get_TextSpeed();
 
         if (finalecount > strlen(finaletext) * speed + (midstage ? NEWTEXTWAIT : TEXTWAIT) || (midstage && acceleratestage))
         {
@@ -217,7 +212,7 @@ void F_Ticker(void)
 
             }
 
-            else if (!demo_compatibility && midstage)
+            else if (midstage)
             {
 
             next_level:

@@ -573,9 +573,7 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 
   c = 0;
 
-  stopc = !mbf_features &&
-    !demo_compatibility && monsters_remember ?
-    MAXPLAYERS : 2;
+  stopc = !mbf_features && monsters_remember ? MAXPLAYERS : 2;
 
   for (;; actor->lastlook = (actor->lastlook+1)&(MAXPLAYERS-1))
     {
@@ -585,7 +583,7 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
       if (c++ == stopc || actor->lastlook == stop)
       {
 
-        if (!mbf_features && !demo_compatibility && monsters_remember)
+        if (!mbf_features && monsters_remember)
         {
           if (actor->lastenemy && actor->lastenemy->health > 0)
           {
@@ -618,9 +616,6 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 static boolean P_LookForMonsters(mobj_t *actor, boolean allaround)
 {
   thinker_t *cap, *th;
-
-  if (demo_compatibility)
-    return false;
 
   if (actor->lastenemy && actor->lastenemy->health > 0 && monsters_remember &&
       !(actor->lastenemy->flags & actor->flags & MF_FRIEND))
