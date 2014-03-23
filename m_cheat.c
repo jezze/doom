@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomstat.h"
 #include "g_game.h"
 #include "r_data.h"

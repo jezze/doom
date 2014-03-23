@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <SDL.h>
+#include "d_think.h"
 #include "doomtype.h"
 #include "doomdef.h"
 #include "d_main.h"

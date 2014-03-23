@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomtype.h"
 #include "info.h"
 #include "d_items.h"

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "d_think.h"
 #include "z_zone.h"
 #include "doomstat.h"
 #include "v_video.h"

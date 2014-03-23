@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include "d_think.h"
 #include "doomstat.h"
 #include "f_finale.h"
 #include "m_misc.h"

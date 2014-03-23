@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include "d_think.h"
 #include "doomstat.h"
 #include "doomtype.h"
 #include "i_system.h"

@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include "d_think.h"
 #include "doomstat.h"
 #include "g_game.h"
 #include "m_menu.h"

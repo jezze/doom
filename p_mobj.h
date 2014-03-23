@@ -3,7 +3,6 @@
 
 #include "tables.h"
 #include "m_fixed.h"
-#include "d_think.h"
 #include "doomtype.h"
 #include "info.h"
 

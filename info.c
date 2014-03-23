@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomdef.h"
 #include "sounds.h"
 #include "m_fixed.h"

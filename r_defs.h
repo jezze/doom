@@ -3,7 +3,6 @@
 
 #include "doomdef.h"
 #include "m_fixed.h"
-#include "d_think.h"
 #include "p_mobj.h"
 
 #define SIL_NONE                        0

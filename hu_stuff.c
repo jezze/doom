@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomstat.h"
 #include "hu_stuff.h"
 #include "hu_lib.h"

@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomstat.h"
 
 GameMode_t gamemode = indetermined;

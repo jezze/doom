@@ -1,8 +1,6 @@
 #ifndef __P_TICK__
 #define __P_TICK__
 
-#include "d_think.h"
-
 #define thinkercap thinkerclasscap[th_all]
 
 typedef enum

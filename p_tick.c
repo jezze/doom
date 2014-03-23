@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomstat.h"
 #include "p_user.h"
 #include "p_spec.h"

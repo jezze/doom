@@ -1,8 +1,6 @@
 #ifndef __INFO__
 #define __INFO__
 
-#include "d_think.h"
-
 typedef enum
 {
 

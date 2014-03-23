@@ -1,4 +1,5 @@
 #include "doomdef.h"
+#include "d_think.h"
 #include "doomstat.h"
 #include "v_video.h"
 #include "hu_lib.h"

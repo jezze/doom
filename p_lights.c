@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomstat.h"
 #include "doomdef.h"
 #include "m_random.h"

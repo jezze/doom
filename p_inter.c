@@ -1,3 +1,4 @@
+#include "d_think.h"
 #include "doomstat.h"
 #include "d_event.h"
 #include "d_englsh.h"

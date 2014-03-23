@@ -1,4 +1,5 @@
 #include <sys/mman.h>
+#include "d_think.h"
 #include "doomstat.h"
 #include "doomtype.h"
 #include "w_wad.h"

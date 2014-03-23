@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <fcntl.h>
+#include "d_think.h"
 #include "doomdef.h"
 #include "doomstat.h"
 #include "d_englsh.h"

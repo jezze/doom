@@ -4,6 +4,7 @@
 #include <SDL_mutex.h>
 #include <SDL_byteorder.h>
 #include <SDL_version.h>
+#include "d_think.h"
 #include "m_fixed.h"
 #include "z_zone.h"
 #include "i_sound.h"
