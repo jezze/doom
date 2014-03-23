@@ -116,8 +116,6 @@ struct setting defaults[] = {
   {"sfx_volume", {&snd_SfxVolume}, {8}, 0, 15, def_int, ss_none},
   {"music_volume", {&snd_MusicVolume}, {8}, 0, 15, def_int,ss_none},
   {"mus_pause_opt", {&mus_pause_opt}, {2}, 0, 2, def_int, ss_none},
-  {"screen_width", {&desired_screenwidth}, {640}, 320, MAX_SCREENWIDTH, def_int, ss_none},
-  {"screen_height", {&desired_screenheight}, {480}, 200, MAX_SCREENHEIGHT, def_int, ss_none},
   {"filter_wall", {(int*)&drawvars.filterwall}, {RDRAW_FILTER_POINT}, RDRAW_FILTER_POINT, RDRAW_FILTER_ROUNDED, def_int, ss_none},
   {"filter_floor", {(int*)&drawvars.filterfloor}, {RDRAW_FILTER_POINT}, RDRAW_FILTER_POINT, RDRAW_FILTER_ROUNDED, def_int, ss_none},
   {"filter_sprite", {(int*)&drawvars.filtersprite}, {RDRAW_FILTER_POINT}, RDRAW_FILTER_POINT, RDRAW_FILTER_ROUNDED, def_int, ss_none},

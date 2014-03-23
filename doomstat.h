@@ -48,7 +48,6 @@ extern int gamemap;
 extern boolean respawnmonsters;
 extern int snd_SfxVolume;
 extern int snd_MusicVolume;
-extern unsigned int desired_screenwidth, desired_screenheight;
 extern boolean menuactive;
 extern int viewangleoffset;
 extern int consoleplayer;

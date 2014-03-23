@@ -11,12 +11,8 @@
 #include <ctype.h>
 #include <limits.h>
 
-#define BASE_WIDTH 320
-#define INV_ASPECT_RATIO 0.625
-
 #define MAX_SCREENWIDTH  2048
 #define MAX_SCREENHEIGHT 1536
-
 #define MAXPLAYERS       4
 
 #define DEN_PLAYER5 4001

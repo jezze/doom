@@ -7,6 +7,7 @@
 #include "r_main.h"
 #include "r_draw.h"
 
+#define BASE_WIDTH 320
 #define noterased viewwindowx
 
 extern int key_backspace;

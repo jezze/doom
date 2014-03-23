@@ -32,8 +32,6 @@ ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
 static ticcmd_t* localcmds;
 int maketic;
 static const char *wad_files[MAXLOADFILES];
-unsigned int desired_screenwidth;
-unsigned int desired_screenheight;
 
 const char *const standard_iwads[] = {
     "chex.wad",
@@ -367,7 +365,7 @@ static void D_DoomMainSetup(void)
     M_LoadDefaults();
     IdentifyVersion();
     G_ReloadDefaults();
-    I_CalculateRes(desired_screenwidth, desired_screenheight);
+    I_CalculateRes(640, 480);
     I_Print("V_Init: allocate screens.\n");
     V_Init();
 
