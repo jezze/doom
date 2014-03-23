@@ -216,8 +216,6 @@ void M_QuitDOOM(int choice)
 
 }
 
-static boolean shiftdown = false;
-
 boolean M_Responder(event_t *ev)
 {
 

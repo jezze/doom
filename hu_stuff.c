@@ -881,8 +881,6 @@ boolean HU_Responder(event_t *ev)
 
     static char lastmessage[HU_MAXLINELENGTH + 1];
     boolean eatkey = false;
-    static boolean shiftdown = false;
-    static boolean altdown = false;
     unsigned char c;
     int i;
     int numplayers;
@@ -897,16 +895,12 @@ boolean HU_Responder(event_t *ev)
     if (ev->data1 == key_shift)
     {
 
-        shiftdown = ev->type == ev_keydown;
-
         return false;
 
     }
 
     else if (ev->data1 == key_alt)
     {
-
-        altdown = ev->type == ev_keydown;
 
         return false;
 
