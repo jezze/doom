@@ -42,9 +42,6 @@ enum
 extern GameMode_t gamemode;
 extern complevel_t compatibility_level;
 extern int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
-extern skill_t startskill;
-extern int startepisode;
-extern int startmap;
 extern skill_t gameskill;
 extern int gameepisode;
 extern int gamemap;

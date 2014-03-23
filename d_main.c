@@ -28,9 +28,6 @@
 boolean nosfxparm;
 boolean nomusicparm;
 
-skill_t startskill;
-int startepisode;
-int startmap;
 ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
 static ticcmd_t* localcmds;
 int maketic;
@@ -371,9 +368,6 @@ static void D_DoomMainSetup(void)
 
     IdentifyVersion();
 
-    startskill = sk_none;
-    startepisode = 1;
-    startmap = 1;
     nomusicparm = 0;
     nosfxparm = 0;
 
@@ -438,7 +432,7 @@ static void D_DoomMainSetup(void)
 
     idmusnum = -1;
 
-    G_InitNew(startskill, startepisode, startmap);
+    G_InitNew(sk_none, 1, 1);
 
 }
 

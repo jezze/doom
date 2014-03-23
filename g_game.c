@@ -1022,9 +1022,6 @@ void G_ReloadDefaults(void)
     monster_avoid_hazards = default_monster_avoid_hazards;
     monster_friction = default_monster_friction;
 
-    if (startskill == sk_none)
-        startskill = (skill_t)(defaultskill-1);
-
     memset(playeringame + 1, 0, sizeof (*playeringame) * (MAXPLAYERS - 1));
 
     consoleplayer = 0;
