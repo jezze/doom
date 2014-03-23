@@ -422,9 +422,6 @@ static void D_DoomMainSetup(void)
     I_InitGraphics();
     I_Print("ST_Init: Init status bar.\n");
     ST_Init();
-
-    idmusnum = -1;
-
     G_InitNew(sk_none, 1, 1);
 
 }

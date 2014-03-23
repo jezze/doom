@@ -33,7 +33,6 @@ static boolean mus_paused;
 static musicinfo_t *mus_playing;
 int default_numChannels = 8;
 int numChannels;
-int idmusnum;
 void S_StopChannel(int cnum);
 int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, int *vol, int *sep, int *pitch);
 static int S_getChannel(void *origin, sfxinfo_t *sfxinfo, int is_pickup);
@@ -102,14 +101,7 @@ void S_Start(void)
 
     mus_paused = 0;
 
-    if (idmusnum != -1)
-    {
-
-        mnum = idmusnum;
-
-    }
-
-    else if (gamemode == commercial)
+    if (gamemode == commercial)
     {
 
         mnum = mus_runnin + gamemap - 1;

@@ -19,6 +19,5 @@ void S_SetMusicVolume(int volume);
 void S_SetSfxVolume(int volume);
 
 extern int numChannels;
-extern int idmusnum;
 
 #endif

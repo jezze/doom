@@ -936,7 +936,6 @@ void G_WorldDone(void)
 void G_DoWorldDone(void)
 {
 
-    idmusnum = -1;
     gamestate = GS_LEVEL;
     gamemap = wminfo.next + 1;
 
