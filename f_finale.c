@@ -2,6 +2,7 @@
 #include "doomstat.h"
 #include "d_event.h"
 #include "v_video.h"
+#include "i_video.h"
 #include "w_wad.h"
 #include "s_sound.h"
 #include "sounds.h"

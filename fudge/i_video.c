@@ -13,6 +13,10 @@
 #include "w_wad.h"
 #include "st_stuff.h"
 
+int SCREENWIDTH = 320;
+int SCREENHEIGHT = 200;
+int SCREENPITCH = 320;
+
 void I_StartTic(void)
 {
 

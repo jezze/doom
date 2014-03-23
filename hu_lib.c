@@ -2,6 +2,7 @@
 #include "d_think.h"
 #include "doomstat.h"
 #include "v_video.h"
+#include "i_video.h"
 #include "hu_lib.h"
 #include "hu_stuff.h"
 #include "r_main.h"

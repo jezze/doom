@@ -11,4 +11,8 @@ void I_SetPalette(int pal);
 void I_FinishUpdate(void);
 void I_StartTic(void);
 
+extern int SCREENWIDTH;
+extern int SCREENHEIGHT;
+extern int SCREENPITCH;
+
 #endif

@@ -2,6 +2,7 @@
 #include "doomstat.h"
 #include "hu_stuff.h"
 #include "hu_lib.h"
+#include "i_video.h"
 #include "st_stuff.h"
 #include "w_wad.h"
 #include "s_sound.h"

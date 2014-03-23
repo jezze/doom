@@ -12,6 +12,7 @@
 #include "v_video.h"
 #include "st_stuff.h"
 #include "i_system.h"
+#include "i_video.h"
 #include "g_game.h"
 
 #define FIELDOFVIEW                     2048

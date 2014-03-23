@@ -5,6 +5,7 @@
 #include "r_draw.h"
 #include "r_filter.h"
 #include "v_video.h"
+#include "i_video.h"
 #include "st_stuff.h"
 #include "g_game.h"
 #include "i_system.h"

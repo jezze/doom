@@ -204,8 +204,4 @@ typedef enum
 
 } ss_types;
 
-extern int SCREENWIDTH;
-extern int SCREENHEIGHT;
-extern int SCREENPITCH;
-
 #endif

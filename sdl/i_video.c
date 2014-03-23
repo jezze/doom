@@ -18,6 +18,9 @@
 
 #define NO_PALETTE_CHANGE 1000
 
+int SCREENWIDTH = 320;
+int SCREENHEIGHT = 200;
+int SCREENPITCH = 320;
 static SDL_Surface *screen;
 static int newpal = 0;
 
