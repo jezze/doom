@@ -22,7 +22,6 @@ static const unsigned char rndtable[256] = {
 };
 
 rng_t rng;
-unsigned long rngseed = 1993;
 
 int (P_Random)(pr_class_t pr_class)
 {
@@ -41,7 +40,7 @@ int (P_Random)(pr_class_t pr_class)
 
 }
 
-void M_ClearRandom (void)
+void M_ClearRandom(unsigned long rngseed)
 {
 
     int i;

@@ -1031,15 +1031,13 @@ void G_ReloadDefaults(void)
 
     G_Compatibility();
 
-    rngseed += I_GetRandomTimeSeed() + gametic;
-
 }
 
 void G_DoNewGame(void)
 {
 
     G_ReloadDefaults();
-    G_InitNew (d_skill, d_episode, d_map);
+    G_InitNew(d_skill, d_episode, d_map);
 
     gameaction = ga_nothing;
 
@@ -1126,7 +1124,7 @@ void G_InitNew(skill_t skill, int episode, int map)
         map = 9;
 
     G_SetFastParms(skill == sk_nightmare);
-    M_ClearRandom();
+    M_ClearRandom(I_GetRandomTimeSeed());
 
     for (i = 0; i < MAXPLAYERS; i++)
         players[i].playerstate = PST_REBORN;

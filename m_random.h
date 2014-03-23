@@ -81,9 +81,8 @@ typedef struct
 } rng_t;
 
 extern rng_t rng;
-extern unsigned long rngseed;
 
 int P_Random(pr_class_t);
-void M_ClearRandom(void);
+void M_ClearRandom(unsigned long rngseed);
 
 #endif
