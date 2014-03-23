@@ -21,12 +21,8 @@
 
 int snd_card = 1;
 int mus_card = 1;
-int detect_voices = 0;
-static boolean sound_inited = false;
-static boolean first_sound_init = true;
 static int SAMPLECOUNT = 512;
 int snd_samplerate = 11025;
-int audio_fd;
 
 typedef struct
 {
@@ -274,10 +270,10 @@ void I_InitSound(void)
     audio.format = AUDIO_S16LSB;
 #endif
     audio.channels = 2;
-    audio.samples = SAMPLECOUNT*snd_samplerate / 11025;
+    audio.samples = SAMPLECOUNT * snd_samplerate / 11025;
     audio.callback = I_UpdateSound;
 
-    if (SDL_OpenAudio(&audio, NULL) < 0 )
+    if (SDL_OpenAudio(&audio, NULL) < 0)
     {
 
         I_Print("couldn't open audio with desired format\n");
@@ -288,10 +284,6 @@ void I_InitSound(void)
     SAMPLECOUNT = audio.samples;
 
     I_Print(" configured audio device with %d samples/slice\n", SAMPLECOUNT);
-
-    if (first_sound_init)
-        first_sound_init = false;
-
     I_InitMusic();
     I_Print("I_InitSound: sound module ready\n");
     SDL_PauseAudio(0);
