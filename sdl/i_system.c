@@ -41,8 +41,7 @@ static void handle_signal(int s)
 void I_Init(void)
 {
 
-    if (!(nomusicparm && nosfxparm))
-        I_InitSound();
+    I_InitSound();
 
     tic_vars.msec = realtic_clock_rate * TICRATE / 100000.0f;
 

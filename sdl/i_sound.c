@@ -291,9 +291,7 @@ void I_InitSound(void)
     if (first_sound_init)
         first_sound_init = false;
 
-    if (!nomusicparm)
-        I_InitMusic();
-
+    I_InitMusic();
     I_Print("I_InitSound: sound module ready\n");
     SDL_PauseAudio(0);
 

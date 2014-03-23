@@ -42,7 +42,7 @@ void S_Init(int sfxVolume, int musicVolume)
 
     numChannels = default_numChannels;
 
-    if (snd_card && !nosfxparm)
+    if (snd_card)
     {
 
         int i;
@@ -58,7 +58,7 @@ void S_Init(int sfxVolume, int musicVolume)
 
     }
 
-    if (mus_card && !nomusicparm)
+    if (mus_card)
     {
 
         S_SetMusicVolume(musicVolume);
@@ -74,7 +74,7 @@ void S_Stop(void)
 
     int cnum;
 
-    if (snd_card && !nosfxparm)
+    if (snd_card)
     {
 
         for (cnum = 0; cnum < numChannels; cnum++)
@@ -96,7 +96,7 @@ void S_Start(void)
 
     S_Stop();
 
-    if (!mus_card || nomusicparm)
+    if (!mus_card)
         return;
 
     mus_paused = 0;
@@ -148,7 +148,7 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
     sfxinfo_t *sfx;
     mobj_t *origin = (mobj_t *)origin_p;
 
-    if (!snd_card || nosfxparm)
+    if (!snd_card)
         return;
 
     is_pickup = sfx_id & PICKUP_SOUND || sfx_id == sfx_oof || sfx_id == sfx_noway;
@@ -264,7 +264,7 @@ void S_StopSound(void *origin)
 
     int cnum;
 
-    if (!snd_card || nosfxparm)
+    if (!snd_card)
         return;
 
     for (cnum = 0; cnum < numChannels; cnum++)
@@ -285,7 +285,7 @@ void S_StopSound(void *origin)
 void S_PauseSound(void)
 {
 
-    if (!mus_card || nomusicparm)
+    if (!mus_card)
         return;
 
     if (mus_playing && !mus_paused)
@@ -302,7 +302,7 @@ void S_PauseSound(void)
 void S_ResumeSound(void)
 {
 
-    if (!mus_card || nomusicparm)
+    if (!mus_card)
         return;
 
     if (mus_playing && mus_paused)
@@ -322,7 +322,7 @@ void S_UpdateSounds(void *listener_p)
     mobj_t *listener = (mobj_t*)listener_p;
     int cnum;
 
-    if (!snd_card || nosfxparm)
+    if (!snd_card)
         return;
 
     for (cnum = 0; cnum < numChannels; cnum++)
@@ -391,7 +391,7 @@ void S_UpdateSounds(void *listener_p)
 void S_SetMusicVolume(int volume)
 {
 
-    if (!mus_card || nomusicparm)
+    if (!mus_card)
         return;
 
     if (volume < 0 || volume > 15)
@@ -406,7 +406,7 @@ void S_SetMusicVolume(int volume)
 void S_SetSfxVolume(int volume)
 {
 
-    if (!snd_card || nosfxparm)
+    if (!snd_card)
         return;
 
     if (volume < 0 || volume > 127)
@@ -419,7 +419,7 @@ void S_SetSfxVolume(int volume)
 void S_StartMusic(int m_id)
 {
 
-    if (!mus_card || nomusicparm)
+    if (!mus_card)
         return;
 
     S_ChangeMusic(m_id, false);
@@ -433,7 +433,7 @@ void S_ChangeMusic(int musicnum, int looping)
     int music_file_failed;
     char* music_filename;
 
-    if (!mus_card || nomusicparm)
+    if (!mus_card)
         return;
 
     if (musicnum <= mus_None || musicnum >= NUMMUSIC)
@@ -491,7 +491,7 @@ void S_ChangeMusic(int musicnum, int looping)
 void S_StopMusic(void)
 {
 
-    if (!mus_card || nomusicparm)
+    if (!mus_card)
         return;
 
     if (mus_playing)
@@ -519,7 +519,7 @@ void S_StopChannel(int cnum)
     int i;
     channel_t *c = &channels[cnum];
 
-    if (!snd_card || nosfxparm)
+    if (!snd_card)
         return;
 
     if (c->sfxinfo)
@@ -549,7 +549,7 @@ int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, int *vol, int *sep, in
     fixed_t adx, ady,approx_dist;
     angle_t angle;
 
-    if (!snd_card || nosfxparm)
+    if (!snd_card)
         return 0;
 
     if (!listener)
@@ -597,7 +597,7 @@ static int S_getChannel(void *origin, sfxinfo_t *sfxinfo, int is_pickup)
     int cnum;
     channel_t *c;
 
-    if (!snd_card || nosfxparm)
+    if (!snd_card)
         return -1;
 
     for (cnum = 0; cnum < numChannels && channels[cnum].sfxinfo; cnum++)

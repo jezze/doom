@@ -16,9 +16,6 @@ typedef struct
 
 } ticcmd_t;
 
-extern boolean nosfxparm;
-extern boolean nomusicparm;
-
 extern const char *wad_files[MAXLOADFILES];
 
 void D_PostEvent(event_t* ev);

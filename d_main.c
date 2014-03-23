@@ -25,9 +25,6 @@
 #include "r_main.h"
 #include "d_main.h"
 
-boolean nosfxparm;
-boolean nomusicparm;
-
 ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
 static ticcmd_t* localcmds;
 int maketic;
@@ -365,12 +362,7 @@ static void D_DoomMainSetup(void)
 
     I_Print("M_LoadDefaults: Load system defaults.\n");
     M_LoadDefaults();
-
     IdentifyVersion();
-
-    nomusicparm = 0;
-    nosfxparm = 0;
-
     G_ReloadDefaults();
     I_CalculateRes(desired_screenwidth, desired_screenheight);
     I_Print("V_Init: allocate screens.\n");
