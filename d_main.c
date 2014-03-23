@@ -25,9 +25,14 @@
 #include "r_main.h"
 #include "d_main.h"
 
+#define MAXLOADFILES 3
+
 ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
 static ticcmd_t* localcmds;
 int maketic;
+static const char *wad_files[MAXLOADFILES];
+unsigned int desired_screenwidth;
+unsigned int desired_screenheight;
 
 const char *const standard_iwads[] = {
     "chex.wad",
@@ -351,9 +356,6 @@ static void IdentifyVersion(void)
     }
 
 }
-
-const char *wad_files[MAXLOADFILES];
-unsigned int desired_screenwidth, desired_screenheight;
 
 static void D_DoomMainSetup(void)
 {
