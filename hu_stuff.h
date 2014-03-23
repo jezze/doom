@@ -13,17 +13,13 @@
 #define HU_MSGHEIGHT                    1
 #define HU_MSGTIMEOUT                   (4 * TICRATE)
 
-extern int hudcolor_titl;
-extern int hudcolor_xyco;
-extern int hudcolor_mesg;
-extern int hudcolor_list;
-extern int hud_msg_lines;
-
 void HU_Init(void);
 void HU_Start(void);
 boolean HU_Responder(event_t *ev);
 void HU_Ticker(void);
 void HU_Drawer(void);
 void HU_Erase(void);
+
+extern int hud_msg_lines;
 
 #endif
