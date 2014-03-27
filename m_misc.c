@@ -71,11 +71,9 @@ extern int mousebforward;
 extern int viewwidth;
 extern int viewheight;
 int mus_pause_opt;
-int endoom_mode;
 extern const char* S_music_files[];
 
 struct setting defaults[] = {
-  {"endoom_mode", {&endoom_mode},{5},0,7, def_hex, ss_none},
   {"default_skill", {&defaultskill}, {3}, 1, 5, def_int, ss_none},
   {"weapon_recoil", {&default_weapon_recoil}, {0}, 0, 1, def_bool, ss_weap, &weapon_recoil},
   {"player_bobbing", {&default_player_bobbing}, {1}, 0, 1, def_bool,ss_weap, &player_bobbing},
