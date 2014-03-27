@@ -24,7 +24,6 @@ extern gamestate_t gamestate;
 extern int gametic;
 extern player_t players[MAXPLAYERS];
 extern boolean playeringame[MAXPLAYERS];
-extern boolean realplayeringame[MAXPLAYERS];
 extern mapthing_t playerstarts[];
 extern wbstartstruct_t wminfo;
 extern int mouseSensitivity_horiz;
