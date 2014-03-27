@@ -2234,9 +2234,6 @@ void T_Friction(friction_t *f)
     mobj_t   *thing;
     msecnode_t* node;
 
-    if (!variable_friction)
-        return;
-
     sec = sectors + f->affectee;
 
     if (!(sec->special & FRICTION_MASK))
@@ -2371,9 +2368,6 @@ void T_Pusher(pusher_t *p)
     int xl,xh,yl,yh,bx,by;
     int radius;
     int ht = 0;
-
-    if (!allow_pushers)
-        return;
 
     sec = sectors + p->affectee;
 

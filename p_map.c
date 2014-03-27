@@ -90,7 +90,7 @@ int P_GetFriction(const mobj_t *mo, int *frictionfactor)
     const msecnode_t *m;
     const sector_t *sec;
 
-    if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY)) && mo->player && variable_friction)
+    if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY)) && mo->player)
         for (m = mo->touching_sectorlist; m; m = m->m_tnext)
             if ((sec = m->m_sector)->special & FRICTION_MASK && (sec->friction < friction || friction == ORIG_FRICTION) && (mo->z <= sec->floorheight || (sec->heightsec != -1 && mo->z <= sectors[sec->heightsec].floorheight)))
                 friction = sec->friction, movefactor = sec->movefactor;
@@ -665,7 +665,7 @@ void P_HitSlideLine (line_t* ld)
     angle_t deltaangle;
     fixed_t movelen;
     fixed_t newlen;
-    boolean icyfloor = P_AproxDistance(tmxmove, tmymove) > 4 * FRACUNIT && variable_friction && slidemo->z <= slidemo->floorz && P_GetFriction(slidemo, NULL) > ORIG_FRICTION;
+    boolean icyfloor = P_AproxDistance(tmxmove, tmymove) > 4 * FRACUNIT && slidemo->z <= slidemo->floorz && P_GetFriction(slidemo, NULL) > ORIG_FRICTION;
 
     if (ld->slopetype == ST_HORIZONTAL)
     {

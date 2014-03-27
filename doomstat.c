@@ -2,10 +2,6 @@
 #include "doomstat.h"
 
 GameMode_t gamemode = indetermined;
-int allow_pushers = 1;
-int default_allow_pushers;
-int variable_friction = 1;
-int default_variable_friction;
 int weapon_recoil;
 int default_weapon_recoil;
 int player_bobbing;

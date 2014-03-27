@@ -162,7 +162,7 @@ static void P_XYMovement(mobj_t *mo)
         if (!P_TryMove(mo, ptryx, ptryy, true))
         {
 
-            if (!(mo->flags & MF_MISSILE) && (mo->flags & MF_BOUNCES || (!player && blockline && variable_friction && mo->z <= mo->floorz && P_GetFriction(mo, NULL) > ORIG_FRICTION)))
+            if (!(mo->flags & MF_MISSILE) && (mo->flags & MF_BOUNCES || (!player && blockline && mo->z <= mo->floorz && P_GetFriction(mo, NULL) > ORIG_FRICTION)))
             {
 
                 if (blockline)

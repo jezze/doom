@@ -82,8 +82,6 @@ struct setting defaults[] = {
   {"monster_backing", {&default_monster_backing}, {0}, 0, 1, def_bool, ss_enem, &monster_backing},
   {"monster_avoid_hazards", {&default_monster_avoid_hazards}, {1}, 0, 1, def_bool, ss_enem, &monster_avoid_hazards},
   {"monster_friction", {&default_monster_friction}, {1}, 0, 1, def_bool, ss_enem, &monster_friction},
-  {"allow_pushers", {&default_allow_pushers}, {1}, 0, 1, def_bool,ss_weap, &allow_pushers},
-  {"variable_friction", {&default_variable_friction}, {1}, 0, 1, def_bool,ss_weap, &variable_friction},
   {"autorun", {&autorun}, {0}, 0, 1, def_bool,ss_none},
   {"samplerate", {&snd_samplerate}, {22050}, 11025, 48000, def_int, ss_none},
   {"sfx_volume", {&snd_SfxVolume}, {8}, 0, 15, def_int, ss_none},
