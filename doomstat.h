@@ -45,7 +45,6 @@ extern int default_player_bobbing;
 extern int monster_backing, default_monster_backing;
 extern int monster_avoid_hazards, default_monster_avoid_hazards;
 extern int monster_friction, default_monster_friction;
-extern int doom_weapon_toggles;
 extern int monster_infighting, default_monster_infighting;
 
 #endif

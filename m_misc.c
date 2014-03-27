@@ -78,7 +78,6 @@ struct setting defaults[] = {
   {"endoom_mode", {&endoom_mode},{5},0,7, def_hex, ss_none},
   {"default_skill", {&defaultskill}, {3}, 1, 5, def_int, ss_none},
   {"weapon_recoil", {&default_weapon_recoil}, {0}, 0, 1, def_bool, ss_weap, &weapon_recoil},
-  {"doom_weapon_toggles", {&doom_weapon_toggles}, {1}, 0, 1, def_bool, ss_weap},
   {"player_bobbing", {&default_player_bobbing}, {1}, 0, 1, def_bool,ss_weap, &player_bobbing},
   {"monsters_remember", {&default_monsters_remember}, {1}, 0, 1, def_bool, ss_enem, &monsters_remember},
   {"monster_infighting", {&default_monster_infighting}, {1}, 0, 1, def_bool, ss_enem, &monster_infighting},
