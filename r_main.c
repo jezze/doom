@@ -41,6 +41,8 @@ const lighttable_t *(*zlight)[MAXLIGHTZ];
 const lighttable_t *fullcolormap;
 const lighttable_t **colormaps;
 int extralight;
+int rendered_visplanes, rendered_segs, rendered_vissprites;
+boolean rendering_stats;
 
 void R_InterpolateView(player_t *player, fixed_t frac)
 {
@@ -373,9 +375,6 @@ static void R_SetupFrame (player_t *player)
     validcount++;
 
 }
-
-int rendered_visplanes, rendered_segs, rendered_vissprites;
-boolean rendering_stats;
 
 static void R_ShowStats(void)
 {
