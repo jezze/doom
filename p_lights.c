@@ -270,9 +270,6 @@ int EV_LightTurnOn(line_t *line, int bright)
 
             sector->lightlevel = tbright;
 
-            if (comp[comp_model])
-                bright = tbright;
-
         }
 
     }

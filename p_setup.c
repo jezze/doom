@@ -1262,22 +1262,8 @@ static int P_GroupLines(void)
         fixed_t *bbox = (void *)sector->blockbox;
         int block;
 
-        if (comp[comp_sound])
-        {
-
-            sector->soundorg.x = (bbox[BOXRIGHT] + bbox[BOXLEFT]) / 2;
-            sector->soundorg.y = (bbox[BOXTOP] + bbox[BOXBOTTOM]) / 2;
-
-        }
-
-        else
-        {
-
-            sector->soundorg.x = bbox[BOXRIGHT] / 2 + bbox[BOXLEFT] / 2;
-            sector->soundorg.y = bbox[BOXTOP] / 2 + bbox[BOXBOTTOM] / 2;
-
-        }
-
+        sector->soundorg.x = bbox[BOXRIGHT] / 2 + bbox[BOXLEFT] / 2;
+        sector->soundorg.y = bbox[BOXTOP] / 2 + bbox[BOXBOTTOM] / 2;
         block = (bbox[BOXTOP] - bmaporgy + MAXRADIUS) >> MAPBLOCKSHIFT;
         block = block >= bmapheight ? bmapheight - 1 : block;
         sector->blockbox[BOXTOP] = block;

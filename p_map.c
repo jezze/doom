@@ -90,7 +90,7 @@ int P_GetFriction(const mobj_t *mo, int *frictionfactor)
     const msecnode_t *m;
     const sector_t *sec;
 
-    if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY)) && ((mo->player && !compatibility)) && variable_friction)
+    if (!(mo->flags & (MF_NOCLIP|MF_NOGRAVITY)) && mo->player && variable_friction)
         for (m = mo->touching_sectorlist; m; m = m->m_tnext)
             if ((sec = m->m_sector)->special & FRICTION_MASK && (sec->friction < friction || friction == ORIG_FRICTION) && (mo->z <= sec->floorheight || (sec->heightsec != -1 && mo->z <= sectors[sec->heightsec].floorheight)))
                 friction = sec->friction, movefactor = sec->movefactor;
@@ -128,7 +128,7 @@ int P_GetMoveFactor(const mobj_t *mo, int *frictionp)
 
 }
 
-boolean P_TeleportMove (mobj_t* thing,fixed_t x,fixed_t y, boolean boss)
+boolean P_TeleportMove(mobj_t* thing,fixed_t x,fixed_t y, boolean boss)
 {
 
     int xl;
@@ -139,7 +139,7 @@ boolean P_TeleportMove (mobj_t* thing,fixed_t x,fixed_t y, boolean boss)
     int by;
 
     subsector_t *newsubsec;
-    telefrag = thing->player || (!comp[comp_telefrag] ? boss : (gamemap == 30));
+    telefrag = thing->player || boss;
     tmthing = thing;
     tmx = x;
     tmy = y;
@@ -491,14 +491,7 @@ boolean P_TryMove(mobj_t* thing, fixed_t x, fixed_t y, boolean dropoff)
         if (!(thing->flags & (MF_DROPOFF|MF_FLOAT)))
         {
 
-            if (comp[comp_dropoff])
-            {
-
-                if ((compatibility || !dropoff) && (tmfloorz - tmdropoffz > 24 * FRACUNIT))
-                    return false;
-            }
-
-            else if (!dropoff || (dropoff == 2 && (tmfloorz-tmdropoffz > 128 * FRACUNIT || !thing->target || thing->target->z >tmdropoffz)))
+            if (!dropoff || (dropoff == 2 && (tmfloorz-tmdropoffz > 128 * FRACUNIT || !thing->target || thing->target->z >tmdropoffz)))
             {
 
                 if (thing->floorz  - tmfloorz > 24 * FRACUNIT || thing->dropoffz - tmdropoffz > 24 * FRACUNIT)
@@ -846,9 +839,7 @@ void P_SlideMove(mobj_t *mo)
         stairstep:
 
             if (!P_TryMove(mo, mo->x, mo->y + mo->momy, true))
-                if (!P_TryMove(mo, mo->x + mo->momx, mo->y, true))
-                    if (compatibility_level == boom_201_compatibility)
-                        mo->momx = mo->momy = 0;
+                P_TryMove(mo, mo->x + mo->momx, mo->y, true);
 
             break;
 
@@ -1185,7 +1176,7 @@ void P_UseLines(player_t *player)
     y2 = y1 + (USERANGE >> FRACBITS) * finesine[angle];
 
     if (P_PathTraverse ( x1, y1, x2, y2, PT_ADDLINES, PTR_UseTraverse))
-        if (!comp[comp_sound] && !P_PathTraverse ( x1, y1, x2, y2, PT_ADDLINES, PTR_NoWayTraverse))
+        if (!P_PathTraverse ( x1, y1, x2, y2, PT_ADDLINES, PTR_NoWayTraverse))
             S_StartSound(usething, sfx_noway);
 
 }
@@ -1330,9 +1321,6 @@ boolean P_CheckSector(sector_t* sector, boolean crunch)
 {
 
     msecnode_t *n;
-
-    if (comp[comp_floors])
-        return P_ChangeSector(sector,crunch);
 
     nofit = false;
     crushchange = crunch;

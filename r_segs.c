@@ -71,9 +71,7 @@ void R_RenderMaskedSegRange(drawseg_t *ds, int x1, int x2)
   frontsector = curline->frontsector;
   backsector = curline->backsector;
   texnum = curline->sidedef->midtexture;
-
-  if (!comp[comp_maskedanim])
-    texnum = texturetranslation[texnum];
+  texnum = texturetranslation[texnum];
 
   rw_lightlevel = R_FakeFlat(frontsector, &tempsec, NULL, NULL, false) ->lightlevel;
 

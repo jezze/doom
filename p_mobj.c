@@ -140,7 +140,7 @@ static void P_XYMovement(mobj_t *mo)
 
         fixed_t ptryx, ptryy;
 
-        if (xmove > MAXMOVE / 2 || ymove > MAXMOVE / 2 || (!comp[comp_moveblock] && (xmove < -MAXMOVE / 2 || ymove < -MAXMOVE / 2)))
+        if (xmove > MAXMOVE / 2 || ymove > MAXMOVE / 2 || (xmove < -MAXMOVE / 2 || ymove < -MAXMOVE / 2))
         {
 
             ptryx = mo->x + xmove / 2;
@@ -396,7 +396,7 @@ floater:
     if (mo->z <= mo->floorz)
     {
 
-        if (mo->flags & MF_SKULLFLY && (!comp[comp_soul]))
+        if (mo->flags & MF_SKULLFLY)
             mo->momz = -mo->momz;
 
         if (mo->momz < 0)
@@ -449,16 +449,13 @@ floater:
     if (mo->z + mo->height > mo->ceilingz)
     {
 
-        if (!comp[comp_soul] && mo->flags & MF_SKULLFLY)
+        if (mo->flags & MF_SKULLFLY)
             mo->momz = -mo->momz;
 
         if (mo->momz > 0)
             mo->momz = 0;
 
         mo->z = mo->ceilingz - mo->height;
-
-        if (comp[comp_soul] && mo->flags & MF_SKULLFLY)
-            mo->momz = -mo->momz;
 
         if ((mo->flags & MF_MISSILE) && !(mo->flags & MF_NOCLIP))
         {
@@ -486,7 +483,7 @@ static void P_NightmareRespawn(mobj_t *mobj)
     x = mobj->spawnpoint.x << FRACBITS;
     y = mobj->spawnpoint.y << FRACBITS;
 
-    if (!comp[comp_respawn] && !x && !y)
+    if (!x && !y)
     {
 
         x = mobj->x;
@@ -559,7 +556,7 @@ void P_MobjThinker(mobj_t *mobj)
 
         mobj->intflags |= MIF_ARMED;
 
-        if (mobj->z > mobj->dropoffz && !(mobj->flags & MF_NOGRAVITY) && !comp[comp_falloff])
+        if (mobj->z > mobj->dropoffz && !(mobj->flags & MF_NOGRAVITY))
             P_ApplyTorque(mobj);
         else
             mobj->intflags &= ~MIF_FALLING, mobj->gear = 0;

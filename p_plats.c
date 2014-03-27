@@ -109,22 +109,18 @@ void T_PlatRaise(plat_t* plat)
 
             }
 
-            if (!comp[comp_floors])
+            switch (plat->type)
             {
 
-                switch(plat->type)
-                {
+            case raiseAndChange:
+            case raiseToNearestAndChange:
+                P_RemoveActivePlat(plat);
 
-                case raiseAndChange:
-                case raiseToNearestAndChange:
-                    P_RemoveActivePlat(plat);
-
-                default:
-                    break;
-
-                }
+            default:
+                break;
 
             }
+
         }
 
         break;

@@ -144,10 +144,6 @@ void P_ChangeSwitchTexture(line_t*       line,  int           useAgain )
   sound = sfx_swtchn;
   soundorg = (mobj_t *)&line->soundorg;
 
-  if (comp[comp_sound]) {
-    soundorg = buttonlist->soundorg;
-  } 
-
   if (!useAgain)
     line->special = 0;
 
@@ -345,7 +341,7 @@ boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
       break;
 
     case 11:
-      if (thing->player && thing->player->health <= 0 && !comp[comp_zombie])
+      if (thing->player && thing->player->health <= 0)
       {
         S_StartSound(thing, sfx_noway);
         return false;
@@ -422,7 +418,7 @@ boolean P_UseSpecialLine(mobj_t *thing, line_t *line, int side)
       break;
 
     case 51:
-      if (thing->player && thing->player->health <= 0 && !comp[comp_zombie])
+      if (thing->player && thing->player->health <= 0)
       {
         S_StartSound(thing, sfx_noway);
         return false;

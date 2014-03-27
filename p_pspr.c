@@ -315,7 +315,7 @@ static void A_FireSomething(player_t* player,int adder)
     if (!(player->mo->flags & MF_NOCLIP))
     {
 
-        if (!compatibility && weapon_recoil)
+        if (weapon_recoil)
             P_Thrust(player, ANG180 + player->mo->angle, 2048 * recoil_values[player->readyweapon]);
 
     }
@@ -505,7 +505,7 @@ void A_FireShotgun2(player_t *player, pspdef_t *psp)
 
 void A_FireCGun(player_t *player, pspdef_t *psp)
 {
-  if (player->ammo[weaponinfo[player->readyweapon].ammo] || comp[comp_sound])
+  if (player->ammo[weaponinfo[player->readyweapon].ammo])
     S_StartSound(player->mo, sfx_pistol);
 
   if (!player->ammo[weaponinfo[player->readyweapon].ammo])

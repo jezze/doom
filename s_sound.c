@@ -212,7 +212,7 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
     for (cnum = 0; cnum < numChannels; cnum++)
     {
 
-        if (channels[cnum].sfxinfo && channels[cnum].origin == origin && (comp[comp_sound] || channels[cnum].is_pickup == is_pickup))
+        if (channels[cnum].sfxinfo && channels[cnum].origin == origin && (channels[cnum].is_pickup == is_pickup))
         {
 
             S_StopChannel(cnum);

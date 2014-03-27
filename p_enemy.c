@@ -285,7 +285,7 @@ static boolean P_Move(mobj_t *actor, boolean dropoff) /* killough 9/12/98 */
             if (P_UseSpecialLine(actor, spechit[numspechit], 0))
                 good |= spechit[numspechit] == blockline ? 1 : 2;
 
-        if (!good || comp[comp_doorstuck])
+        if (!good)
             return good;
 
         return ((P_Random(pr_opendoor) >= 230) ^ (good & 1));
@@ -311,11 +311,7 @@ static boolean P_SmartMove(mobj_t *actor)
   mobj_t *target = actor->target;
   int on_lift, dropoff = false, under_damage;
 
-  on_lift = !comp[comp_staylift]
-    && target && target->health > 0
-    && target->subsector->sector->tag==actor->subsector->sector->tag &&
-    P_IsOnLift(actor);
-
+  on_lift = target && target->health > 0 && target->subsector->sector->tag==actor->subsector->sector->tag && P_IsOnLift(actor);
   under_damage = monster_avoid_hazards && P_IsUnderDamage(actor);
 
   if (!P_Move(actor, dropoff))
@@ -459,7 +455,7 @@ static void P_NewChaseDir(mobj_t *actor)
 
     actor->strafecount = 0;
 
-    if (actor->floorz - actor->dropoffz > FRACUNIT*24 && actor->z <= actor->floorz && !(actor->flags & (MF_DROPOFF|MF_FLOAT)) && !comp[comp_dropoff] && P_AvoidDropoff(actor))
+    if (actor->floorz - actor->dropoffz > FRACUNIT*24 && actor->z <= actor->floorz && !(actor->flags & (MF_DROPOFF|MF_FLOAT)) && P_AvoidDropoff(actor))
     {
 
         P_DoNewChaseDir(actor, dropoff_deltax, dropoff_deltay);
@@ -600,8 +596,7 @@ static boolean P_LookForPlayers(mobj_t *actor, boolean allaround)
 
       P_SetTarget(&actor->target, player->mo);
 
-      if (!comp[comp_pursuit])
-  actor->threshold = 60;
+      actor->threshold = 60;
 
       return true;
     }
@@ -810,7 +805,7 @@ void A_Chase(mobj_t *actor)
     else {
         actor->pursuecount = BASETHRESHOLD;
 
-  if (!(actor->target && actor->target->health > 0 && ((comp[comp_pursuit]) || (((actor->target->flags ^ actor->flags) & MF_FRIEND || (!(actor->flags & MF_FRIEND) && monster_infighting)) && P_CheckSight(actor, actor->target)))) && P_LookForTargets(actor, true))
+  if (!(actor->target && actor->target->health > 0 && ((((actor->target->flags ^ actor->flags) & MF_FRIEND || (!(actor->flags & MF_FRIEND) && monster_infighting)) && P_CheckSight(actor, actor->target)))) && P_LookForTargets(actor, true))
         return;
 
   if (!actor->info->missilestate && actor->flags & MF_FRIEND) {
@@ -1141,13 +1136,6 @@ static boolean PIT_VileCheck(mobj_t *thing)
 
     corpsehit = thing;
     corpsehit->momx = corpsehit->momy = 0;
-    if (comp[comp_vile])
-      {
-        corpsehit->height <<= 2;
-        check = P_CheckPosition(corpsehit,corpsehit->x,corpsehit->y);
-        corpsehit->height >>= 2;
-      }
-    else
       {
         int height,radius;
 
@@ -1215,13 +1203,8 @@ void A_VileChase(mobj_t* actor)
 
                   P_SetMobjState(corpsehit,info->raisestate);
 
-                  if (comp[comp_vile])
-                    corpsehit->height <<= 2;
-                  else
-                    {
                       corpsehit->height = info->height;
                       corpsehit->radius = info->radius;
-                    }
 
       corpsehit->flags =
         (info->flags & ~MF_FRIEND) | (actor->flags & MF_FRIEND);
@@ -1440,21 +1423,6 @@ static void A_PainShootSkull(mobj_t *actor, angle_t angle)
   angle_t       an;
   int           prestep;
 
-  if (comp[comp_pain])
-    {
-
-      int count = 0;
-      thinker_t *currentthinker = NULL;
-      while ((currentthinker = P_NextThinker(currentthinker,th_all)) != NULL)
-        if ((currentthinker->function == P_MobjThinker)
-            && ((mobj_t *)currentthinker)->type == MT_SKULL)
-          count++;
-      if (count > 20)
-        return;
-    }
-
-
-
   an = angle >> ANGLETOFINESHIFT;
 
   prestep = 4*FRACUNIT + 3*(actor->info->radius + mobjinfo[MT_SKULL].radius)/2;
@@ -1463,10 +1431,6 @@ static void A_PainShootSkull(mobj_t *actor, angle_t angle)
   y = actor->y + FixedMul(prestep, finesine[an]);
   z = actor->z + 8*FRACUNIT;
 
-  if (comp[comp_skull])
-    newmobj = P_SpawnMobj(x, y, z, MT_SKULL);
-  else
-    {
 
       if (Check_Sides(actor,x,y))
         return;
@@ -1481,7 +1445,6 @@ static void A_PainShootSkull(mobj_t *actor, angle_t angle)
           P_DamageMobj(newmobj,actor,actor,10000);
           return;
         }
-     }
 
   newmobj->flags = (newmobj->flags & ~MF_FRIEND) | (actor->flags & MF_FRIEND);
 
@@ -1587,21 +1550,6 @@ void A_BossDeath(mobj_t *mo)
     {
 
 
-
-
-      if (comp[comp_666] && gameepisode < 4)
-      {
-
-
-
-
-
-        if (gamemap != 8)
-          return;
-        if (mo->type == MT_BRUISER && gameepisode != 1) 
-          return;
-      }
-      else
       {
       switch(gameepisode)
         {

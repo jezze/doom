@@ -246,7 +246,7 @@ static void R_DoDrawPlane(visplane_t *pl)
         flip = 0;
       }
 
-      if (comp[comp_skymap] || !(dcvars.colormap = fixedcolormap))
+      if (!(dcvars.colormap = fixedcolormap))
         dcvars.colormap = fullcolormap;
 
       dcvars.nextcolormap = dcvars.colormap;

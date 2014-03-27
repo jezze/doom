@@ -4,44 +4,8 @@
 #include "d_player.h"
 
 #define BACKUPTICS                      12
-#define compatibility                   (compatibility_level <= boom_compatibility_compatibility)
-
-enum
-{
-
-    comp_telefrag,
-    comp_dropoff,
-    comp_vile,
-    comp_pain,
-    comp_skull,
-    comp_blazing,
-    comp_doorlight,
-    comp_model,
-    comp_god,
-    comp_falloff,
-    comp_floors,
-    comp_skymap,
-    comp_pursuit,
-    comp_doorstuck,
-    comp_staylift,
-    comp_zombie,
-    comp_stairs,
-    comp_infcheat,
-    comp_zerotags,
-    comp_moveblock,
-    comp_respawn,
-    comp_sound,
-    comp_666,
-    comp_soul,
-    comp_maskedanim,
-    COMP_NUM,
-    COMP_TOTAL = 32
-
-};
 
 extern GameMode_t gamemode;
-extern complevel_t compatibility_level;
-extern int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
 extern skill_t gameskill;
 extern int gameepisode;
 extern int gamemap;

@@ -2,8 +2,6 @@
 #include "doomstat.h"
 
 GameMode_t gamemode = indetermined;
-complevel_t compatibility_level;
-int comp[COMP_TOTAL], default_comp[COMP_TOTAL];
 int allow_pushers = 1;
 int default_allow_pushers;
 int variable_friction = 1;

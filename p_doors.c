@@ -107,9 +107,6 @@ void T_VerticalDoor (vldoor_t *door)
 
                 P_RemoveThinker(&door->thinker);
 
-                if (comp[comp_blazing])
-                    S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdcls);
-
                 break;
 
             case normal:
@@ -158,14 +155,9 @@ void T_VerticalDoor (vldoor_t *door)
             case genBlazeRaise:
                 door->direction = 1;
 
-            if (!comp[comp_blazing])
-            {
-
                 S_StartSound((mobj_t *)&door->sector->soundorg, sfx_bdopn);
 
                 break;
-
-            }
 
             default:
                 door->direction = 1;
@@ -548,7 +540,7 @@ int EV_VerticalDoor(line_t *line, mobj_t *thing)
     door->speed = VDOORSPEED;
     door->topwait = VDOORWAIT;
     door->line = line;
-    door->lighttag = comp[comp_doorlight] ? 0 : line->tag;
+    door->lighttag = line->tag;
 
     switch (line->special)
     {

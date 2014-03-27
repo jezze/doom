@@ -587,8 +587,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
 
     player->bonuscount += BONUSADD;
 
-    if (!comp[comp_sound] || player == &players[displayplayer])
-        S_StartSound(player->mo, sound | PICKUP_SOUND);
+    S_StartSound(player->mo, sound | PICKUP_SOUND);
 
 }
 
@@ -752,7 +751,7 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
         if (target->subsector->sector->special == 11 && damage >= target->health)
             damage = target->health - 1;
 
-        if ((damage < 1000 || (!comp[comp_god] && (player->cheats & CF_GODMODE))) && (player->cheats&CF_GODMODE || player->powers[pw_invulnerability]))
+        if ((damage < 1000 || ((player->cheats & CF_GODMODE))) && (player->cheats&CF_GODMODE || player->powers[pw_invulnerability]))
             return;
 
         if (player->armortype)

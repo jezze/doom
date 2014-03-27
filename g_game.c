@@ -962,53 +962,6 @@ void G_DeferedInitNew(skill_t skill, int episode, int map)
 
 }
 
-static void G_Compatibility(void)
-{
-
-    static const struct
-    {
-
-        complevel_t fix;
-        complevel_t opt;
-
-    } levels[] = {
-        { mbf_compatibility, mbf_compatibility },
-        { mbf_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { mbf_compatibility, mbf_compatibility },
-        { boom_compatibility_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { mbf_compatibility, mbf_compatibility },
-        { boom_202_compatibility, mbf_compatibility },
-        { mbf_compatibility, mbf_compatibility },
-        { lxdoom_1_compatibility, mbf_compatibility },
-        { boom_compatibility_compatibility, mbf_compatibility },
-        { mbf_compatibility, mbf_compatibility },
-        { boom_compatibility, mbf_compatibility },
-        { lxdoom_1_compatibility, prboom_2_compatibility },
-        { prboom_2_compatibility, prboom_2_compatibility },
-        { boom_compatibility_compatibility, prboom_3_compatibility },
-        { ultdoom_compatibility, prboom_4_compatibility },
-        { prboom_4_compatibility, prboom_4_compatibility },
-        { doom_1666_compatibility, prboom_4_compatibility },
-    };
-    int i;
-
-    if (sizeof (levels) / sizeof (*levels) != COMP_NUM)
-        I_Error("G_Compatibility: consistency error");
-
-    for (i = 0; i < sizeof (levels) / sizeof (*levels); i++)
-        if (compatibility_level < levels[i].opt)
-            comp[i] = (compatibility_level < levels[i].fix);
-
-}
-
 void G_ReloadDefaults(void)
 {
 
@@ -1025,11 +978,6 @@ void G_ReloadDefaults(void)
     memset(playeringame + 1, 0, sizeof (*playeringame) * (MAXPLAYERS - 1));
 
     consoleplayer = 0;
-    compatibility_level = best_compatibility;
-
-    memcpy(comp, default_comp, sizeof comp);
-
-    G_Compatibility();
 
 }
 

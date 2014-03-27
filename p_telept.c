@@ -45,8 +45,7 @@ int EV_Teleport(line_t *line, int side, mobj_t *thing)
           if (!P_TeleportMove(thing, m->x, m->y, false))
             return 0;
 
-          if (compatibility_level != finaldoom_compatibility)
-            thing->z = thing->floorz;
+          thing->z = thing->floorz;
 
           if (player)
             player->viewz = thing->z + player->viewheight;

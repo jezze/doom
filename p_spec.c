@@ -141,10 +141,7 @@ int twoSided
   int   line )
 {
 
-  return comp[comp_model] ?
-    (sectors[sector].lines[line])->flags & ML_TWOSIDED
-    :
-    (sectors[sector].lines[line])->sidenum[1] != NO_INDEX;
+  return (sectors[sector].lines[line])->sidenum[1] != NO_INDEX;
 }
 
 sector_t* getNextSector
@@ -152,14 +149,8 @@ sector_t* getNextSector
   sector_t*     sec )
 {
 
-  if (comp[comp_model])
-  {
-    if (!(line->flags & ML_TWOSIDED))
-      return NULL;
-  }
-
   if (line->frontsector == sec) {
-    if (comp[comp_model] || line->backsector!=sec)
+    if (line->backsector!=sec)
       return line->backsector;
     else
       return NULL;
@@ -193,10 +184,7 @@ fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
   int i;
   line_t* check;
   sector_t* other;
-  fixed_t floor = -500*FRACUNIT;
-
-  if (!comp[comp_model])
-    floor = -32000*FRACUNIT;
+  fixed_t floor = -32000*FRACUNIT;
 
   for (i=0 ;i < sec->linecount ; i++)
   {
@@ -297,9 +285,7 @@ fixed_t P_FindLowestCeilingSurrounding(sector_t* sec)
   int                 i;
   line_t*             check;
   sector_t*           other;
-  fixed_t             height = INT_MAX;
-
-  if (!comp[comp_model]) height = 32000*FRACUNIT;
+  fixed_t             height = 32000*FRACUNIT;
 
   for (i=0 ;i < sec->linecount ; i++)
   {
@@ -320,9 +306,7 @@ fixed_t P_FindHighestCeilingSurrounding(sector_t* sec)
   int             i;
   line_t* check;
   sector_t*       other;
-  fixed_t height = 0;
-
-  if (!comp[comp_model]) height = -32000*FRACUNIT;
+  fixed_t height = -32000*FRACUNIT;
 
   for (i=0 ;i < sec->linecount ; i++)
   {
@@ -340,13 +324,10 @@ fixed_t P_FindHighestCeilingSurrounding(sector_t* sec)
 
 fixed_t P_FindShortestTextureAround(int secnum)
 {
-  int minsize = INT_MAX;
+  int minsize = 32000<<FRACBITS;
   side_t*     side;
   int i;
   sector_t *sec = &sectors[secnum];
-
-  if (!comp[comp_model])
-    minsize = 32000<<FRACBITS;
 
   for (i = 0; i < sec->linecount; i++)
   {
@@ -367,13 +348,10 @@ fixed_t P_FindShortestTextureAround(int secnum)
 
 fixed_t P_FindShortestUpperAround(int secnum)
 {
-  int minsize = INT_MAX;
+  int minsize = 32000<<FRACBITS;
   side_t*     side;
   int i;
   sector_t *sec = &sectors[secnum];
-
-  if (!comp[comp_model])
-    minsize = 32000<<FRACBITS;
 
   for (i = 0; i < sec->linecount; i++)
   {
@@ -663,7 +641,7 @@ boolean P_SectorActive(special_e t, const sector_t *sec)
 
 int P_CheckTag(line_t *line)
 {
-  if (comp[comp_zerotags] || line->tag)
+  if (line->tag)
     return 1;
 
   switch(line->special)
@@ -1028,8 +1006,8 @@ void P_CrossSpecialLine(line_t *line, int side, mobj_t *thing)
     case 52:
 
 
-      if (!(thing->player && thing->player->health <= 0 && !comp[comp_zombie]))
-  G_ExitLevel ();
+      if (!(thing->player && thing->player->health <= 0))
+        G_ExitLevel ();
       break;
 
     case 53:
@@ -1114,8 +1092,8 @@ void P_CrossSpecialLine(line_t *line, int side, mobj_t *thing)
 
 
 
-      if (!(thing->player && thing->player->health <= 0 && !comp[comp_zombie]))
-  G_SecretExitLevel ();
+      if (!(thing->player && thing->player->health <= 0))
+            G_SecretExitLevel ();
       break;
 
     case 125:
@@ -1745,7 +1723,7 @@ void P_ShootSpecialLine
           case 197:
 
 
-            if(thing->player && thing->player->health<=0 && !comp[comp_zombie])
+            if(thing->player && thing->player->health<=0)
               break;
             P_ChangeSwitchTexture(line,0);
             G_ExitLevel();
@@ -1754,7 +1732,7 @@ void P_ShootSpecialLine
           case 198:
 
 
-            if(thing->player && thing->player->health<=0 && !comp[comp_zombie])
+            if(thing->player && thing->player->health<=0)
               break;
             P_ChangeSwitchTexture(line,0);
             G_SecretExitLevel();
@@ -1815,9 +1793,6 @@ void P_PlayerInSpecialSector (player_t* player)
         break;
 
       case 11:
-
-        if (comp[comp_god])
-          player->cheats &= ~CF_GODMODE;
 
         if (!(leveltime&0x1f))
           P_DamageMobj (player->mo, NULL, NULL, 20);
@@ -1944,8 +1919,6 @@ void P_UpdateSpecials (void)
         }
         {
           mobj_t *so = (mobj_t *)buttonlist[i].soundorg;
-          if (comp[comp_sound])
-            so = (mobj_t *)&buttonlist[i].soundorg;
           S_StartSound(so, sfx_swtchn);
         }
         memset(&buttonlist[i],0,sizeof(button_t));
@@ -2261,7 +2234,7 @@ void T_Friction(friction_t *f)
     mobj_t   *thing;
     msecnode_t* node;
 
-    if (compatibility || !variable_friction)
+    if (!variable_friction)
         return;
 
     sec = sectors + f->affectee;

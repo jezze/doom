@@ -43,14 +43,11 @@ result_e T_MovePlane
           }
           else
           {
-            lastpos = sector->floorheight;
-            sector->floorheight -= speed;
-            flag = P_CheckSector(sector,crush);
-      if ((flag == true) && comp[comp_floors]) {
-        sector->floorheight = lastpos;
-        P_ChangeSector(sector,crush);
-        return crushed;
-      }
+
+                lastpos = sector->floorheight;
+                sector->floorheight -= speed;
+                flag = P_CheckSector(sector,crush);
+                
           }
           break;
 
@@ -58,7 +55,7 @@ result_e T_MovePlane
 
 
 
-          destheight = (comp[comp_floors] || dest<sector->ceilingheight)?
+          destheight = (dest<sector->ceilingheight)?
                           dest : sector->ceilingheight;
           if (sector->floorheight + speed > destheight)
           {
@@ -80,11 +77,6 @@ result_e T_MovePlane
             flag = P_CheckSector(sector,crush);
             if (flag == true)
             {
-        /* jff 1/25/98 fix floor crusher */
-              if (comp[comp_floors]) {
-                if (crush == true)
-                  return crushed;
-              }
               sector->floorheight = lastpos;
               P_CheckSector(sector,crush);
               return crushed;
@@ -102,7 +94,7 @@ result_e T_MovePlane
 
 
 
-          destheight = (comp[comp_floors] || dest>sector->floorheight)?
+          destheight = (dest>sector->floorheight)?
                           dest : sector->floorheight;
           if (sector->ceilingheight - speed < destheight)
           {
@@ -471,7 +463,7 @@ int EV_DoFloor
           int minsize = INT_MAX;
           side_t*     side;
 
-          if (!comp[comp_model]) minsize = 32000<<FRACBITS;
+          minsize = 32000<<FRACBITS;
           floor->direction = 1;
           floor->sector = sec;
           floor->speed = FLOORSPEED;
@@ -481,28 +473,20 @@ int EV_DoFloor
             {
               side = getSide(secnum,i,0);
 
-              if (side->bottomtexture > 0 ||
-                  (comp[comp_model] && !side->bottomtexture))
+              if (side->bottomtexture > 0)
                 if (textureheight[side->bottomtexture] < minsize)
                   minsize = textureheight[side->bottomtexture];
               side = getSide(secnum,i,1);
 
-              if (side->bottomtexture > 0 ||
-                  (comp[comp_model] && !side->bottomtexture))
+              if (side->bottomtexture > 0)
                 if (textureheight[side->bottomtexture] < minsize)
                   minsize = textureheight[side->bottomtexture];
             }
           }
-          if (comp[comp_model])
-            floor->floordestheight = floor->sector->floorheight + minsize;
-          else
-          {
-            floor->floordestheight =
-              (floor->sector->floorheight>>FRACBITS) + (minsize>>FRACBITS);
+            floor->floordestheight = (floor->sector->floorheight>>FRACBITS) + (minsize>>FRACBITS);
             if (floor->floordestheight>32000)
               floor->floordestheight = 32000;
             floor->floordestheight<<=FRACBITS;
-          }
         }
       break;
 
@@ -667,20 +651,14 @@ int EV_BuildStairs
         if (tsec->floorpic != texture)
           continue;
 
-        if (comp[comp_stairs])
-          height += stairsize;
-
         if (P_SectorActive(floor_special,tsec))
           continue;
 
-        if (!comp[comp_stairs])
-          height += stairsize;
-
+        height += stairsize;
         sec = tsec;
         secnum = newsecnum;
+        floor = Z_Malloc(sizeof(*floor), PU_LEVSPEC, 0);
 
-
-        floor = Z_Malloc (sizeof(*floor), PU_LEVSPEC, 0);
         memset(floor, 0, sizeof(*floor));
         P_AddThinker (&floor->thinker);
 
@@ -691,18 +669,12 @@ int EV_BuildStairs
         floor->speed = speed;
         floor->floordestheight = height;
         floor->type = buildStair;
-        floor->crush = type==build8? false : true;
+        floor->crush = type == build8 ? false : true;
         ok = 1;
+
         break;
       }
     } while(ok);
-
-   }
-   if (comp[comp_stairs])
-   {
-
-        ssec = -1;
-        minssec = secnum;
 
    }
 
@@ -734,19 +706,14 @@ int EV_DoDonut(line_t*  line)
     s2 = getNextSector(s1->lines[0],s1);
     if (!s2) continue;
 
-    if (!comp[comp_floors] && P_SectorActive(floor_special,s2))
+    if (P_SectorActive(floor_special,s2))
       continue;
 
 
     for (i = 0;i < s2->linecount;i++)
     {
 
-      if (comp[comp_model])
-      {
-        if ((!s2->lines[i]->flags & ML_TWOSIDED) || (s2->lines[i]->backsector == s1))
-          continue;
-      }
-      else if (!s2->lines[i]->backsector || s2->lines[i]->backsector == s1)
+      if (!s2->lines[i]->backsector || s2->lines[i]->backsector == s1)
         continue;
 
       rtn = 1;
