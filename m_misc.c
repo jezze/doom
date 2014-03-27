@@ -75,7 +75,7 @@ extern const char* S_music_files[];
 
 struct setting defaults[] = {
   {"default_skill", {&defaultskill}, {3}, 1, 5, def_int, ss_none},
-  {"weapon_recoil", {&default_weapon_recoil}, {0}, 0, 1, def_bool, ss_weap, &weapon_recoil},
+  {"weapon_recoil", {&default_weapon_recoil}, {1}, 0, 1, def_bool, ss_weap, &weapon_recoil},
   {"player_bobbing", {&default_player_bobbing}, {1}, 0, 1, def_bool,ss_weap, &player_bobbing},
   {"monsters_remember", {&default_monsters_remember}, {1}, 0, 1, def_bool, ss_enem, &monsters_remember},
   {"monster_infighting", {&default_monster_infighting}, {1}, 0, 1, def_bool, ss_enem, &monster_infighting},
