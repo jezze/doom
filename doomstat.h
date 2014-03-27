@@ -49,7 +49,6 @@ extern boolean respawnmonsters;
 extern int snd_SfxVolume;
 extern int snd_MusicVolume;
 extern boolean menuactive;
-extern int viewangleoffset;
 extern int consoleplayer;
 extern int displayplayer;
 extern int totalkills, totallive;

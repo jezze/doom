@@ -725,6 +725,5 @@ void R_DrawMasked(void)
     if (ds->maskedtexturecol)
       R_RenderMaskedSegRange(ds, ds->x1, ds->x2);
 
-  if (!viewangleoffset)
-    R_DrawPlayerSprites ();
+  R_DrawPlayerSprites ();
 }

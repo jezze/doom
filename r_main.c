@@ -19,7 +19,6 @@
 #define KEEPTIMES                       10
 #define DISTMAP                         2
 
-int viewangleoffset;
 int validcount = 1;
 const lighttable_t *fixedcolormap;
 int centerx, centery;
