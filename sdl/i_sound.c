@@ -79,7 +79,6 @@ static void updateSoundParams(int handle, int volume, int seperation, int pitch)
     int slot = handle;
     int rightvol;
     int leftvol;
-    int step = steptable[pitch];
 
     channelinfo[slot].step = ((channelinfo[slot].samplerate << 16) / snd_samplerate);
 

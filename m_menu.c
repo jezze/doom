@@ -219,8 +219,6 @@ void M_QuitDOOM(int choice)
 boolean M_Responder(event_t *ev)
 {
 
-    int i;
-
     if (ev->type != ev_keydown)
         return false;
 

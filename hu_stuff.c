@@ -226,7 +226,6 @@ patchnum_t hu_msgbg[9];
 
 static hu_textline_t w_title;
 static hu_stext_t w_message;
-static hu_itext_t w_inputbuffer[MAXPLAYERS];
 static hu_textline_t w_coordx;
 static hu_textline_t w_coordy;
 static hu_textline_t w_coordz;
@@ -249,9 +248,6 @@ static int hudcolor_titl = 5;
 static int hudcolor_xyco = 3;
 static int hudcolor_mesg = 6;
 static int hudcolor_list = 5;
-static char hud_coordstrx[32];
-static char hud_coordstry[32];
-static char hud_coordstrz[32];
 static char hud_ammostr[80];
 static char hud_healthstr[80];
 static char hud_armorstr[80];
@@ -261,8 +257,6 @@ static char hud_gkeysstr[80];
 static char hud_monsecstr[80];
 static boolean bsdown;
 static int bscounter;
-static char lastmessage[HU_MAXLINELENGTH + 1];
-static int num_nobrainers = 0;
 
 void HU_Init(void)
 {
@@ -354,7 +348,6 @@ static void HU_Stop(void)
 void HU_Start(void)
 {
 
-    int i;
     const char *s;
 
     if (headsupactive)
@@ -844,9 +837,6 @@ void HU_Erase(void)
 void HU_Ticker(void)
 {
 
-    int i, rc;
-    char c;
-
     if (message_counter && !--message_counter)
     {
 
@@ -882,7 +872,6 @@ boolean HU_Responder(event_t *ev)
 {
 
     boolean eatkey = false;
-    unsigned char c;
     int i;
     int numplayers = 0;
 

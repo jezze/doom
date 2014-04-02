@@ -42,8 +42,6 @@ int viewwindowy;
 static int temp_x = 0;
 static int tempyl[4], tempyh[4];
 static byte byte_tempbuf[MAX_SCREENHEIGHT * 4];
-static unsigned short short_tempbuf[MAX_SCREENHEIGHT * 4];
-static unsigned int int_tempbuf[MAX_SCREENHEIGHT * 4];
 static int startx = 0;
 static int temptype = COL_NONE;
 static int commontop, commonbot;
@@ -234,7 +232,7 @@ extern lighttable_t *(*c_zlight)[LIGHTLEVELS][MAXLIGHTZ];
 
 void R_InitTranslationTables (void)
 {
-    int i, j;
+    int i;
 #define MAXTRANS 3
     byte transtocolour[MAXTRANS];
 

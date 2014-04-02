@@ -101,7 +101,6 @@
 
 static player_t *plyr;
 static unsigned int st_clock;
-static int st_msgcounter = 0;
 static boolean st_statusbaron;
 static boolean st_notdeathmatch;
 static boolean st_armson;

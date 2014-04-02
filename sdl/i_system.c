@@ -24,7 +24,6 @@ static unsigned int displaytime;
 static boolean InDisplay = false;
 int ms_to_next_tick;
 int realtic_clock_rate = 100;
-static int_64_t I_GetTime_Scale = 1 << 24;
 tic_vars_t tic_vars;
 
 static void handle_signal(int s)

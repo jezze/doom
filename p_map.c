@@ -1484,7 +1484,6 @@ void P_CreateSecNodeList(mobj_t *thing, fixed_t x, fixed_t y)
 
     msecnode_t* node;
     mobj_t* saved_tmthing = tmthing;
-    fixed_t saved_tmx = tmx, saved_tmy = tmy;
     node = sector_list;
 
     while (node)

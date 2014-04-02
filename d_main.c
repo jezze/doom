@@ -334,7 +334,6 @@ static char *FindIWADFile(void)
 static void IdentifyVersion(void)
 {
 
-    int i;
     char *iwad = FindIWADFile();
 
     if (iwad && *iwad)

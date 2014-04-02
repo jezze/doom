@@ -106,7 +106,6 @@ static void P_XYMovement(mobj_t *mo)
 
     player_t *player;
     fixed_t xmove, ymove;
-    fixed_t oldx, oldy;
 
     if (!(mo->momx | mo->momy))
     {
@@ -139,8 +138,6 @@ static void P_XYMovement(mobj_t *mo)
 
     xmove = mo->momx;
     ymove = mo->momy;
-    oldx = mo->x;
-    oldy = mo->y;
 
     do
     {
@@ -749,7 +746,6 @@ void P_SpawnPlayer(int n, const mapthing_t *mthing)
     fixed_t y;
     fixed_t z;
     mobj_t *mobj;
-    int i;
 
     if (!playeringame[n])
         return;
