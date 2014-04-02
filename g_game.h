@@ -22,8 +22,7 @@ void G_DoWorldDone(void);
 void G_PlayerReborn(int player);
 void G_RestartLevel(void);
 void G_DoVictory(void);
-void G_BuildTiccmd (ticcmd_t* cmd);
-void G_MakeSpecialEvent(buttoncode_t bc, ...);
+void G_BuildTiccmd(ticcmd_t* cmd);
 
 extern int key_right;
 extern int key_left;
