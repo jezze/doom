@@ -21,8 +21,11 @@
 int SCREENWIDTH = 320;
 int SCREENHEIGHT = 200;
 int SCREENPITCH = 320;
-static SDL_Surface *screen;
+static SDL_Surface *surface;
+static SDL_Color* colours;
+static size_t num_pals;
 static int newpal = 0;
+static int frameno;
 
 static int getkey(SDL_keysym *key)
 {
@@ -160,8 +163,6 @@ static void postevent(SDL_Event *Event)
 static boolean skipframe(void)
 {
 
-    static int frameno;
-
     frameno++;
 
     switch (gamestate)
@@ -179,9 +180,6 @@ static boolean skipframe(void)
 
 static void setpalette(int pal)
 {
-
-    static SDL_Color* colours;
-    static size_t num_pals;
 
     if (colours == NULL)
     {
@@ -212,7 +210,7 @@ static void setpalette(int pal)
 
     }
 
-    SDL_SetPalette(SDL_GetVideoSurface(), SDL_LOGPAL | SDL_PHYSPAL, colours + 256 * pal, 0, 256);
+    SDL_SetPalette(surface, SDL_LOGPAL | SDL_PHYSPAL, colours + 256 * pal, 0, 256);
 
 }
 
@@ -232,14 +230,14 @@ void I_FinishUpdate(void)
     if (skipframe())
         return;
 
-    if (SDL_MUSTLOCK(screen))
+    if (SDL_MUSTLOCK(surface))
     {
 
         int h;
         byte *src;
         byte *dest;
 
-        if (SDL_LockSurface(screen) < 0)
+        if (SDL_LockSurface(surface) < 0)
         {
 
             I_Print("I_FinishUpdate: %s\n", SDL_GetError());
@@ -248,21 +246,21 @@ void I_FinishUpdate(void)
 
         }
 
-        dest = screen->pixels;
+        dest = surface->pixels;
         src = screens[0].data;
-        h = screen->h;
+        h = surface->h;
 
         for (; h > 0; h--)
         {
 
             memcpy(dest, src, SCREENWIDTH);
 
-            dest += screen->pitch;
+            dest += surface->pitch;
             src += screens[0].byte_pitch;
 
         }
 
-        SDL_UnlockSurface(screen);
+        SDL_UnlockSurface(surface);
 
     }
 
@@ -275,7 +273,7 @@ void I_FinishUpdate(void)
 
     }
 
-    SDL_Flip(screen);
+    SDL_Flip(surface);
 
 }
 
@@ -329,17 +327,17 @@ void I_InitGraphics(void)
     screens[4].width = SCREENWIDTH;
     screens[4].height = (ST_SCALED_HEIGHT + 1);
     screens[4].byte_pitch = SCREENPITCH;
-    screen = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_DOUBLEBUF | SDL_HWPALETTE | SDL_FULLSCREEN);
+    surface = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_DOUBLEBUF | SDL_HWPALETTE | SDL_FULLSCREEN);
 
-    if (screen == NULL)
+    if (surface == NULL)
         I_Error("Couldn't set %dx%d video mode [%s]", SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
 
-    if (!SDL_MUSTLOCK(screen))
+    if (!SDL_MUSTLOCK(surface))
     {
 
         screens[0].not_on_heap = true;
-        screens[0].data = (unsigned char *)(screen->pixels);
-        screens[0].byte_pitch = screen->pitch;
+        screens[0].data = (unsigned char *)(surface->pixels);
+        screens[0].byte_pitch = surface->pitch;
     }
 
     else
