@@ -259,6 +259,10 @@ static char hud_weapstr[80];
 static char hud_keysstr[80];
 static char hud_gkeysstr[80];
 static char hud_monsecstr[80];
+static boolean bsdown;
+static int bscounter;
+static char lastmessage[HU_MAXLINELENGTH + 1];
+static int num_nobrainers = 0;
 
 void HU_Init(void)
 {
@@ -837,9 +841,6 @@ void HU_Erase(void)
 
 }
 
-static boolean bsdown;
-static int bscounter;
-
 void HU_Ticker(void)
 {
 
@@ -880,15 +881,10 @@ void HU_Ticker(void)
 boolean HU_Responder(event_t *ev)
 {
 
-    static char lastmessage[HU_MAXLINELENGTH + 1];
     boolean eatkey = false;
     unsigned char c;
     int i;
-    int numplayers;
-
-    static int num_nobrainers = 0;
-
-    numplayers = 0;
+    int numplayers = 0;
 
     for (i = 0; i < MAXPLAYERS; i++)
         numplayers += playeringame[i];

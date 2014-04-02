@@ -29,7 +29,7 @@ int negonearray[MAX_SCREENWIDTH];
 int screenheightarray[MAX_SCREENWIDTH];
 
 spritedef_t *sprites;
-int numsprites;
+static int numsprites;
 
 #define MAX_SPRITE_FRAMES 29
 

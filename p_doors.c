@@ -9,7 +9,7 @@
 #include "i_system.h"
 #include "z_zone.h"
 
-void T_VerticalDoor (vldoor_t *door)
+void T_VerticalDoor(vldoor_t *door)
 {
 
     result_e res;

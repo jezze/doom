@@ -7,7 +7,7 @@
 #include "p_tick.h"
 #include "z_zone.h"
 
-void T_FireFlicker (fireflicker_t* flick)
+void T_FireFlicker(fireflicker_t *flick)
 {
 
     int amount;
@@ -26,7 +26,7 @@ void T_FireFlicker (fireflicker_t* flick)
 
 }
 
-void T_LightFlash (lightflash_t* flash)
+void T_LightFlash(lightflash_t *flash)
 {
 
     if (--flash->count)
@@ -74,10 +74,10 @@ void T_StrobeFlash (strobe_t *flash)
 
 }
 
-void T_Glow(glow_t* g)
+void T_Glow(glow_t *g)
 {
 
-    switch(g->direction)
+    switch (g->direction)
     {
 
     case -1:
@@ -112,7 +112,7 @@ void T_Glow(glow_t* g)
 
 }
 
-void P_SpawnFireFlicker (sector_t*  sector)
+void P_SpawnFireFlicker(sector_t *sector)
 {
 
     fireflicker_t *flick;
@@ -131,7 +131,7 @@ void P_SpawnFireFlicker (sector_t*  sector)
 
 }
 
-void P_SpawnLightFlash (sector_t* sector)
+void P_SpawnLightFlash(sector_t *sector)
 {
 
     lightflash_t *flash;
@@ -152,7 +152,7 @@ void P_SpawnLightFlash (sector_t* sector)
 
 }
 
-void P_SpawnStrobeFlash(sector_t* sector, int fastOrSlow, int inSync)
+void P_SpawnStrobeFlash(sector_t *sector, int fastOrSlow, int inSync)
 {
 
     strobe_t *flash = Z_Malloc (sizeof(*flash), PU_LEVSPEC, 0);
@@ -179,7 +179,7 @@ void P_SpawnStrobeFlash(sector_t* sector, int fastOrSlow, int inSync)
 
 }
 
-void P_SpawnGlowingLight(sector_t*  sector)
+void P_SpawnGlowingLight(sector_t *sector)
 {
 
     glow_t *g = Z_Malloc(sizeof(*g), PU_LEVSPEC, 0);
@@ -219,7 +219,7 @@ int EV_StartLightStrobing(line_t *line)
 
 }
 
-int EV_TurnTagLightsOff(line_t* line)
+int EV_TurnTagLightsOff(line_t *line)
 {
 
     int j;

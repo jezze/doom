@@ -8,14 +8,9 @@
 #include "sounds.h"
 #include "z_zone.h"
 
-result_e T_MovePlane
-( sector_t*     sector,
-  fixed_t       speed,
-  fixed_t       dest,
-  boolean       crush,
-  int           floorOrCeiling,
-  int           direction )
+result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crush, int floorOrCeiling, int direction)
 {
+
   boolean       flag;
   fixed_t       lastpos;
   fixed_t       destheight;
@@ -259,47 +254,15 @@ void T_MoveElevator(elevator_t* elevator)
 
   if (elevator->direction<0)
   {
-    res = T_MovePlane
-    (
-      elevator->sector,
-      elevator->speed,
-      elevator->ceilingdestheight,
-      0,
-      1,
-      elevator->direction
-    );
+    res = T_MovePlane(elevator->sector, elevator->speed, elevator->ceilingdestheight, 0, 1, elevator->direction);
     if (res==ok || res==pastdest)
-      T_MovePlane
-      (
-        elevator->sector,
-        elevator->speed,
-        elevator->floordestheight,
-        0,
-        0,
-        elevator->direction
-      );
+      T_MovePlane(elevator->sector, elevator->speed, elevator->floordestheight, 0, 0, elevator->direction);
   }
   else
   {
-    res = T_MovePlane
-    (
-      elevator->sector,
-      elevator->speed,
-      elevator->floordestheight,
-      0,
-      0,
-      elevator->direction
-    );
+    res = T_MovePlane(elevator->sector, elevator->speed, elevator->floordestheight, 0, 0, elevator->direction);
     if (res==ok || res==pastdest)
-      T_MovePlane
-      (
-        elevator->sector,
-        elevator->speed,
-        elevator->ceilingdestheight,
-        0,
-        1,
-        elevator->direction
-      );
+      T_MovePlane(elevator->sector, elevator->speed, elevator->ceilingdestheight, 0, 1, elevator->direction);
   }
 
 
@@ -317,9 +280,7 @@ void T_MoveElevator(elevator_t* elevator)
   }
 }
 
-int EV_DoFloor
-( line_t*       line,
-  floor_e       floortype )
+int EV_DoFloor(line_t * line, floor_e floortype)
 {
   int           secnum;
   int           rtn;
@@ -522,9 +483,7 @@ int EV_DoFloor
 }
 
 
-int EV_DoChange
-( line_t*       line,
-  change_e      changetype )
+int EV_DoChange(line_t *line, change_e changetype)
 {
   int                   secnum;
   int                   rtn;
@@ -564,8 +523,7 @@ int EV_DoChange
   return rtn;
 }
 
-static inline int P_FindSectorFromLineTagWithLowerBound
-(line_t* l, int start, int min)
+static inline int P_FindSectorFromLineTagWithLowerBound(line_t *l, int start, int min)
 {
   do {
     start = P_FindSectorFromLineTag(l,start);
@@ -682,7 +640,7 @@ int EV_BuildStairs
   return rtn;
 }
 
-int EV_DoDonut(line_t*  line)
+int EV_DoDonut(line_t *line)
 {
   sector_t* s1;
   sector_t* s2;

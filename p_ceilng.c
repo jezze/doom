@@ -7,12 +7,12 @@
 #include "sounds.h"
 #include "z_zone.h"
 
-ceilinglist_t *activeceilings;
+static ceilinglist_t *activeceilings;
 
-void T_MoveCeiling (ceiling_t* ceiling)
+void T_MoveCeiling(ceiling_t* ceiling)
 {
 
-    result_e  res;
+    result_e res;
 
     switch (ceiling->direction)
     {

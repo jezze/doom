@@ -597,7 +597,6 @@ typedef struct
 
 extern button_t buttonlist[MAXBUTTONS];
 extern platlist_t *activeplats;
-extern ceilinglist_t *activeceilings;
 
 int twoSided(int sector, int line);
 sector_t *getSector(int currentSector, int line, int side);

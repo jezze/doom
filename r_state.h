@@ -12,7 +12,6 @@ extern int *texturetranslation;
 extern int firstspritelump;
 extern int lastspritelump;
 extern int numspritelumps;
-extern int numsprites;
 extern spritedef_t *sprites;
 extern int numvertexes;
 extern vertex_t *vertexes;
