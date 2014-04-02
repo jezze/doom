@@ -16,6 +16,13 @@
 #include "i_system.h"
 #include "z_zone.h"
 
+static mapthing_t itemrespawnque[ITEMQUESIZE];
+static int itemrespawntime[ITEMQUESIZE];
+int iquehead;
+int iquetail;
+extern fixed_t attackrange;
+extern byte playernumtotrans[MAXPLAYERS];
+
 boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
 {
 
@@ -662,11 +669,6 @@ mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
 
 }
 
-static mapthing_t itemrespawnque[ITEMQUESIZE];
-static int itemrespawntime[ITEMQUESIZE];
-int iquehead;
-int iquetail;
-
 void P_RemoveMobj(mobj_t *mobj)
 {
 
@@ -738,8 +740,6 @@ static int P_FindDoomedNum(unsigned type)
     return i;
 
 }
-
-extern byte playernumtotrans[MAXPLAYERS];
 
 void P_SpawnPlayer(int n, const mapthing_t *mthing)
 {
@@ -911,8 +911,6 @@ void P_SpawnMapThing(const mapthing_t *mthing)
         mobj->flags |= MF_AMBUSH;
 
 }
-
-extern fixed_t attackrange;
 
 void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
 {

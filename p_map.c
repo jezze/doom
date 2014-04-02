@@ -329,7 +329,7 @@ static boolean PIT_CheckThing(mobj_t *thing)
 
             if (thing == tmthing->target)
                 return true;
-            else if (thing->type != MT_PLAYER && !monsters_infight)
+            else if (thing->type != MT_PLAYER)
                 return false;
 
         }

@@ -13,14 +13,13 @@
 
 #define BONUSADD                        6
 
-int initial_health = 100;
-int initial_bullets = 50;
-int maxhealth = 100;
-int max_armor = 200;
-int green_armor_class = 1;
-int blue_armor_class = 2;
-int max_soul = 200;
-int soul_health = 100;
+static int maxhealth = 100;
+static int maxarmor = 200;
+static int maxsoul = 200;
+static int green_armor_class = 1;
+static int blue_armor_class = 2;
+static int soul_health = 100;
+static int clipammo[NUMAMMO] = {10, 4, 20, 1};
 int mega_health = 200;
 int god_health = 100;
 int idfa_armor = 200;
@@ -28,9 +27,7 @@ int idfa_armor_class = 2;
 int idkfa_armor = 200;
 int idkfa_armor_class = 2;
 int bfgcells = 40;
-int monsters_infight = 0;
-int maxammo[NUMAMMO]  = {200, 50, 300, 50};
-int clipammo[NUMAMMO] = { 10, 4, 20, 1};
+int maxammo[NUMAMMO] = {200, 50, 300, 50};
 
 static boolean P_GiveAmmo(player_t *player, ammotype_t ammo, int num)
 {
@@ -257,8 +254,8 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
     case SPR_BON2:
         player->armorpoints++;
 
-        if (player->armorpoints > max_armor)
-            player->armorpoints = max_armor;
+        if (player->armorpoints > maxarmor)
+            player->armorpoints = maxarmor;
 
         if (!player->armortype)
             player->armortype = green_armor_class;
@@ -270,8 +267,8 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
     case SPR_SOUL:
         player->health += soul_health;
 
-        if (player->health > max_soul)
-            player->health = max_soul;
+        if (player->health > maxsoul)
+            player->health = maxsoul;
 
         player->mo->health = player->health;
         player->message = GOTSUPER;

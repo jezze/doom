@@ -15,8 +15,6 @@
 #define WEAPONBOTTOM (FRACUNIT*128)
 #define WEAPONTOP    (FRACUNIT*32)
 
-#define BFGCELLS bfgcells
-
 extern void P_Thrust(player_t *, angle_t, fixed_t);
 
 static const int recoil_values[] = {
@@ -171,7 +169,7 @@ boolean P_CheckAmmo(player_t *player)
   int count = 1;
 
   if (player->readyweapon == wp_bfg)
-    count = BFGCELLS;
+    count = bfgcells;
   else
     if (player->readyweapon == wp_supershotgun)
       count = 2;
@@ -404,7 +402,7 @@ void A_FireMissile(player_t *player, pspdef_t *psp)
 
 void A_FireBFG(player_t *player, pspdef_t *psp)
 {
-  player->ammo[weaponinfo[player->readyweapon].ammo] -= BFGCELLS;
+  player->ammo[weaponinfo[player->readyweapon].ammo] -= bfgcells;
   P_SpawnPlayerMissile(player->mo, MT_BFG);
 }
 

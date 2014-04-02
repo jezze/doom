@@ -679,11 +679,11 @@ void G_PlayerReborn(int player)
     players[player].secretcount = secretcount;
     p->usedown = p->attackdown = true;
     p->playerstate = PST_LIVE;
-    p->health = initial_health;
+    p->health = 100;
     p->readyweapon = p->pendingweapon = wp_pistol;
     p->weaponowned[wp_fist] = true;
     p->weaponowned[wp_pistol] = true;
-    p->ammo[am_clip] = initial_bullets;
+    p->ammo[am_clip] = 50;
 
     for (i = 0; i < NUMAMMO; i++)
         p->maxammo[i] = maxammo[i];
