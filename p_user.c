@@ -9,7 +9,7 @@
 #define INVERSECOLORMAP                 32
 #define MAXBOB                          0x100000
 
-boolean onground;
+static boolean onground;
 
 void P_Thrust(player_t *player, angle_t angle, fixed_t move)
 {

@@ -5,6 +5,15 @@
 #include "p_map.h"
 #include "p_setup.h"
 
+static size_t num_intercepts;
+static intercept_t *intercepts, *intercept_p;
+fixed_t opentop;
+fixed_t openbottom;
+fixed_t openrange;
+fixed_t lowfloor;
+sector_t *openfrontsector;
+sector_t *openbacksector;
+
 fixed_t P_AproxDistance(fixed_t dx, fixed_t dy)
 {
   dx = D_abs(dx);
@@ -82,13 +91,6 @@ fixed_t P_InterceptVector(const divline_t *v2, const divline_t *v1)
       return 0;
     return (fixed_t)(((int_64_t)(v1->x - v2->x) * v1->dy - (int_64_t)(v1->y - v2->y) * v1->dx) / den);
 }
-
-fixed_t opentop;
-fixed_t openbottom;
-fixed_t openrange;
-fixed_t lowfloor;
-sector_t *openfrontsector;
-sector_t *openbacksector;
 
 void P_LineOpening(const line_t *linedef)
 {
@@ -215,12 +217,8 @@ boolean P_BlockThingsIterator(int x, int y, boolean func(mobj_t*))
   return true;
 }
 
-static intercept_t *intercepts, *intercept_p;
-
-
 static void check_intercept(void)
 {
-  static size_t num_intercepts;
   size_t offset = intercept_p - intercepts;
   if (offset >= num_intercepts)
     {

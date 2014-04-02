@@ -11,11 +11,9 @@
 static int *switchlist;
 static int max_numswitches;
 static int numswitches;
+button_t buttonlist[MAXBUTTONS];
 
-button_t  buttonlist[MAXBUTTONS];
-
-switchlist_t alphSwitchList[] =
-{
+switchlist_t alphSwitchList[] = {
     {"SW1BRCOM",	"SW2BRCOM",	1},
     {"SW1BRN1",	"SW2BRN1",	1},
     {"SW1BRN2",	"SW2BRN2",	1},
@@ -68,68 +66,87 @@ switchlist_t alphSwitchList[] =
 
 void P_InitSwitchList(void)
 {
-  int i, index = 0;
-  int episode = (gamemode == registered || gamemode==retail) ? 2 : gamemode == commercial ? 3 : 1;
 
-  for (i=0;;i++)
-  {
-    if (index+1 >= max_numswitches)
-      switchlist = realloc(switchlist, sizeof *switchlist *
-          (max_numswitches = max_numswitches ? max_numswitches*2 : 8));
-    if (alphSwitchList[i].episode <= episode)
+    int i, index = 0;
+    int episode = (gamemode == registered || gamemode==retail) ? 2 : gamemode == commercial ? 3 : 1;
+
+    for (i = 0; ; i++)
     {
-      int texture1, texture2;
 
-      if (!alphSwitchList[i].episode)
-        break;
+        if (index + 1 >= max_numswitches)
+            switchlist = realloc(switchlist, sizeof *switchlist * (max_numswitches = max_numswitches ? max_numswitches * 2 : 8));
 
-      texture1 = R_CheckTextureNumForName(alphSwitchList[i].name1);
-      if (texture1 == -1)
-        I_Print("P_InitSwitchList: unknown texture %s\n",
-            alphSwitchList[i].name1);
-      texture2 = R_CheckTextureNumForName(alphSwitchList[i].name2);
-      if (texture2 == -1)
-        I_Print("P_InitSwitchList: unknown texture %s\n",
-            alphSwitchList[i].name2);
-      if (texture1 != -1 && texture2 != -1) {
-        switchlist[index++] = texture1;
-        switchlist[index++] = texture2;
-      }
+        if (alphSwitchList[i].episode <= episode)
+        {
+
+            int texture1, texture2;
+
+            if (!alphSwitchList[i].episode)
+                break;
+
+            texture1 = R_CheckTextureNumForName(alphSwitchList[i].name1);
+
+            if (texture1 == -1)
+                I_Print("P_InitSwitchList: unknown texture %s\n", alphSwitchList[i].name1);
+
+            texture2 = R_CheckTextureNumForName(alphSwitchList[i].name2);
+            
+            if (texture2 == -1)
+                I_Print("P_InitSwitchList: unknown texture %s\n", alphSwitchList[i].name2);
+
+            if (texture1 != -1 && texture2 != -1)
+            {
+            
+                switchlist[index++] = texture1;
+                switchlist[index++] = texture2;
+
+            }
+
+        }
+
     }
-  }
 
-  numswitches = index/2;
-  switchlist[index] = -1;
+    numswitches = index / 2;
+    switchlist[index] = -1;
+
 }
 
-static void P_StartButton
-( line_t*       line,
-  bwhere_e      w,
-  int           texture,
-  int           time )
+static void P_StartButton(line_t *line, bwhere_e w, int texture, int time)
 {
-  int           i;
 
+    int i;
 
-  for (i = 0;i < MAXBUTTONS;i++)
-    if (buttonlist[i].btimer && buttonlist[i].line == line)
-      return;
-
-  for (i = 0;i < MAXBUTTONS;i++)
-    if (!buttonlist[i].btimer)
+    for (i = 0; i < MAXBUTTONS; i++)
     {
-      buttonlist[i].line = line;
-      buttonlist[i].where = w;
-      buttonlist[i].btexture = texture;
-      buttonlist[i].btimer = time;
-      buttonlist[i].soundorg = (mobj_t *)&line->soundorg;
-      return;
+
+        if (buttonlist[i].btimer && buttonlist[i].line == line)
+            return;
+
     }
 
-  I_Error("P_StartButton: no button slots left!");
+    for (i = 0; i < MAXBUTTONS; i++)
+    {
+
+        if (!buttonlist[i].btimer)
+        {
+
+            buttonlist[i].line = line;
+            buttonlist[i].where = w;
+            buttonlist[i].btexture = texture;
+            buttonlist[i].btimer = time;
+            buttonlist[i].soundorg = (mobj_t *)&line->soundorg;
+
+            return;
+
+        }
+
+    }
+
+    I_Error("P_StartButton: no button slots left!");
+
 }
 
-void P_ChangeSwitchTexture(line_t*       line,  int           useAgain )
+void P_ChangeSwitchTexture(line_t *line, int useAgain)
 {
 
   mobj_t  *soundorg;

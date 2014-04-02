@@ -183,3 +183,4 @@ boolean P_CheckSight(mobj_t *t1, mobj_t *t2)
     return P_CrossBSPNode(numnodes - 1);
 
 }
+

@@ -13,23 +13,40 @@
 #include "p_enemy.h"
 #include "p_tick.h"
 
-static mobj_t *current_actor;
+#define SKULLSPEED                      (20 * FRACUNIT)
+#define FATSPREAD                       (ANG90 / 8)
 
-typedef enum {
-  DI_EAST,
-  DI_NORTHEAST,
-  DI_NORTH,
-  DI_NORTHWEST,
-  DI_WEST,
-  DI_SOUTHWEST,
-  DI_SOUTH,
-  DI_SOUTHEAST,
-  DI_NODIR,
-  NUMDIRS
+typedef enum
+{
+
+    DI_EAST,
+    DI_NORTHEAST,
+    DI_NORTH,
+    DI_NORTHWEST,
+    DI_WEST,
+    DI_SOUTHWEST,
+    DI_SOUTH,
+    DI_SOUTHEAST,
+    DI_NODIR,
+    NUMDIRS
+
 } dirtype_t;
 
 static void P_NewChaseDir(mobj_t *actor);
 void P_ZBumpCheck(mobj_t *);
+
+mobj_t* corpsehit;
+mobj_t* vileobj;
+fixed_t viletryx;
+fixed_t viletryy;
+int TRACEANGLE = 0xc000000;
+static mobj_t *current_actor;
+static int current_allaround;
+static fixed_t dropoff_deltax, dropoff_deltay, floorz;
+static fixed_t xspeed[8] = {FRACUNIT,47000,0,-47000,-FRACUNIT,-47000,0,47000};
+static fixed_t yspeed[8] = {0,47000,FRACUNIT,47000,0,-47000,-FRACUNIT,-47000};
+extern line_t **spechit;
+extern int numspechit;
 
 static void P_RecursiveSound(sector_t *sec, int soundblocks, mobj_t *soundtarget)
 {
@@ -205,15 +222,6 @@ static int P_IsUnderDamage(mobj_t *actor)
 
 
 
-
-
-
-static fixed_t xspeed[8] = {FRACUNIT,47000,0,-47000,-FRACUNIT,-47000,0,47000};
-static fixed_t yspeed[8] = {0,47000,FRACUNIT,47000,0,-47000,-FRACUNIT,-47000};
-
-
-extern  line_t **spechit;
-extern  int    numspechit;
 
 static boolean P_Move(mobj_t *actor, boolean dropoff) /* killough 9/12/98 */
 {
@@ -394,7 +402,6 @@ static void P_DoNewChaseDir(mobj_t *actor, fixed_t deltax, fixed_t deltay)
     actor->movedir = DI_NODIR;
 }
 
-static fixed_t dropoff_deltax, dropoff_deltay, floorz;
 
 static boolean PIT_AvoidDropoff(line_t *line)
 {
@@ -490,7 +497,6 @@ static boolean P_IsVisible(mobj_t *actor, mobj_t *mo, boolean allaround)
 
 }
 
-static int current_allaround;
 
 static boolean PIT_FindTarget(mobj_t *mo)
 {
@@ -1025,7 +1031,6 @@ void A_SkelMissile(mobj_t *actor)
   P_SetTarget(&mo->tracer, actor->target);
 }
 
-int     TRACEANGLE = 0xc000000;
 
 void A_Tracer(mobj_t *actor)
 {
@@ -1109,11 +1114,6 @@ void A_SkelFist(mobj_t *actor)
       P_DamageMobj(actor->target, actor, actor, damage);
     }
 }
-
-mobj_t* corpsehit;
-mobj_t* vileobj;
-fixed_t viletryx;
-fixed_t viletryy;
 
 static boolean PIT_VileCheck(mobj_t *thing)
 {
@@ -1316,8 +1316,6 @@ void A_VileAttack(mobj_t *actor)
   P_RadiusAttack(fire, actor, 70);
 }
 
-#define FATSPREAD       (ANG90/8)
-
 void A_FatRaise(mobj_t *actor)
 {
   A_FaceTarget(actor);
@@ -1388,8 +1386,6 @@ void A_FatAttack3(mobj_t *actor)
   mo->momx = FixedMul(mo->info->speed, finecosine[an]);
   mo->momy = FixedMul(mo->info->speed, finesine[an]);
 }
-
-#define SKULLSPEED              (20*FRACUNIT)
 
 void A_SkullAttack(mobj_t *actor)
 {
@@ -1878,11 +1874,11 @@ void A_SpawnFly(mobj_t *mo)
 
   P_UpdateThinker(&newmobj->thinker);
 
-  if (P_LookForTargets(newmobj,true))      /* killough 9/4/98 */
+  if (P_LookForTargets(newmobj,true))
     P_SetMobjState(newmobj, newmobj->info->seestate);
 
 
-  P_TeleportMove(newmobj, newmobj->x, newmobj->y, true); /* killough 8/9/98 */
+  P_TeleportMove(newmobj, newmobj->x, newmobj->y, true);
 
 
   P_RemoveMobj(mo);

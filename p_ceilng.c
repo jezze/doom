@@ -202,13 +202,10 @@ void T_MoveCeiling(ceiling_t* ceiling)
 int EV_DoCeiling(line_t *line, ceiling_e type)
 {
 
-    int secnum;
-    int rtn;
-    sector_t* sec;
-    ceiling_t*  ceiling;
-
-    secnum = -1;
-    rtn = 0;
+    int secnum = -1;
+    int rtn = 0;
+    sector_t *sec;
+    ceiling_t *ceiling;
 
     switch (type)
     {

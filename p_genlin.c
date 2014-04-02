@@ -8,9 +8,9 @@
 #include "sounds.h"
 #include "z_zone.h"
 
-int EV_DoGenFloor
-( line_t*       line )
+int EV_DoGenFloor(line_t *line)
 {
+
   int                   secnum;
   int                   rtn;
   boolean               manual;
@@ -195,8 +195,7 @@ manual_floor:
   return rtn;
 }
 
-int EV_DoGenCeiling
-( line_t*       line )
+int EV_DoGenCeiling(line_t *line)
 {
   int                   secnum;
   int                   rtn;
@@ -390,9 +389,9 @@ manual_ceiling:
   return rtn;
 }
 
-int EV_DoGenLift
-( line_t*       line )
+int EV_DoGenLift(line_t *line)
 {
+
   plat_t*         plat;
   int             secnum;
   int             rtn;
@@ -530,9 +529,9 @@ manual_lift:
   return rtn;
 }
 
-int EV_DoGenStairs
-( line_t*       line )
+int EV_DoGenStairs(line_t *line)
 {
+
   int                   secnum;
   int                   osecnum;
   int                   height;
@@ -712,9 +711,9 @@ manual_stair:
   return rtn;
 }
 
-int EV_DoGenCrusher
-( line_t*       line )
+int EV_DoGenCrusher(line_t *line)
 {
+
   int                   secnum;
   int                   rtn;
   boolean               manual;
@@ -797,9 +796,9 @@ manual_crusher:
   return rtn;
 }
 
-int EV_DoGenLockedDoor
-( line_t* line )
+int EV_DoGenLockedDoor(line_t *line)
 {
+
   int   secnum,rtn;
   sector_t* sec;
   vldoor_t* door;
@@ -887,9 +886,9 @@ manual_locked:
   return rtn;
 }
 
-int EV_DoGenDoor
-( line_t* line )
+int EV_DoGenDoor(line_t *line)
 {
+
   int   secnum,rtn;
   sector_t* sec;
   boolean   manual;
