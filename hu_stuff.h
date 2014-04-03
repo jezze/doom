@@ -3,7 +3,6 @@
 
 #include "d_event.h"
 #include "r_defs.h"
-#include "v_video.h"
 
 #define HU_FONTSTART                    '!'
 #define HU_FONTEND                      0x7f

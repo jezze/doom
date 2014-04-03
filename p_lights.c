@@ -2,8 +2,8 @@
 #include <string.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
-#include "doomdef.h"
 #include "m_random.h"
 #include "r_main.h"
 #include "p_spec.h"

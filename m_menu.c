@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <fcntl.h>
-#include "d_think.h"
 #include "doomdef.h"
+#include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
 #include "d_englsh.h"
 #include "d_main.h"

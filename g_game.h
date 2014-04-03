@@ -1,8 +1,6 @@
 #ifndef __G_GAME__
 #define __G_GAME__
 
-#include "doomdef.h"
-
 #define GAME_OPTION_SIZE                64
 
 boolean G_Responder(event_t *ev);

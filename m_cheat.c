@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
 #include "g_game.h"
 #include "r_data.h"

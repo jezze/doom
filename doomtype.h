@@ -18,33 +18,6 @@ typedef unsigned long long uint_64_t;
 
 #include <limits.h>
 
-typedef enum
-{
-
-    doom_12_compatibility,
-    doom_1666_compatibility,
-    doom2_19_compatibility,
-    ultdoom_compatibility,
-    finaldoom_compatibility,
-    dosdoom_compatibility,
-    tasdoom_compatibility,
-    boom_compatibility_compatibility,
-    boom_201_compatibility,
-    boom_202_compatibility,
-    lxdoom_1_compatibility,
-    mbf_compatibility,
-    prboom_1_compatibility,
-    prboom_2_compatibility,
-    prboom_3_compatibility,
-    prboom_4_compatibility,
-    prboom_5_compatibility,
-    prboom_6_compatibility,
-    MAX_COMPATIBILITY_LEVEL,
-    boom_compatibility = boom_201_compatibility,
-    best_compatibility = prboom_6_compatibility
-
-} complevel_t;
-
 enum patch_translation_e
 {
 

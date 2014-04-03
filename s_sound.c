@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
 #include "s_sound.h"
 #include "i_sound.h"

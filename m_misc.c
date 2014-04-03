@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
 #include "g_game.h"
 #include "m_menu.h"

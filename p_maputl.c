@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
 #include "r_main.h"
 #include "p_maputl.h"

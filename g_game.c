@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
 #include "f_finale.h"
 #include "m_misc.h"

@@ -1,10 +1,6 @@
 #ifndef __DOOMDEF__
 #define __DOOMDEF__
 
-#ifndef __GNUC__
-#define __attribute__(x)
-#endif
-
 #define MAX_SCREENWIDTH  2048
 #define MAX_SCREENHEIGHT 1536
 #define MAXPLAYERS       4

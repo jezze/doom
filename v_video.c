@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
-#include "d_think.h"
 #include "doomdef.h"
+#include "d_think.h"
+#include "p_pspr.h"
 #include "r_main.h"
 #include "r_draw.h"
 #include "w_wad.h"

@@ -2,6 +2,7 @@
 #include <string.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "z_zone.h"
 #include "doomstat.h"
 #include "w_wad.h"

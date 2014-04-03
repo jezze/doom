@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include "doomdef.h"
 #include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
-#include "doomdef.h"
 #include "doomtype.h"
 #include "v_video.h"
 #include "r_draw.h"

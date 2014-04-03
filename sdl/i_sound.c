@@ -13,6 +13,7 @@
 #include "i_system.h"
 #include "s_sound.h"
 #include "doomdef.h"
+#include "p_pspr.h"
 #include "doomstat.h"
 #include "doomtype.h"
 #include "d_main.h"

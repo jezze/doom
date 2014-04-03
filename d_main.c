@@ -4,8 +4,9 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "d_think.h"
 #include "doomdef.h"
+#include "d_think.h"
+#include "p_pspr.h"
 #include "doomtype.h"
 #include "doomstat.h"
 #include "d_englsh.h"
