@@ -5,7 +5,6 @@
 #include "i_video.h"
 #include "w_wad.h"
 #include "st_stuff.h"
-#include "st_lib.h"
 #include "r_main.h"
 #include "m_cheat.h"
 #include "s_sound.h"
@@ -138,8 +137,156 @@ static int st_faceindex = 0;
 static int keyboxes[3];
 static int st_randomnumber;
 extern char *mapnames[];
+static boolean st_stopped = true;
 
-static void ST_Stop(void);
+static void ST_initNum(st_number_t *n, int x, int y, const patchnum_t *pl, int *num, boolean *on, int width)
+{
+
+    n->x = x;
+    n->y = y;
+    n->oldnum = 0;
+    n->width = width;
+    n->num = num;
+    n->on = on;
+    n->p = pl;
+
+}
+
+static void ST_drawNum(st_number_t *n, int cm, boolean refresh)
+{
+
+    int numdigits = n->width;
+    int num = *n->num;
+    int w = n->p[0].width;
+    int h = n->p[0].height;
+    int x = n->x;
+    int neg;
+
+    if (n->oldnum == num && !refresh)
+        return;
+
+    if ((neg = (n->oldnum = num) < 0))
+    {
+
+        if (numdigits == 2 && num < -9)
+            num = -9;
+        else if (numdigits == 3 && num < -99)
+            num = -99;
+
+        num = -num;
+
+    }
+
+    x = n->x - numdigits * w;
+
+    V_CopyRect(x, n->y - ST_Y, BG, w * numdigits, h, x, n->y, FG, VPT_STRETCH);
+
+    if (num == 1994)
+        return;
+
+    x = n->x;
+
+    if (!num)
+        V_DrawNumPatch(x - w, n->y, FG, n->p[0].lumpnum, cm, ((cm != CR_DEFAULT) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
+
+    while (num && numdigits--)
+    {
+
+        x -= w;
+
+        V_DrawNumPatch(x, n->y, FG, n->p[num % 10].lumpnum, cm, ((cm != CR_DEFAULT) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
+
+        num /= 10;
+
+    }
+
+    if (neg)
+        V_DrawNamePatch(x - w, n->y, FG, "STTMINUS", cm, ((cm != CR_DEFAULT) ? VPT_TRANS : VPT_NONE) | VPT_STRETCH);
+
+}
+
+static void ST_updateNum(st_number_t *n, int cm, boolean refresh)
+{
+
+    if (*n->on)
+        ST_drawNum(n, cm, refresh);
+
+}
+
+static void ST_initPercent(st_percent_t *p, int x, int y, const patchnum_t *pl, int *num, boolean *on, const patchnum_t *percent)
+{
+
+    ST_initNum(&p->n, x, y, pl, num, on, 3);
+
+    p->p = percent;
+
+}
+
+static void ST_updatePercent(st_percent_t *per, int cm, int refresh)
+{
+
+    if (*per->n.on && (refresh || (per->n.oldnum != *per->n.num)))
+        V_DrawNumPatch(per->n.x, per->n.y, FG, per->p->lumpnum, cm, VPT_NONE | VPT_STRETCH);
+
+    ST_updateNum(&per->n, cm, refresh);
+
+}
+
+static void ST_initMultIcon(st_multicon_t *i, int x, int y, const patchnum_t *il, int *inum, boolean *on)
+{
+
+    i->x = x;
+    i->y = y;
+    i->oldinum = -1;
+    i->inum = inum;
+    i->on = on;
+    i->p = il;
+
+}
+
+static void ST_updateMultIcon(st_multicon_t *mi, boolean refresh)
+{
+
+    int w;
+    int h;
+    int x;
+    int y;
+
+    if (*mi->on && (mi->oldinum != *mi->inum || refresh))
+    {
+
+        if (mi->oldinum != -1)
+        {
+
+            x = mi->x - mi->p[mi->oldinum].leftoffset;
+            y = mi->y - mi->p[mi->oldinum].topoffset;
+            w = mi->p[mi->oldinum].width;
+            h = mi->p[mi->oldinum].height;
+
+            V_CopyRect(x, y-ST_Y, BG, w, h, x, y, FG, VPT_STRETCH);
+
+        }
+
+        if (*mi->inum != -1)
+            V_DrawNumPatch(mi->x, mi->y, FG, mi->p[*mi->inum].lumpnum, CR_DEFAULT, VPT_STRETCH);
+
+        mi->oldinum = *mi->inum;
+
+    }
+
+}
+
+static void ST_initBinIcon(st_binicon_t *b, int x, int y, const patchnum_t *i, boolean *val, boolean *on)
+{
+
+    b->x = x;
+    b->y = y;
+    b->oldval = 0;
+    b->val = val;
+    b->on = on;
+    b->p = i;
+
+}
 
 static void ST_refreshBackground(void)
 {
@@ -498,45 +645,45 @@ static void ST_drawWidgets(boolean refresh)
     st_armson = st_statusbaron;
 
     if (*w_ready.num * 100 < ammo_red * plyr->maxammo[weaponinfo[w_ready.data].ammo])
-        STlib_updateNum(&w_ready, CR_RED, refresh);
+        ST_updateNum(&w_ready, CR_RED, refresh);
     else if (*w_ready.num * 100 < ammo_yellow * plyr->maxammo[weaponinfo[w_ready.data].ammo])
-        STlib_updateNum(&w_ready, CR_GOLD, refresh);
+        ST_updateNum(&w_ready, CR_GOLD, refresh);
     else
-        STlib_updateNum(&w_ready, CR_GREEN, refresh);
+        ST_updateNum(&w_ready, CR_GREEN, refresh);
 
     for (i = 0; i < 4; i++)
     {
 
-        STlib_updateNum(&w_ammo[i], CR_DEFAULT, refresh);
-        STlib_updateNum(&w_maxammo[i], CR_DEFAULT, refresh);
+        ST_updateNum(&w_ammo[i], CR_DEFAULT, refresh);
+        ST_updateNum(&w_maxammo[i], CR_DEFAULT, refresh);
 
     }
 
     if (*w_health.n.num < health_red)
-        STlib_updatePercent(&w_health, CR_RED, refresh);
+        ST_updatePercent(&w_health, CR_RED, refresh);
     else if (*w_health.n.num < health_yellow)
-        STlib_updatePercent(&w_health, CR_GOLD, refresh);
+        ST_updatePercent(&w_health, CR_GOLD, refresh);
     else if (*w_health.n.num <= health_green)
-        STlib_updatePercent(&w_health, CR_GREEN, refresh);
+        ST_updatePercent(&w_health, CR_GREEN, refresh);
     else
-        STlib_updatePercent(&w_health, CR_BLUE2, refresh);
+        ST_updatePercent(&w_health, CR_BLUE2, refresh);
 
     if (*w_armor.n.num < armor_red)
-        STlib_updatePercent(&w_armor, CR_RED, refresh);
+        ST_updatePercent(&w_armor, CR_RED, refresh);
     else if (*w_armor.n.num < armor_yellow)
-        STlib_updatePercent(&w_armor, CR_GOLD, refresh);
+        ST_updatePercent(&w_armor, CR_GOLD, refresh);
     else if (*w_armor.n.num <= armor_green)
-        STlib_updatePercent(&w_armor, CR_GREEN, refresh);
+        ST_updatePercent(&w_armor, CR_GREEN, refresh);
     else
-        STlib_updatePercent(&w_armor, CR_BLUE2, refresh);
+        ST_updatePercent(&w_armor, CR_BLUE2, refresh);
 
     for (i = 0; i < 6; i++)
-        STlib_updateMultIcon(&w_arms[i], refresh);
+        ST_updateMultIcon(&w_arms[i], refresh);
 
-    STlib_updateMultIcon(&w_faces, refresh);
+    ST_updateMultIcon(&w_faces, refresh);
 
     for (i = 0; i < 3; i++)
-        STlib_updateMultIcon(&w_keyboxes[i], refresh);
+        ST_updateMultIcon(&w_keyboxes[i], refresh);
 
 }
 
@@ -655,44 +802,29 @@ static void ST_createWidgets(void)
 
     int i;
 
-    STlib_initNum(&w_ready, ST_AMMOX, ST_AMMOY, tallnum, &plyr->ammo[weaponinfo[plyr->readyweapon].ammo], &st_statusbaron, ST_AMMOWIDTH);
+    ST_initNum(&w_ready, ST_AMMOX, ST_AMMOY, tallnum, &plyr->ammo[weaponinfo[plyr->readyweapon].ammo], &st_statusbaron, ST_AMMOWIDTH);
 
     w_ready.data = plyr->readyweapon;
 
-    STlib_initPercent(&w_health, ST_HEALTHX, ST_HEALTHY, tallnum, &plyr->health, &st_statusbaron, &tallpercent);
-    STlib_initBinIcon(&w_armsbg, ST_ARMSBGX, ST_ARMSBGY, &armsbg, &st_notdeathmatch, &st_statusbaron);
+    ST_initPercent(&w_health, ST_HEALTHX, ST_HEALTHY, tallnum, &plyr->health, &st_statusbaron, &tallpercent);
+    ST_initBinIcon(&w_armsbg, ST_ARMSBGX, ST_ARMSBGY, &armsbg, &st_notdeathmatch, &st_statusbaron);
 
     for (i = 0; i < 6; i++)
-        STlib_initMultIcon(&w_arms[i], ST_ARMSX + (i % 3) * ST_ARMSXSPACE, ST_ARMSY + (i / 3) * ST_ARMSYSPACE, arms[i], (int *)&plyr->weaponowned[i + 1], &st_armson);
+        ST_initMultIcon(&w_arms[i], ST_ARMSX + (i % 3) * ST_ARMSXSPACE, ST_ARMSY + (i / 3) * ST_ARMSYSPACE, arms[i], (int *)&plyr->weaponowned[i + 1], &st_armson);
 
-    STlib_initMultIcon(&w_faces, ST_FACESX, ST_FACESY, faces, &st_faceindex, &st_statusbaron);
-    STlib_initPercent(&w_armor, ST_ARMORX, ST_ARMORY, tallnum, &plyr->armorpoints, &st_statusbaron, &tallpercent);
-    STlib_initMultIcon(&w_keyboxes[0], ST_KEY0X, ST_KEY0Y, keys, &keyboxes[0], &st_statusbaron);
-    STlib_initMultIcon(&w_keyboxes[1], ST_KEY1X, ST_KEY1Y, keys, &keyboxes[1], &st_statusbaron);
-    STlib_initMultIcon(&w_keyboxes[2], ST_KEY2X, ST_KEY2Y, keys, &keyboxes[2], &st_statusbaron);
-    STlib_initNum(&w_ammo[0], ST_AMMO0X, ST_AMMO0Y, shortnum, &plyr->ammo[0], &st_statusbaron, ST_AMMO0WIDTH);
-    STlib_initNum(&w_ammo[1], ST_AMMO1X, ST_AMMO1Y, shortnum, &plyr->ammo[1], &st_statusbaron, ST_AMMO1WIDTH);
-    STlib_initNum(&w_ammo[2], ST_AMMO2X, ST_AMMO2Y, shortnum, &plyr->ammo[2], &st_statusbaron, ST_AMMO2WIDTH);
-    STlib_initNum(&w_ammo[3], ST_AMMO3X, ST_AMMO3Y, shortnum, &plyr->ammo[3], &st_statusbaron, ST_AMMO3WIDTH);
-    STlib_initNum(&w_maxammo[0], ST_MAXAMMO0X, ST_MAXAMMO0Y, shortnum, &plyr->maxammo[0], &st_statusbaron, ST_MAXAMMO0WIDTH);
-    STlib_initNum(&w_maxammo[1], ST_MAXAMMO1X, ST_MAXAMMO1Y, shortnum, &plyr->maxammo[1], &st_statusbaron, ST_MAXAMMO1WIDTH);
-    STlib_initNum(&w_maxammo[2], ST_MAXAMMO2X, ST_MAXAMMO2Y, shortnum, &plyr->maxammo[2], &st_statusbaron, ST_MAXAMMO2WIDTH);
-    STlib_initNum(&w_maxammo[3], ST_MAXAMMO3X, ST_MAXAMMO3Y, shortnum, &plyr->maxammo[3], &st_statusbaron, ST_MAXAMMO3WIDTH);
-
-}
-
-static boolean st_stopped = true;
-
-void ST_Start(void)
-{
-
-    if (!st_stopped)
-        ST_Stop();
-
-    ST_initData();
-    ST_createWidgets();
-
-    st_stopped = false;
+    ST_initMultIcon(&w_faces, ST_FACESX, ST_FACESY, faces, &st_faceindex, &st_statusbaron);
+    ST_initPercent(&w_armor, ST_ARMORX, ST_ARMORY, tallnum, &plyr->armorpoints, &st_statusbaron, &tallpercent);
+    ST_initMultIcon(&w_keyboxes[0], ST_KEY0X, ST_KEY0Y, keys, &keyboxes[0], &st_statusbaron);
+    ST_initMultIcon(&w_keyboxes[1], ST_KEY1X, ST_KEY1Y, keys, &keyboxes[1], &st_statusbaron);
+    ST_initMultIcon(&w_keyboxes[2], ST_KEY2X, ST_KEY2Y, keys, &keyboxes[2], &st_statusbaron);
+    ST_initNum(&w_ammo[0], ST_AMMO0X, ST_AMMO0Y, shortnum, &plyr->ammo[0], &st_statusbaron, ST_AMMO0WIDTH);
+    ST_initNum(&w_ammo[1], ST_AMMO1X, ST_AMMO1Y, shortnum, &plyr->ammo[1], &st_statusbaron, ST_AMMO1WIDTH);
+    ST_initNum(&w_ammo[2], ST_AMMO2X, ST_AMMO2Y, shortnum, &plyr->ammo[2], &st_statusbaron, ST_AMMO2WIDTH);
+    ST_initNum(&w_ammo[3], ST_AMMO3X, ST_AMMO3Y, shortnum, &plyr->ammo[3], &st_statusbaron, ST_AMMO3WIDTH);
+    ST_initNum(&w_maxammo[0], ST_MAXAMMO0X, ST_MAXAMMO0Y, shortnum, &plyr->maxammo[0], &st_statusbaron, ST_MAXAMMO0WIDTH);
+    ST_initNum(&w_maxammo[1], ST_MAXAMMO1X, ST_MAXAMMO1Y, shortnum, &plyr->maxammo[1], &st_statusbaron, ST_MAXAMMO1WIDTH);
+    ST_initNum(&w_maxammo[2], ST_MAXAMMO2X, ST_MAXAMMO2Y, shortnum, &plyr->maxammo[2], &st_statusbaron, ST_MAXAMMO2WIDTH);
+    ST_initNum(&w_maxammo[3], ST_MAXAMMO3X, ST_MAXAMMO3Y, shortnum, &plyr->maxammo[3], &st_statusbaron, ST_MAXAMMO3WIDTH);
 
 }
 
@@ -705,6 +837,19 @@ static void ST_Stop(void)
     V_SetPalette(0);
 
     st_stopped = true;
+
+}
+
+void ST_Start(void)
+{
+
+    if (!st_stopped)
+        ST_Stop();
+
+    ST_initData();
+    ST_createWidgets();
+
+    st_stopped = false;
 
 }
 
