@@ -7,6 +7,8 @@
 
 lumpinfo_t *lumpinfo;
 int numlumps;
+wadfile_info_t *wadfiles = NULL;
+size_t numwadfiles = 0;
 
 static void ExtractFileBase(const char *path, char *dest)
 {
@@ -201,7 +203,7 @@ unsigned W_LumpNameHash(const char *s)
 
 }
 
-int (W_CheckNumForName)(register const char *name, register int li_namespace)
+int W_CheckNumForName(register const char *name, register int li_namespace)
 {
 
     register int i = (numlumps == 0) ? (-1) : (lumpinfo[W_LumpNameHash(name) % (unsigned)numlumps].index);
@@ -213,7 +215,7 @@ int (W_CheckNumForName)(register const char *name, register int li_namespace)
 
 }
 
-void W_HashLumps(void)
+static void W_HashLumps(void)
 {
 
     int i;
@@ -236,7 +238,7 @@ void W_HashLumps(void)
 int W_GetNumForName(const char *name)
 {
 
-    int i = W_CheckNumForName(name);
+    int i = W_CheckNumForName(name, ns_global);
 
     if (i == -1)
         I_Error("W_GetNumForName: %.8s not found", name);
@@ -244,9 +246,6 @@ int W_GetNumForName(const char *name)
     return i;
 
 }
-
-wadfile_info_t *wadfiles = NULL;
-size_t numwadfiles = 0;
 
 void W_Init(void)
 {
@@ -270,25 +269,7 @@ void W_Init(void)
 
 }
 
-void W_ReleaseAllWads(void)
-{
-
-    W_DoneCache();
-
-    numwadfiles = 0;
-
-    free(wadfiles);
-
-    wadfiles = NULL;
-    numlumps = 0;
-
-    free(lumpinfo);
-
-    lumpinfo = NULL;
-
-}
-
-int W_LumpLength (int lump)
+int W_LumpLength(int lump)
 {
 
     if (lump >= numlumps)

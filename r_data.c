@@ -82,11 +82,11 @@ static void R_InitTextures (void)
   for (i=0 ; i<nummappatches ; i++)
     {
       strncpy (name,name_p+i*8, 8);
-      patchlookup[i] = W_CheckNumForName(name);
+      patchlookup[i] = W_CheckNumForName(name, ns_global);
       if (patchlookup[i] == -1)
         {
 
-          patchlookup[i] = (W_CheckNumForName)(name, ns_sprites);
+          patchlookup[i] = W_CheckNumForName(name, ns_sprites);
 
         }
     }
@@ -97,7 +97,7 @@ static void R_InitTextures (void)
   maxoff = W_LumpLength(maptex_lump[0]);
   directory = maptex+1;
 
-  if (W_CheckNumForName("TEXTURE2") != -1)
+  if (W_CheckNumForName("TEXTURE2", ns_global) != -1)
     {
       maptex2 = W_CacheLumpNum(maptex_lump[1] = W_GetNumForName("TEXTURE2"));
       numtextures2 = *maptex2;
@@ -267,7 +267,7 @@ void R_InitData(void)
 
 int R_FlatNumForName(const char *name)
 {
-  int i = (W_CheckNumForName)(name, ns_flats);
+  int i = W_CheckNumForName(name, ns_flats);
   if (i == -1)
     I_Error("R_FlatNumForName: %.8s not found", name);
   return i - firstflat;

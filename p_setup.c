@@ -800,7 +800,7 @@ static void P_LoadSideDefs2(int lump)
             break;
 
         case 260:
-            sd->midtexture = strncasecmp("TRANMAP", msd->midtexture, 8) ? (sd->special = W_CheckNumForName(msd->midtexture)) < 0 || W_LumpLength(sd->special) != 65536 ? sd->special = 0, R_TextureNumForName(msd->midtexture) : (sd->special++, 0) : (sd->special = 0);
+            sd->midtexture = strncasecmp("TRANMAP", msd->midtexture, 8) ? (sd->special = W_CheckNumForName(msd->midtexture, ns_global)) < 0 || W_LumpLength(sd->special) != 65536 ? sd->special = 0, R_TextureNumForName(msd->midtexture) : (sd->special++, 0) : (sd->special = 0);
             sd->toptexture = R_TextureNumForName(msd->toptexture);
             sd->bottomtexture = R_TextureNumForName(msd->bottomtexture);
 
@@ -1385,7 +1385,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
     }
 
     lumpnum = W_GetNumForName(lumpname);
-    gl_lumpnum = W_CheckNumForName(gl_lumpname);
+    gl_lumpnum = W_CheckNumForName(gl_lumpname, ns_global);
     leveltime = 0; totallive = 0;
 
     if ((i = lumpnum + ML_BLOCKMAP + 1) < numlumps && !strncasecmp(lumpinfo[i].name, "BEHAVIOR", 8))

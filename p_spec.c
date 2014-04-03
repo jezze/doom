@@ -100,7 +100,7 @@ void P_InitPicAnims (void)
     }
     else
     {
-      if ((W_CheckNumForName)(animdefs[i].startname, ns_flats) == -1)
+      if (W_CheckNumForName(animdefs[i].startname, ns_flats) == -1)
           continue;
 
       lastanim->picnum = R_FlatNumForName (animdefs[i].endname);

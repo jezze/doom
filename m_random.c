@@ -26,7 +26,6 @@ rng_t rng;
 int P_Random(pr_class_t pr_class)
 {
 
-    int compat = pr_class == pr_misc ? (rng.prndindex = (rng.prndindex + 1) & 255) : (rng. rndindex = (rng. rndindex + 1) & 255);
     unsigned long boom;
 
     if (pr_class != pr_misc)
