@@ -1355,7 +1355,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
     players[consoleplayer].viewz = 1;
 
     S_Start();
-    Z_FreeTags(PU_LEVEL, PU_PURGELEVEL - 1);
+    Z_FreeTags(PU_LEVEL, PU_CACHE - 1);
 
     if (rejectlump != -1)
     {

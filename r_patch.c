@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <assert.h>
 #include "d_think.h"
 #include "z_zone.h"
 #include "doomstat.h"
@@ -10,7 +12,6 @@
 #include "i_system.h"
 #include "r_draw.h"
 #include "r_patch.h"
-#include <assert.h>
 
 typedef struct
 {

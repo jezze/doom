@@ -8,15 +8,8 @@
 #define HU_FONTSTART                    '!'
 #define HU_FONTEND                      0x7f
 #define HU_FONTSIZE                     (HU_FONTEND - HU_FONTSTART + 1)
-#define HU_BROADCAST                    5
-#define HU_MSGX                         0
-#define HU_MSGY                         0
-#define HU_MSGWIDTH                     64
-#define HU_MSGHEIGHT                    1
-#define HU_MSGTIMEOUT                   (4 * TICRATE)
 #define HU_MAXLINES                     4
 #define HU_MAXLINELENGTH                80
-#define HU_REFRESHSPACING               8
 #define HU_MAXMESSAGES                  16
 #define MAXLINES                        25
 

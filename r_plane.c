@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "d_think.h"
 #include "z_zone.h"
 #include "doomstat.h"

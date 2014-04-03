@@ -9,6 +9,7 @@
 #include "sounds.h"
 #include "g_game.h"
 #include "r_main.h"
+#include "r_draw.h"
 
 const char *const mapnames[] = {
     HUSTR_E1M1,
@@ -20,7 +21,6 @@ const char *const mapnames[] = {
     HUSTR_E1M7,
     HUSTR_E1M8,
     HUSTR_E1M9,
-
     HUSTR_E2M1,
     HUSTR_E2M2,
     HUSTR_E2M3,
@@ -30,7 +30,6 @@ const char *const mapnames[] = {
     HUSTR_E2M7,
     HUSTR_E2M8,
     HUSTR_E2M9,
-
     HUSTR_E3M1,
     HUSTR_E3M2,
     HUSTR_E3M3,
@@ -40,7 +39,6 @@ const char *const mapnames[] = {
     HUSTR_E3M7,
     HUSTR_E3M8,
     HUSTR_E3M9,
-
     HUSTR_E4M1,
     HUSTR_E4M2,
     HUSTR_E4M3,
@@ -50,7 +48,6 @@ const char *const mapnames[] = {
     HUSTR_E4M7,
     HUSTR_E4M8,
     HUSTR_E4M9,
-
 };
 
 const char *const mapnames2[] = {
@@ -65,7 +62,6 @@ const char *const mapnames2[] = {
     HUSTR_9,
     HUSTR_10,
     HUSTR_11,
-
     HUSTR_12,
     HUSTR_13,
     HUSTR_14,
@@ -75,7 +71,6 @@ const char *const mapnames2[] = {
     HUSTR_18,
     HUSTR_19,
     HUSTR_20,
-
     HUSTR_21,
     HUSTR_22,
     HUSTR_23,
@@ -102,7 +97,6 @@ const char *const mapnamesp[] = {
     PHUSTR_9,
     PHUSTR_10,
     PHUSTR_11,
-
     PHUSTR_12,
     PHUSTR_13,
     PHUSTR_14,
@@ -112,7 +106,6 @@ const char *const mapnamesp[] = {
     PHUSTR_18,
     PHUSTR_19,
     PHUSTR_20,
-
     PHUSTR_21,
     PHUSTR_22,
     PHUSTR_23,
@@ -139,7 +132,6 @@ const char *const mapnamest[] = {
     THUSTR_9,
     THUSTR_10,
     THUSTR_11,
-
     THUSTR_12,
     THUSTR_13,
     THUSTR_14,
@@ -149,7 +141,6 @@ const char *const mapnamest[] = {
     THUSTR_18,
     THUSTR_19,
     THUSTR_20,
-
     THUSTR_21,
     THUSTR_22,
     THUSTR_23,
@@ -202,6 +193,11 @@ const char *const mapnamest[] = {
 #define HU_INPUTY                       (HU_MSGY + HU_MSGHEIGHT * (hu_font[0].height) + 1)
 #define HU_INPUTWIDTH                   64
 #define HU_INPUTHEIGHT                  1
+#define HU_MSGTIMEOUT                   (4 * TICRATE)
+#define HU_MSGX                         0
+#define HU_MSGY                         0
+#define HU_MSGHEIGHT                    1
+#define HU_REFRESHSPACING               8
 #define key_alt                         KEYD_RALT
 #define key_shift                       KEYD_RSHIFT
 
@@ -213,7 +209,10 @@ const char* player_names[] = {
 };
 
 int plyrcoltran[MAXPLAYERS] = {
-    CR_GREEN,CR_GRAY,CR_BROWN,CR_RED
+    CR_GREEN,
+    CR_GRAY,
+    CR_BROWN,
+    CR_RED
 };
 
 static player_t *plr;

@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include "doomtype.h"
 #include "m_fixed.h"
 #include "z_zone.h"
@@ -82,17 +84,6 @@ void *Z_BMalloc(struct block_memory_alloc_s *pzone)
     newpool->blocks = pzone->perpool;
 
     return getelem(newpool, pzone->size, 0);
-
-}
-
-void *Z_BCalloc(struct block_memory_alloc_s *pzone)
-{
-
-    void *p = Z_BMalloc(pzone);
-
-    memset(p,0,pzone->size);
-
-    return p;
 
 }
 

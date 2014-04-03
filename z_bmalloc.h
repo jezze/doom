@@ -14,5 +14,4 @@ struct block_memory_alloc_s
 #define NULL_BLOCK_MEMORY_ALLOC_ZONE(name) name.firstpool = NULL
 
 void *Z_BMalloc(struct block_memory_alloc_s *pzone);
-void *Z_BCalloc(struct block_memory_alloc_s *pzone);
 void Z_BFree(struct block_memory_alloc_s *pzone, void *p);
