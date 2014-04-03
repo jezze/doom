@@ -261,8 +261,6 @@ void I_InitSound(void)
 
     SDL_AudioSpec audio;
 
-    I_Print("I_InitSound: ");
-
     audio.freq = snd_samplerate;
 #if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
     audio.format = AUDIO_S16MSB;
@@ -276,14 +274,12 @@ void I_InitSound(void)
     if (SDL_OpenAudio(&audio, NULL) < 0)
     {
 
-        I_Print("couldn't open audio with desired format\n");
+        I_Error("I_InitSound: Couldn't open audio with desired format");
 
         return;
     }
 
-    I_Print(" configured audio device with %d samples/slice\n", audio.samples);
     I_InitMusic();
-    I_Print("I_InitSound: sound module ready\n");
     SDL_PauseAudio(0);
 
 }

@@ -242,7 +242,7 @@ void I_FinishUpdate(void)
         if (SDL_LockSurface(surface) < 0)
         {
 
-            I_Print("I_FinishUpdate: %s\n", SDL_GetError());
+            I_Error("I_FinishUpdate: %s", SDL_GetError());
 
             return;
 
@@ -290,7 +290,7 @@ void I_PreInitGraphics(void)
 {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
-        I_Error("Could not initialize SDL [%s]", SDL_GetError());
+        I_Error("I_PreInitGraphics: Could not initialize SDL [%s]", SDL_GetError());
 
 }
 
@@ -312,7 +312,6 @@ void I_InitGraphics(void)
 
     int i;
 
-    I_Print("I_InitGraphics: %dx%d\n", SCREENWIDTH, SCREENHEIGHT);
     V_InitMode();
     V_FreeScreens();
     I_CalculateRes(SCREENWIDTH, SCREENHEIGHT);
@@ -332,7 +331,7 @@ void I_InitGraphics(void)
     surface = SDL_SetVideoMode(SCREENWIDTH, SCREENHEIGHT, 8, SDL_DOUBLEBUF | SDL_HWPALETTE | SDL_FULLSCREEN);
 
     if (surface == NULL)
-        I_Error("Couldn't set %dx%d video mode [%s]", SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
+        I_Error("I_InitGraphics: Couldn't set %dx%d video mode [%s]", SCREENWIDTH, SCREENHEIGHT, SDL_GetError());
 
     if (!SDL_MUSTLOCK(surface))
     {

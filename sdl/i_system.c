@@ -256,14 +256,8 @@ char *I_FindFile(const char *wfname, const char *ext)
         if (access(p, F_OK))
             strcat(p, ext);
 
-        if (!access(p,F_OK))
-        {
-
-            I_Print(" found %s\n", p);
-
+        if (!access(p, F_OK))
             return p;
-
-        }
 
         free(p);
 

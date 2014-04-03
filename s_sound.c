@@ -53,7 +53,6 @@ void S_Init(int sfxVolume, int musicVolume)
 
         int i;
 
-        I_Print("S_Init: default sfx volume %d\n", sfxVolume);
         I_SetChannels();
         S_SetSfxVolume(sfxVolume);
 

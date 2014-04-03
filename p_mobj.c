@@ -71,7 +71,7 @@ boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
     } while (!mobj->tics && !seenstate[state]);
 
     if (ret && !mobj->tics)
-        I_Print("Warning: State Cycle Detected");
+        I_Error("P_SetMobjState: State Cycle Detected");
 
     if (!--recursion)
     {
@@ -846,7 +846,7 @@ void P_SpawnMapThing(const mapthing_t *mthing)
     if ((options & MTF_RESERVED))
     {
 
-        I_Print("P_SpawnMapThing: correcting bad flags (%u) (thing type %d)\n", options, mthing->type);
+        I_Error("P_SpawnMapThing: Correcting bad flags (%u) (thing type %d)\n", options, mthing->type);
 
         options &= MTF_EASY | MTF_NORMAL | MTF_HARD | MTF_AMBUSH | MTF_NOTSINGLE;
 
@@ -878,7 +878,7 @@ void P_SpawnMapThing(const mapthing_t *mthing)
     if (i == NUMMOBJTYPES)
     {
 
-        I_Print("Unknown Thing type %i at (%i, %i)", mthing->type, mthing->x, mthing->y);
+        I_Error("P_SpawnMapThing: Unknown Thing type %i at (%i, %i)", mthing->type, mthing->x, mthing->y);
 
         return;
 

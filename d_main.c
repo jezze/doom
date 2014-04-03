@@ -35,7 +35,6 @@
 ticcmd_t netcmds[MAXPLAYERS][BACKUPTICS];
 static ticcmd_t* localcmds;
 int maketic;
-static const char *wad_files[MAXLOADFILES];
 
 const char *const standard_iwads[] = {
     "chex.wad",
@@ -343,7 +342,6 @@ static void IdentifyVersion(void)
     if (iwad && *iwad)
     {
 
-        I_Print("IWAD found: %s\n", iwad);
         CheckIWAD(iwad, &gamemode, &haswolflevels);
         D_AddFile(iwad,source_iwad);
         free(iwad);
@@ -353,7 +351,7 @@ static void IdentifyVersion(void)
     else
     {
 
-        I_Error("IdentifyVersion: IWAD not found\n");
+        I_Error("IdentifyVersion: IWAD not found.");
 
     }
 
@@ -363,67 +361,20 @@ static void D_DoomMainSetup(void)
 {
 
     setbuf(stdout, NULL);
-
-    I_Print("M_LoadDefaults: Load system defaults.\n");
     M_LoadDefaults();
     IdentifyVersion();
     G_ReloadDefaults();
     I_CalculateRes(640, 480);
-    I_Print("V_Init: allocate screens.\n");
     V_Init();
-
-    {
-
-        int i;
-
-        for (i = 0; i < MAXLOADFILES; i++)
-        {
-
-            const char *fname = wad_files[i];
-            char *fpath;
-
-            if (!(fname && *fname))
-                continue;
-
-            fpath = I_FindFile(fname, ".wad");
-
-            if (!fpath)
-            {
-
-                I_Print("Failed to autoload %s\n", fname);
-
-            }
-
-            else
-            {
-
-                D_AddFile(fpath, source_auto_load);
-                free(fpath);
-
-            }
-
-        }
-
-    }
-
-    I_Print("D_InitNetGame: Checking for network game.\n");
     D_InitNetGame();
-    I_Print("W_Init: Init WADfiles.\n");
     W_Init();
-    I_Print("M_Init: Init miscellaneous info.\n");
     M_Init();
-    I_Print("R_Init: Init DOOM refresh daemon - ");
     R_Init();
-    I_Print("\nP_Init: Init Playloop state.\n");
     P_Init();
-    I_Print("I_Init: Setting up machine state.\n");
     I_Init();
-    I_Print("S_Init: Setting up sound.\n");
     S_Init(snd_SfxVolume, snd_MusicVolume);
-    I_Print("HU_Init: Setting up heads up display.\n");
     HU_Init();
     I_InitGraphics();
-    I_Print("ST_Init: Init status bar.\n");
     ST_Init();
     G_InitNew(sk_none, 1, 1);
 

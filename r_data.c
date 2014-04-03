@@ -162,8 +162,7 @@ static void R_InitTextures (void)
           if (patch->patch == -1)
             {
 
-              I_Print("\nR_InitTextures: Missing patch %d in texture %.8s",
-                     mpatch->patch), texture->name;
+              I_Error("R_InitTextures: Missing patch %d in texture %.8s", mpatch->patch), texture->name;
               ++errors;
             }
         }
@@ -261,11 +260,8 @@ const lighttable_t* R_ColourMap(int lightlevel, fixed_t spryscale)
 
 void R_InitData(void)
 {
-  I_Print("Textures ");
   R_InitTextures();
-  I_Print("Flats ");
   R_InitFlats();
-  I_Print("Sprites ");
   R_InitSpriteLumps();
   R_InitColormaps();
 }
@@ -303,7 +299,7 @@ int R_SafeTextureNumForName(const char *name, int snum)
   int i = R_CheckTextureNumForName(name);
   if (i == -1) {
     i = 0;
-    I_Print("bad texture '%s' in sidedef %d\n",name,snum);
+    I_Error("R_SafeTextureNumForName: Bad texture '%s' in sidedef %d\n",name,snum);
   }
   return i;
 }

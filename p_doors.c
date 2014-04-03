@@ -501,7 +501,7 @@ int EV_VerticalDoor(line_t *line, mobj_t *thing)
                 else
                 {
 
-                    I_Print("EV_VerticalDoor: unknown thinker.function in thinker corruption emulation");
+                    I_Error("EV_VerticalDoor: Unknown thinker. Function in thinker corruption emulation");
 
                 }
 

@@ -276,7 +276,7 @@ static void WI_drawOnLnode(int n, const char *const c[])
     if (fits && i < 2)
         V_DrawNamePatch(lnodes[wbs->epsd][n].x, lnodes[wbs->epsd][n].y, FB, c[i], CR_DEFAULT, VPT_STRETCH);
     else
-        I_Print("Could not place patch on level %d", n + 1);
+        I_Error("WI_drawOnLnode: Could not place patch on level %d", n + 1);
 
 }
 

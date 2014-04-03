@@ -144,45 +144,17 @@ static void P_GetNodesVersion(int lumpnum, int gl_lumpnum)
             data = W_CacheLumpNum(gl_lumpnum + ML_GL_SEGS);
 
             if (*(const int *)data == gNd3)
-            {
-
                 nodesVersion = gNd3;
-
-                I_Print("P_GetNodesVersion: found version 3 nodes\n");
-                I_Error("P_GetNodesVersion: version 3 nodes not supported\n");
-
-            }
-            
             else
-            {
-
                 nodesVersion = gNd2;
-
-                I_Print("P_GetNodesVersion: found version 2 nodes\n");
-
-            }
 
         }
         
         if (*(const int *)data == gNd4)
-        {
-
             nodesVersion = gNd4;
 
-            I_Print("P_GetNodesVersion: found version 4 nodes\n");
-            I_Error("P_GetNodesVersion: version 4 nodes not supported\n");
-
-        }
-
         if (*(const int *)data == gNd5)
-        {
-
             nodesVersion = gNd5;
-
-            I_Print("P_GetNodesVersion: found version 5 nodes\n");
-            I_Error("P_GetNodesVersion: version 5 nodes not supported\n");
-
-        }
 
     }
     
@@ -190,8 +162,6 @@ static void P_GetNodesVersion(int lumpnum, int gl_lumpnum)
     {
 
         nodesVersion = 0;
-
-        I_Print("P_GetNodesVersion: using normal BSP nodes\n");
 
         if (P_CheckForZDoomNodes(lumpnum, gl_lumpnum))
             I_Error("P_GetNodesVersion: ZDoom nodes not supported yet");
@@ -372,7 +342,7 @@ static void P_LoadSegs(int lump)
 
             li->frontsector = 0;
 
-            I_Print("P_LoadSegs: front of seg %i has no sidedef\n", i);
+            I_Error("P_LoadSegs: front of seg %i has no sidedef", i);
 
         }
 
@@ -539,9 +509,7 @@ static void P_LoadNodes(int lump)
     if ((!data) || (!numnodes))
     {
 
-        if (numsubsectors == 1)
-            I_Print("P_LoadNodes: trivial map (no nodes, one subsector)\n");
-        else
+        if (numsubsectors != 1)
             I_Error("P_LoadNodes: no nodes in level");
 
     }
@@ -684,7 +652,7 @@ static void P_LoadLineDefs(int lump)
 
                     ld->sidenum[j] = NO_INDEX;
 
-                    I_Print("P_LoadLineDefs: linedef %d has out-of-range sidedef number\n", numlines - i - 1);
+                    I_Error("P_LoadLineDefs: linedef %d has out-of-range sidedef number", numlines - i - 1);
 
                 }
 
@@ -695,7 +663,7 @@ static void P_LoadLineDefs(int lump)
 
                 ld->sidenum[0] = 0;
 
-                I_Print("P_LoadLineDefs: linedef %d missing first sidedef\n", numlines - i - 1);
+                I_Error("P_LoadLineDefs: linedef %d missing first sidedef", numlines - i - 1);
 
             }
         
@@ -704,7 +672,7 @@ static void P_LoadLineDefs(int lump)
 
                 ld->flags &= ~ML_TWOSIDED;
 
-                I_Print("P_LoadLineDefs: linedef %d has two-sided flag set, but no second sidedef\n", numlines - i - 1);
+                I_Error("P_LoadLineDefs: linedef %d has two-sided flag set, but no second sidedef", numlines - i - 1);
 
             }
 
@@ -785,7 +753,7 @@ static void P_LoadSideDefs2(int lump)
             if (sector_num >= numsectors)
             {
 
-                I_Print("P_LoadSideDefs2: sidedef %i has out-of-range sector num %u\n", i, sector_num);
+                I_Error("P_LoadSideDefs2: sidedef %i has out-of-range sector num %u", i, sector_num);
                 sector_num = 0;
 
             }
@@ -1170,7 +1138,7 @@ static void P_LoadReject(int lumpnum, int totallines)
 
     rejectlump = -1;
 
-    I_Print("P_LoadReject: REJECT too short (%u<%u) - padded\n", length, required);
+    I_Error("P_LoadReject: REJECT too short (%u<%u) - padded", length, required);
 
 }
 
@@ -1215,7 +1183,7 @@ static int P_GroupLines(void)
         }
 
         if (subsectors[i].sector == NULL)
-            I_Error("P_GroupLines: Subsector a part of no sector!\n");
+            I_Error("P_GroupLines: Subsector a part of no sector!");
 
     }
 
@@ -1442,7 +1410,7 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
 
     for (i = 0; i < MAXPLAYERS; i++)
         if (playeringame[i] && !players[i].mo)
-            I_Error("P_SetupLevel: missing player %d start\n", i + 1);
+            I_Error("P_SetupLevel: missing player %d start", i + 1);
 
     if (gamemode == commercial)
         P_SpawnBrainTargets();

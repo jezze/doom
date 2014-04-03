@@ -302,20 +302,13 @@ static void R_ExecuteSetViewSize(int setblocks)
 void R_Init(void)
 {
 
-    I_Print("\nR_LoadTrigTables: ");
     R_LoadTrigTables();
-    I_Print("\nR_InitData: ");
     R_InitData();
     R_ExecuteSetViewSize(10);
-    I_Print("\nR_Init: R_InitPlanes ");
     R_InitPlanes();
-    I_Print("R_InitLightTables ");
     R_InitLightTables();
-    I_Print("R_InitSkyMap ");
     R_InitSkyMap();
-    I_Print("R_InitTranslationsTables ");
     R_InitTranslationTables();
-    I_Print("R_InitPatches ");
     R_InitPatches();
 
 }

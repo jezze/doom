@@ -105,7 +105,6 @@ static void W_AddFile(wadfile_info_t *wadfile)
 
     }
 
-    I_Print(" adding %s\n", wadfile->name);
     startlump = numlumps;
 
     if (strlen(wadfile->name) <= 4 || (strcasecmp(wadfile->name + strlen(wadfile->name) - 4, ".wad") && strcasecmp(wadfile->name + strlen(wadfile->name) - 4,".gwa")))
