@@ -1,8 +1,6 @@
 #ifndef __P_MAPUTL__
 #define __P_MAPUTL__
 
-#include "r_defs.h"
-
 #define MAPBLOCKUNITS   128
 #define MAPBLOCKSIZE    (MAPBLOCKUNITS*FRACUNIT)
 #define MAPBLOCKSHIFT   (FRACBITS+7)

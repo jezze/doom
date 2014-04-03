@@ -7,9 +7,9 @@
 #include "r_draw.h"
 #include "w_wad.h"
 #include "v_video.h"
-#include "i_video.h"
 #include "r_filter.h"
 #include "i_system.h"
+#include "i_video.h"
 
 screeninfo_t screens[NUM_SCREENS];
 

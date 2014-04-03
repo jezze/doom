@@ -1,8 +1,6 @@
 #ifndef __P_ENEMY__
 #define __P_ENEMY__
 
-#include "p_mobj.h"
-
 void P_NoiseAlert (mobj_t *target, mobj_t *emmiter);
 void P_SpawnBrainTargets(void);
 

@@ -14,6 +14,7 @@
 #include "doomtype.h"
 #include "d_main.h"
 #include "m_fixed.h"
+#include "sounds.h"
 #include "i_system.h"
 #include "i_video.h"
 #include "i_sound.h"

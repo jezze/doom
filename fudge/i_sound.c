@@ -22,7 +22,7 @@ void I_SetChannels(void)
 
 }
 
-int I_GetSfxLumpNum(sfxinfo_t *sfx)
+int I_GetSfxLumpNum(struct sfxinfo *sfx)
 {
 
     return 0;
@@ -100,7 +100,7 @@ int I_RegisterSong(const void *data, size_t len)
 
 }
 
-int I_RegisterMusic(const char *filename, musicinfo_t *song )
+int I_RegisterMusic(const char *filename, struct musicinfo *song)
 {
 
     return 1;

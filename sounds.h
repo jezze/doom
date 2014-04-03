@@ -1,16 +1,13 @@
 #ifndef __SOUNDS__
 #define __SOUNDS__
 
-struct sfxinfo_struct;
-typedef struct sfxinfo_struct sfxinfo_t;
-
-struct sfxinfo_struct
+struct sfxinfo
 {
 
     const char *name;
     int singularity;
     int priority;
-    sfxinfo_t *link;
+    struct sfxinfo *link;
     int pitch;
     int volume;
     void *data;
@@ -19,7 +16,7 @@ struct sfxinfo_struct
 
 };
 
-typedef struct
+struct musicinfo
 {
 
     const char *name;
@@ -27,10 +24,7 @@ typedef struct
     const void *data;
     int handle;
 
-} musicinfo_t;
-
-extern sfxinfo_t S_sfx[];
-extern musicinfo_t S_music[];
+};
 
 typedef enum
 {
@@ -222,5 +216,8 @@ typedef enum
     NUMSFX
 
 } sfxenum_t;
+
+extern struct sfxinfo S_sfx[];
+extern struct musicinfo S_music[];
 
 #endif

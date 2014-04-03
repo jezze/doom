@@ -12,9 +12,6 @@
 #include "g_game.h"
 #include "m_menu.h"
 #include "w_wad.h"
-#include "i_system.h"
-#include "i_sound.h"
-#include "i_video.h"
 #include "v_video.h"
 #include "hu_stuff.h"
 #include "st_stuff.h"
@@ -26,6 +23,9 @@
 #include "r_draw.h"
 #include "r_main.h"
 #include "z_zone.h"
+#include "i_system.h"
+#include "i_sound.h"
+#include "i_video.h"
 
 #define MAX_KEY                         65536
 #define MAX_MOUSEB                      2

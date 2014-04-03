@@ -7,7 +7,6 @@
 #include "p_pspr.h"
 #include "doomstat.h"
 #include "hu_stuff.h"
-#include "i_video.h"
 #include "st_stuff.h"
 #include "w_wad.h"
 #include "s_sound.h"
@@ -16,6 +15,8 @@
 #include "g_game.h"
 #include "r_main.h"
 #include "r_draw.h"
+#include "v_video.h"
+#include "i_video.h"
 
 const char *const mapnames[] = {
     HUSTR_E1M1,

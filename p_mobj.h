@@ -3,7 +3,6 @@
 
 #include "tables.h"
 #include "m_fixed.h"
-#include "doomtype.h"
 #include "info.h"
 
 #define NF_SUBSECTOR                    0x8000

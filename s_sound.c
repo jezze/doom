@@ -4,6 +4,7 @@
 #include "d_think.h"
 #include "p_pspr.h"
 #include "doomstat.h"
+#include "sounds.h"
 #include "s_sound.h"
 #include "i_sound.h"
 #include "i_system.h"
@@ -11,6 +12,7 @@
 #include "r_main.h"
 #include "m_random.h"
 #include "w_wad.h"
+#include "doomtype.h"
 
 #define S_CLIPPING_DIST                 (1200 << FRACBITS)
 #define S_CLOSE_DIST                    (160 << FRACBITS)
@@ -24,7 +26,7 @@ const char *S_music_files[NUMMUSIC];
 
 typedef struct
 {
-  sfxinfo_t *sfxinfo;
+  struct sfxinfo *sfxinfo;
   void *origin;
   int handle;
   int is_pickup;
@@ -34,12 +36,12 @@ static channel_t *channels;
 int snd_SfxVolume = 15;
 int snd_MusicVolume = 15;
 static boolean mus_paused;
-static musicinfo_t *mus_playing;
+static struct musicinfo *mus_playing;
 int default_numChannels = 8;
 int numChannels;
 void S_StopChannel(int cnum);
 int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, int *vol, int *sep, int *pitch);
-static int S_getChannel(void *origin, sfxinfo_t *sfxinfo, int is_pickup);
+static int S_getChannel(void *origin, struct sfxinfo *sfxinfo, int is_pickup);
 
 void S_Init(int sfxVolume, int musicVolume)
 {
@@ -142,7 +144,7 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
 {
 
     int sep, pitch, priority, cnum, is_pickup;
-    sfxinfo_t *sfx;
+    struct sfxinfo *sfx;
     mobj_t *origin = (mobj_t *)origin_p;
 
     if (!snd_card)
@@ -325,7 +327,7 @@ void S_UpdateSounds(void *listener_p)
     for (cnum = 0; cnum < numChannels; cnum++)
     {
 
-        sfxinfo_t *sfx;
+        struct sfxinfo *sfx;
         channel_t *c = &channels[cnum];
 
         if ((sfx = c->sfxinfo))
@@ -426,7 +428,7 @@ void S_StartMusic(int m_id)
 void S_ChangeMusic(int musicnum, int looping)
 {
 
-    musicinfo_t *music;
+    struct musicinfo *music;
     int music_file_failed;
     char* music_filename;
 
@@ -588,7 +590,7 @@ int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, int *vol, int *sep, in
 
 }
 
-static int S_getChannel(void *origin, sfxinfo_t *sfxinfo, int is_pickup)
+static int S_getChannel(void *origin, struct sfxinfo *sfxinfo, int is_pickup)
 {
 
     int cnum;

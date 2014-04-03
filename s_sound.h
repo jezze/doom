@@ -1,7 +1,7 @@
 #ifndef __S_SOUND__
 #define __S_SOUND__
 
-#define PICKUP_SOUND (0x8000)
+#define PICKUP_SOUND                    0x8000
 
 void S_Init(int sfxVolume, int musicVolume);
 void S_Stop(void);

@@ -1,8 +1,6 @@
 #ifndef __M_RANDOM__
 #define __M_RANDOM__
 
-#include "doomtype.h"
-
 typedef enum
 {
 

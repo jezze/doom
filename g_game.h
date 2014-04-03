@@ -1,8 +1,6 @@
 #ifndef __G_GAME__
 #define __G_GAME__
 
-#define GAME_OPTION_SIZE                64
-
 boolean G_Responder(event_t *ev);
 void G_InitNew(skill_t skill, int episode, int map);
 void G_DeferedInitNew(skill_t skill, int episode, int map);

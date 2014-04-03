@@ -1,9 +1,6 @@
 #ifndef __I_VIDEO__
 #define __I_VIDEO__
 
-#include "doomtype.h"
-#include "v_video.h"
-
 void I_PreInitGraphics(void);
 void I_CalculateRes(unsigned int width, unsigned int height);
 void I_InitGraphics(void);

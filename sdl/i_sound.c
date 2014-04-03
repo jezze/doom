@@ -7,16 +7,17 @@
 #include "d_think.h"
 #include "m_fixed.h"
 #include "z_zone.h"
-#include "i_sound.h"
 #include "m_misc.h"
 #include "w_wad.h"
 #include "i_system.h"
 #include "s_sound.h"
+#include "sounds.h"
 #include "doomdef.h"
 #include "p_pspr.h"
 #include "doomstat.h"
 #include "doomtype.h"
 #include "d_main.h"
+#include "i_sound.h"
 
 #define MAX_CHANNELS                    32
 
@@ -131,7 +132,7 @@ void I_SetChannels(void)
 
 }
 
-int I_GetSfxLumpNum(sfxinfo_t *sfx)
+int I_GetSfxLumpNum(struct sfxinfo *sfx)
 {
 
     char namebuf[9];
@@ -329,7 +330,7 @@ int I_RegisterSong(const void *data, size_t len)
 
 }
 
-int I_RegisterMusic(const char *filename, musicinfo_t *song )
+int I_RegisterMusic(const char *filename, struct musicinfo *song)
 {
 
     return 1;

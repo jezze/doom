@@ -1,8 +1,6 @@
 #ifndef __M_MENU__
 #define __M_MENU__
 
-#include "d_event.h"
-
 void M_StartControlPanel(void);
 boolean M_Responder(event_t *ev);
 void M_Ticker(void);

@@ -1,7 +1,7 @@
 #include "doomtype.h"
 #include "sounds.h"
 
-musicinfo_t S_music[] = {
+struct musicinfo S_music[] = {
     {0},
     {"e1m1", 0},
     {"e1m2", 0},
@@ -72,7 +72,7 @@ musicinfo_t S_music[] = {
     {"dm2int", 0}
 };
 
-sfxinfo_t S_sfx[] = {
+struct sfxinfo S_sfx[] = {
     {"none", false,  0, 0, -1, -1, 0},
     {"pistol", false, 64, 0, -1, -1, 0},
     {"shotgn", false, 64, 0, -1, -1, 0},

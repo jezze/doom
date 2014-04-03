@@ -1,8 +1,6 @@
 #ifndef __P_USER__
 #define __P_USER__
 
-#include "d_player.h"
-
 void P_PlayerThink(player_t *player);
 void P_CalcHeight(player_t *player);
 void P_DeathThink(player_t *player);

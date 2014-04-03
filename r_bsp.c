@@ -9,9 +9,9 @@
 #include "r_plane.h"
 #include "r_things.h"
 #include "r_bsp.h"
-#include "i_video.h"
 #include "v_video.h"
 #include "p_map.h"
+#include "i_video.h"
 
 seg_t     *curline;
 side_t    *sidedef;

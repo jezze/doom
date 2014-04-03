@@ -1,10 +1,6 @@
 #ifndef __V_VIDEO__
 #define __V_VIDEO__
 
-#include "doomtype.h"
-#include "doomdef.h"
-#include "r_data.h"
-
 #define CR_DEFAULT                      CR_RED
 #define NUM_SCREENS                     6
 
@@ -54,19 +50,7 @@ typedef struct
 
 } fline_t;
 
-typedef enum
-{
-
-    VID_MODE8,
-    VID_MODEMAX
-
-} video_mode_t;
-
 extern screeninfo_t screens[NUM_SCREENS];
-
-#define VID_NUMCOLORWEIGHTS 64
-#define VID_COLORWEIGHTMASK (VID_NUMCOLORWEIGHTS-1)
-#define VID_COLORWEIGHTBITS 6
 
 void V_InitMode();
 void V_Init(void);

@@ -1,8 +1,6 @@
 #ifndef __P_SETUP__
 #define __P_SETUP__
 
-#include "p_mobj.h"
-
 extern const byte *rejectmatrix;
 extern long *blockmaplump;
 extern long *blockmap;

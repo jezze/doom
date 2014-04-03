@@ -6,6 +6,7 @@
 #include "p_pspr.h"
 #include "doomstat.h"
 #include "w_wad.h"
+#include "r_defs.h"
 #include "r_draw.h"
 #include "r_main.h"
 #include "r_sky.h"

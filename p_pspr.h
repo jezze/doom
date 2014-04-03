@@ -3,11 +3,10 @@
 
 #include "m_fixed.h"
 #include "tables.h"
-
 #include "info.h"
 
-#define FF_FULLBRIGHT   0x8000
-#define FF_FRAMEMASK    0x7fff
+#define FF_FULLBRIGHT                   0x8000
+#define FF_FRAMEMASK                    0x7fff
 
 struct player_s;
 

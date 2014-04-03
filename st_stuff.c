@@ -5,7 +5,6 @@
 #include "p_pspr.h"
 #include "doomstat.h"
 #include "m_random.h"
-#include "i_video.h"
 #include "w_wad.h"
 #include "st_stuff.h"
 #include "r_main.h"
@@ -16,6 +15,7 @@
 #include "r_defs.h"
 #include "r_draw.h"
 #include "v_video.h"
+#include "i_video.h"
 
 #define BG 4
 #define FG 0

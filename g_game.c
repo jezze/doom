@@ -23,8 +23,6 @@
 #include "r_main.h"
 #include "r_draw.h"
 #include "p_map.h"
-#include "s_sound.h"
-#include "sounds.h"
 #include "r_data.h"
 #include "r_sky.h"
 #include "p_inter.h"

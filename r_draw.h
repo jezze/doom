@@ -1,8 +1,6 @@
 #ifndef __R_DRAW__
 #define __R_DRAW__
 
-#include "r_defs.h"
-
 enum column_pipeline_e
 {
 
