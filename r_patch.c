@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include "doomdef.h"
 #include "d_think.h"
 #include "z_zone.h"
 #include "doomstat.h"

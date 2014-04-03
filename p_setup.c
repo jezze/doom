@@ -1,4 +1,5 @@
 #include <math.h>
+#include "doomdef.h"
 #include "d_think.h"
 #include "doomstat.h"
 #include "g_game.h"

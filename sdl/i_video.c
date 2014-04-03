@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <SDL.h>
+#include "doomdef.h"
 #include "d_think.h"
 #include "doomstat.h"
 #include "doomdef.h"
