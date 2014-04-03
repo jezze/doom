@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "doomdef.h"
 #include "d_think.h"
 #include "doomstat.h"

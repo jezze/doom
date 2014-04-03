@@ -1,6 +1,9 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include "d_think.h"
 #include "doomdef.h"
 #include "doomtype.h"

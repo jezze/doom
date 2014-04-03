@@ -1,6 +1,7 @@
-#include <stdio.h>
-#include <stdarg.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
 #include <fcntl.h>
 #include "doomdef.h"
 #include "d_think.h"

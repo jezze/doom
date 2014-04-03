@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "d_think.h"
 #include "doomdef.h"
 #include "sounds.h"

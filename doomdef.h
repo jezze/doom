@@ -5,12 +5,6 @@
 #define __attribute__(x)
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <limits.h>
-
 #define MAX_SCREENWIDTH  2048
 #define MAX_SCREENHEIGHT 1536
 #define MAXPLAYERS       4
