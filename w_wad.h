@@ -78,7 +78,6 @@ const void *W_LockLumpNum(int lump);
 void W_UnlockLumpNum(int lump);
 unsigned W_LumpNameHash(const char *s);
 void W_Init(void);
-void W_InitCache(void);
 
 #define W_CacheLumpName(name) W_CacheLumpNum(W_GetNumForName(name))
 #define W_UnlockLumpName(name) W_UnlockLumpNum(W_GetNumForName(name))

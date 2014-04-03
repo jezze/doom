@@ -4,11 +4,56 @@
 #include "doomtype.h"
 #include "i_system.h"
 #include "w_wad.h"
+#include "z_zone.h"
 
 lumpinfo_t *lumpinfo;
 int numlumps;
 wadfile_info_t *wadfiles = NULL;
 size_t numwadfiles = 0;
+
+static struct
+{
+
+    void *cache;
+    unsigned int locks;
+
+} *cachelump;
+
+const void *W_LockLumpNum(int lump)
+{
+
+    return W_CacheLumpNum(lump);
+
+}
+
+void W_UnlockLumpNum(int lump)
+{
+
+    const int unlocks = 1;
+
+    cachelump[lump].locks -= unlocks;
+
+    if (unlocks && !cachelump[lump].locks)
+        Z_ChangeTag(cachelump[lump].cache, PU_CACHE);
+
+}
+
+const void *W_CacheLumpNum(int lump)
+{
+
+    const int locks = 1;
+
+    if (!cachelump[lump].cache)
+        W_ReadLump(lump, Z_Malloc(W_LumpLength(lump), PU_CACHE, &cachelump[lump].cache));
+
+    if (!cachelump[lump].locks && locks)
+        Z_ChangeTag(cachelump[lump].cache, PU_STATIC);
+
+    cachelump[lump].locks += locks;
+
+    return cachelump[lump].cache;
+
+}
 
 static void ExtractFileBase(const char *path, char *dest)
 {
@@ -264,8 +309,11 @@ void W_Init(void)
     W_CoalesceMarkedResource("F_START", "F_END", ns_flats);
     W_CoalesceMarkedResource("B_START", "B_END", ns_prboom);
     W_HashLumps();
-    I_Print("W_InitCache\n");
-    W_InitCache();
+
+    cachelump = calloc(sizeof *cachelump, numlumps);
+
+    if (!cachelump)
+        I_Error ("W_Init: Couldn't allocate lumpcache");
 
 }
 
