@@ -10,8 +10,12 @@
 #include "s_sound.h"
 #include "sounds.h"
 #include "d_englsh.h"
+#include "r_defs.h"
 #include "r_draw.h"
+#include "v_video.h"
 
+#define BG 4
+#define FG 0
 #define STARTREDPALS                    1
 #define STARTBONUSPALS                  9
 #define NUMREDPALS                      8
@@ -97,6 +101,54 @@
 #define ST_MAXAMMO3WIDTH                ST_MAXAMMO0WIDTH
 #define ST_MAXAMMO3X                    (ST_X + 314)
 #define ST_MAXAMMO3Y                    (ST_Y + 17)
+
+typedef struct
+{
+
+    int x;
+    int y;
+    int width;
+    int oldnum;
+    int *num;
+    boolean *on;
+    const patchnum_t *p;
+    int data;
+
+} st_number_t;
+
+typedef struct
+{
+
+    st_number_t n;
+    const patchnum_t *p;
+
+} st_percent_t;
+
+typedef struct
+{
+
+    int x;
+    int y;
+    int oldinum;
+    int *inum;
+    boolean *on;
+    const patchnum_t *p;
+    int data;
+
+} st_multicon_t;
+
+typedef struct
+{
+
+    int x;
+    int y;
+    boolean oldval;
+    boolean *val;
+    boolean *on;
+    const patchnum_t *p;
+    int data;
+
+} st_binicon_t;
 
 static player_t *plyr;
 static unsigned int st_clock;

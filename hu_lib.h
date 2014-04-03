@@ -4,8 +4,6 @@
 #include "r_defs.h"
 #include "v_video.h"
 
-#define BG                              1
-#define FG                              0
 #define HU_MAXLINES                     4
 #define HU_MAXLINELENGTH                80
 #define HU_REFRESHSPACING               8

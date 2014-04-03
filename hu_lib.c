@@ -8,8 +8,10 @@
 #include "r_main.h"
 #include "r_draw.h"
 
-#define BASE_WIDTH 320
-#define noterased viewwindowx
+#define BG                              1
+#define FG                              0
+#define BASE_WIDTH                      320
+#define noterased                       viewwindowx
 
 extern int key_backspace;
 extern int key_enter;
