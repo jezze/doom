@@ -1,8 +1,6 @@
 #ifndef __R_PLANE__
 #define __R_PLANE__
 
-#include "r_data.h"
-
 #define PL_SKYFLAT                      0x80000000
 
 extern int *lastopening;
