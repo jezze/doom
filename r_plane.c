@@ -9,11 +9,11 @@
 #include "r_main.h"
 #include "r_draw.h"
 #include "r_things.h"
-#include "r_sky.h"
 #include "r_plane.h"
 #include "v_video.h"
 
-#define MAXVISPLANES 128
+#define MAXVISPLANES                    128
+#define ANGLETOSKYSHIFT                 22
 
 static visplane_t *visplanes[MAXVISPLANES];
 static visplane_t *freetail;

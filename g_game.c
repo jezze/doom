@@ -24,12 +24,13 @@
 #include "r_draw.h"
 #include "p_map.h"
 #include "r_data.h"
-#include "r_sky.h"
 #include "p_inter.h"
 #include "g_game.h"
 #include "i_system.h"
 #include "z_zone.h"
 #include "z_bmalloc.h"
+
+#define SKYFLATNAME                     "F_SKY1"
 
 static int ticdup = 1;
 gameaction_t gameaction;

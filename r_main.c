@@ -12,7 +12,6 @@
 #include "r_plane.h"
 #include "r_bsp.h"
 #include "r_draw.h"
-#include "r_sky.h"
 #include "v_video.h"
 #include "st_stuff.h"
 #include "i_system.h"
@@ -47,6 +46,16 @@ const lighttable_t **colormaps;
 int extralight;
 int rendered_visplanes, rendered_segs, rendered_vissprites;
 boolean rendering_stats;
+int skyflatnum;
+int skytexture;
+int skytexturemid;
+
+void R_InitSkyMap(void)
+{
+
+    skytexturemid = 100 * FRACUNIT;
+
+}
 
 void R_InterpolateView(player_t *player, fixed_t frac)
 {

@@ -9,7 +9,6 @@
 #include "r_defs.h"
 #include "r_draw.h"
 #include "r_main.h"
-#include "r_sky.h"
 #include "i_system.h"
 #include "r_bsp.h"
 #include "r_things.h"
