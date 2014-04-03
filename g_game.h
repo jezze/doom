@@ -62,5 +62,8 @@ extern int defaultskill;
 extern boolean haswolflevels;
 extern int pars[4][10];
 extern int cpars[32];
+extern int mousebfire;
+extern int mousebstrafe;
+extern int mousebforward;
 
 #endif

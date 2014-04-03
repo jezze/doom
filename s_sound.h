@@ -18,6 +18,7 @@ void S_UpdateSounds(void *listener);
 void S_SetMusicVolume(int volume);
 void S_SetSfxVolume(int volume);
 
+extern const char* S_music_files[];
 extern int numChannels;
 
 #endif
