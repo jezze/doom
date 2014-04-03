@@ -1300,7 +1300,7 @@ static void P_RemoveSlimeTrails(void)
         const line_t *l;
 
         if (segs[i].miniseg == true)
-            return;
+            goto error;
 
         l = segs[i].linedef;
 
@@ -1338,6 +1338,7 @@ static void P_RemoveSlimeTrails(void)
 
     }
 
+error:
     free(hit);
 
 }
