@@ -1,4 +1,5 @@
 #include "d_think.h"
+#include "doomdef.h"
 #include "doomstat.h"
 #include "m_random.h"
 #include "w_wad.h"

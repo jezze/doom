@@ -218,39 +218,10 @@ void (Z_ChangeTag)(void *ptr, int tag)
 
 }
 
-void *(Z_Realloc)(void *ptr, size_t n, int tag, void **user)
-{
-
-    void *p = (Z_Malloc)(n, tag, user);
-
-    if (ptr)
-    {
-
-        memblock_t *block = (memblock_t *)((char *) ptr - HEADER_SIZE);
-
-        memcpy(p, ptr, n <= block->size ? n : block->size);
-        (Z_Free)(ptr);
-
-        if (user)
-            *user = p;
-
-    }
-
-    return p;
-
-}
-
 void *(Z_Calloc)(size_t n1, size_t n2, int tag, void **user)
 {
 
     return (n1 *= n2) ? memset((Z_Malloc)(n1, tag, user), 0, n1) : NULL;
-
-}
-
-char *(Z_Strdup)(const char *s, int tag, void **user)
-{
-
-    return strcpy((Z_Malloc)(strlen(s) + 1, tag, user), s);
 
 }
 
