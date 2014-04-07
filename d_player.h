@@ -1,7 +1,6 @@
 #ifndef __D_PLAYER__
 #define __D_PLAYER__
 
-#include "d_items.h"
 #include "p_mobj.h"
 #include "d_main.h"
 

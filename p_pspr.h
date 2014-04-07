@@ -29,6 +29,19 @@ typedef struct
 
 } pspdef_t;
 
+typedef struct
+{
+
+    ammotype_t  ammo;
+    int upstate;
+    int downstate;
+    int readystate;
+    int atkstate;
+    int flashstate;
+
+} weaponinfo_t;
+
+extern weaponinfo_t weaponinfo[NUMWEAPONS];
 extern int weapon_preferences[2][NUMWEAPONS + 1];
 
 int P_WeaponPreferred(int w1, int w2);
