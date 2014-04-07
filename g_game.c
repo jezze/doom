@@ -50,7 +50,6 @@ wbstartstruct_t wminfo;
 boolean haswolflevels = false;
 int autorun = false;
 int totalleveltimes;
-int longtics;
 int key_right;
 int key_left;
 int key_up;
@@ -118,7 +117,7 @@ static inline char fudgef(char b)
 
     static int c;
 
-    if (!b || longtics)
+    if (!b)
         return b;
         
     if (++c & 0x1f)
@@ -136,7 +135,7 @@ static inline char fudgef(char b)
 static inline short fudgea(short b)
 {
 
-    if (!b || !longtics)
+    if (!b)
         return b;
 
     b |= 1;
