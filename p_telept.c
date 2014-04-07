@@ -10,7 +10,6 @@
 #include "r_main.h"
 #include "p_tick.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "p_user.h"
 
 static mobj_t* P_TeleportDestination(line_t* line)

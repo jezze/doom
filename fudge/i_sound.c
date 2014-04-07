@@ -22,13 +22,6 @@ void I_SetChannels(void)
 
 }
 
-int I_GetSfxLumpNum(struct sfxinfo *sfx)
-{
-
-    return 0;
-
-}
-
 int I_StartSound(int id, int channel, int vol, int sep, int pitch, int priority)
 {
 

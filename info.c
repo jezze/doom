@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include "d_think.h"
 #include "doomdef.h"
-#include "sounds.h"
 #include "m_fixed.h"
+#include "s_sound.h"
 #include "p_mobj.h"
 #include "p_enemy.h"
 #include "p_pspr.h"

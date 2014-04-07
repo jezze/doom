@@ -4,19 +4,12 @@
 #include "d_think.h"
 #include "p_pspr.h"
 #include "doomstat.h"
-#include "doomtype.h"
 #include "r_data.h"
 #include "r_draw.h"
 #include "v_video.h"
-#include "d_main.h"
-#include "d_event.h"
-#include "i_video.h"
-#include "z_zone.h"
-#include "s_sound.h"
-#include "sounds.h"
-#include "w_wad.h"
 #include "st_stuff.h"
 #include "i_system.h"
+#include "i_video.h"
 
 #define NO_PALETTE_CHANGE 1000
 
@@ -152,7 +145,6 @@ static void postevent(SDL_Event *Event)
         break;
 
     case SDL_QUIT:
-        S_StartSound(NULL, sfx_swtchn);
         I_Exit(0);
 
     default:

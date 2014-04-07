@@ -10,7 +10,6 @@
 #include "r_main.h"
 #include "m_cheat.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "d_englsh.h"
 #include "r_defs.h"
 #include "r_draw.h"

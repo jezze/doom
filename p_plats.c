@@ -9,7 +9,6 @@
 #include "p_spec.h"
 #include "p_tick.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "z_zone.h"
 
 platlist_t *activeplats;

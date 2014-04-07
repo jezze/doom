@@ -9,7 +9,6 @@
 #include "p_maputl.h"
 #include "p_map.h"
 #include "p_tick.h"
-#include "sounds.h"
 #include "st_stuff.h"
 #include "hu_stuff.h"
 #include "s_sound.h"

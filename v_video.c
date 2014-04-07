@@ -5,9 +5,8 @@
 #include "p_pspr.h"
 #include "r_main.h"
 #include "r_draw.h"
-#include "w_wad.h"
-#include "v_video.h"
 #include "r_filter.h"
+#include "v_video.h"
 #include "i_system.h"
 #include "i_video.h"
 

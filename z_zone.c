@@ -1,14 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
-#include "doomdef.h"
-#include "d_think.h"
-#include "p_pspr.h"
+#include "m_fixed.h"
 #include "z_zone.h"
-#include "doomstat.h"
-#include "v_video.h"
-#include "g_game.h"
 #include "i_system.h"
 
 #define CACHE_ALIGN                     32
@@ -79,7 +73,7 @@ void *(Z_Malloc)(size_t size, int tag, void **user)
     {
 
         if (!blockbytag[PU_CACHE])
-            I_Error ("Z_Malloc: Failure trying to allocate %lu bytes", (unsigned long)size);
+            I_Error("Z_Malloc: Failure trying to allocate %lu bytes", (unsigned long)size);
 
         Z_FreeTags(PU_CACHE,PU_CACHE);
 

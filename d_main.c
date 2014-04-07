@@ -10,7 +10,6 @@
 #include "doomtype.h"
 #include "doomstat.h"
 #include "d_englsh.h"
-#include "sounds.h"
 #include "z_zone.h"
 #include "w_wad.h"
 #include "s_sound.h"

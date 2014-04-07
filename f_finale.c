@@ -6,15 +6,11 @@
 #include "d_think.h"
 #include "p_pspr.h"
 #include "doomstat.h"
-#include "d_event.h"
-#include "v_video.h"
-#include "w_wad.h"
-#include "s_sound.h"
-#include "sounds.h"
-#include "d_englsh.h"
 #include "r_state.h"
-#include "f_finale.h"
+#include "s_sound.h"
+#include "d_englsh.h"
 #include "wi_stuff.h"
+#include "v_video.h"
 #include "i_video.h"
 
 #define TEXTSPEED                       3

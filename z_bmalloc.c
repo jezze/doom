@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include "doomtype.h"
 #include "m_fixed.h"
 #include "z_zone.h"
 #include "z_bmalloc.h"

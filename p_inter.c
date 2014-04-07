@@ -8,7 +8,6 @@
 #include "m_random.h"
 #include "r_main.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "p_tick.h"
 #include "p_inter.h"
 #include "p_enemy.h"

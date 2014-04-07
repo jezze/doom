@@ -5,16 +5,13 @@
 #include "d_think.h"
 #include "p_pspr.h"
 #include "doomstat.h"
-#include "m_random.h"
-#include "w_wad.h"
 #include "g_game.h"
+#include "m_random.h"
 #include "r_main.h"
 #include "v_video.h"
 #include "wi_stuff.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "i_system.h"
-#include "r_draw.h"
 
 #define NUMEPISODES                     4
 #define NUMMAPS                         9

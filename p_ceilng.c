@@ -8,7 +8,6 @@
 #include "p_spec.h"
 #include "p_tick.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "z_zone.h"
 
 static ceilinglist_t *activeceilings;

@@ -3,16 +3,13 @@
 #include "doomdef.h"
 #include "d_think.h"
 #include "p_pspr.h"
-#include "doomstat.h"
-#include "w_wad.h"
 #include "r_main.h"
 #include "r_bsp.h"
 #include "r_segs.h"
 #include "r_draw.h"
 #include "r_things.h"
-#include "v_video.h"
-#include "i_system.h"
 #include "z_zone.h"
+#include "i_system.h"
 
 #define MINZ        (FRACUNIT*4)
 #define BASEYCENTER 100

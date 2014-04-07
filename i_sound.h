@@ -3,7 +3,6 @@
 
 void I_InitSound(void);
 void I_SetChannels(void);
-int I_GetSfxLumpNum(struct sfxinfo *sfxinfo);
 int I_StartSound(int id, int channel, int vol, int sep, int pitch, int priority);
 void I_StopSound(int handle);
 boolean I_SoundIsPlaying(int handle);

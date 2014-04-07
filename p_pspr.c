@@ -10,7 +10,6 @@
 #include "p_enemy.h"
 #include "m_random.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "d_event.h"
 
 #define LOWERSPEED                      (FRACUNIT * 6)
