@@ -837,7 +837,7 @@ static void ST_initData(void)
 
     int i;
 
-    plyr = &players[displayplayer];
+    plyr = &players[consoleplayer];
     st_clock = 0;
     st_statusbaron = true;
     st_faceindex = 0;

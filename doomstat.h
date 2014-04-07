@@ -14,7 +14,6 @@ extern int snd_SfxVolume;
 extern int snd_MusicVolume;
 extern boolean menuactive;
 extern int consoleplayer;
-extern int displayplayer;
 extern int totalkills, totallive;
 extern int totalitems;
 extern int totalsecret;

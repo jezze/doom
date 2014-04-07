@@ -704,7 +704,7 @@ void HU_Start(void)
     if (headsupactive)
         HU_Stop();
 
-    plr = &players[displayplayer];
+    plr = &players[consoleplayer];
     message_on = false;
     message_dontfuckwithme = false;
     message_nottobefuckedwith = false;
@@ -819,13 +819,12 @@ void HU_Drawer(void)
 {
 
     char *s;
-    player_t *plr;
+    player_t *plr = &players[consoleplayer];
     char ammostr[80];
     char healthstr[80];
     char armorstr[80];
     int i;
 
-    plr = &players[displayplayer];
 
     {
 

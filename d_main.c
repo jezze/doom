@@ -83,7 +83,7 @@ static void D_InitNetGame(void)
         playeringame[i] = false;
 
     playeringame[0] = true;
-    consoleplayer = displayplayer = 0;
+    consoleplayer = 0;
 
 }
 
@@ -130,7 +130,7 @@ static void D_Display(void)
     {
 
         HU_Erase();
-        R_RenderPlayerView(&players[displayplayer]);
+        R_RenderPlayerView(&players[consoleplayer]);
         ST_Drawer();
         HU_Drawer();
 
@@ -192,8 +192,8 @@ static void D_DoomLoop(void)
 
         tryruntics();
 
-        if (players[displayplayer].mo)
-            S_UpdateSounds(players[displayplayer].mo);
+        if (players[consoleplayer].mo)
+            S_UpdateSounds(players[consoleplayer].mo);
 
         D_Display();
 

@@ -43,7 +43,6 @@ int starttime;
 boolean playeringame[MAXPLAYERS];
 player_t players[MAXPLAYERS];
 int consoleplayer;
-int displayplayer;
 int gametic;
 int basetic;
 int totalkills, totallive, totalitems, totalsecret;
@@ -440,7 +439,6 @@ static void G_DoLoadLevel(void)
 
     P_SetupLevel(gameepisode, gamemap, 0, gameskill);
 
-    displayplayer = consoleplayer;
     gameaction = ga_nothing;
 
     memset(gamekeydown, 0, sizeof (gamekeydown));

@@ -180,7 +180,7 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
 
     }
 
-    if (!origin || origin == players[displayplayer].mo)
+    if (!origin || origin == players[consoleplayer].mo)
     {
 
         sep = NORM_SEP;
@@ -188,7 +188,7 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
 
     }
     
-    else if (!S_AdjustSoundParams(players[displayplayer].mo, origin, &volume, &sep, &pitch))
+    else if (!S_AdjustSoundParams(players[consoleplayer].mo, origin, &volume, &sep, &pitch))
     {
 
         return;
@@ -196,7 +196,7 @@ void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume)
 
     }
 
-    else if (origin->x == players[displayplayer].mo->x && origin->y == players[displayplayer].mo->y)
+    else if (origin->x == players[consoleplayer].mo->x && origin->y == players[consoleplayer].mo->y)
     {
 
         sep = NORM_SEP;
