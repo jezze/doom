@@ -823,16 +823,12 @@ void HU_Drawer(void)
     char ammostr[80];
     char healthstr[80];
     char armorstr[80];
-    int i, doit;
+    int i;
 
     plr = &players[displayplayer];
 
-    if (viewheight == SCREENHEIGHT)
     {
 
-        doit = !(gametic & 1);
-
-        if (doit)
         {
 
             HU_clearTextLine(&w_ammo);
@@ -907,7 +903,6 @@ void HU_Drawer(void)
 
         HU_drawTextLine(&w_ammo, false);
 
-        if (doit)
         {
 
             int health = plr->health;
@@ -967,7 +962,6 @@ void HU_Drawer(void)
 
         HU_drawTextLine(&w_health, false);
 
-        if (doit)
         {
 
             int armor = plr->armorpoints;
@@ -1027,7 +1021,6 @@ void HU_Drawer(void)
 
         HU_drawTextLine(&w_armor, false);
 
-        if (doit)
         {
 
             int w;
@@ -1101,7 +1094,6 @@ void HU_Drawer(void)
 
         HU_drawTextLine(&w_weapon, false);
 
-        if (doit)
         {
 
             int k;
@@ -1143,7 +1135,6 @@ void HU_Drawer(void)
 
         HU_drawTextLine(&w_gkeys, false);
 
-        if (doit)
         {
 
             HU_clearTextLine(&w_monsec);
