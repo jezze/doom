@@ -244,11 +244,11 @@ static hu_textline_t w_monsec;
 static hu_mtext_t w_rtext;
 static boolean message_on;
 static boolean message_list;
-boolean message_dontfuckwithme;
+static boolean message_dontfuckwithme;
 static boolean message_nottobefuckedwith;
-static int message_counter;
 static boolean headsupactive = false;
-int hud_msg_lines = 1;
+static int message_counter;
+static int hud_msg_lines = 1;
 static int hudcolor_titl = 5;
 static int hudcolor_xyco = 3;
 static int hudcolor_mesg = 6;
@@ -1247,7 +1247,7 @@ boolean HU_Responder(event_t *ev)
     if (ev->data1 == key_enter)
     {
 
-        if (hud_msg_lines>1)
+        if (hud_msg_lines > 1)
         {
 
             if (message_list)

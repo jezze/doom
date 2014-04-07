@@ -68,6 +68,4 @@ void HU_Ticker(void);
 void HU_Drawer(void);
 void HU_Erase(void);
 
-extern int hud_msg_lines;
-
 #endif
