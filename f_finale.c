@@ -43,7 +43,6 @@ void F_CastTicker(void);
 boolean F_CastResponder(event_t *ev);
 void F_CastDrawer(void);
 
-extern int acceleratestage;
 static int midstage;
 
 void F_StartFinale(void)

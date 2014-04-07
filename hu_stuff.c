@@ -268,9 +268,6 @@ static int bscounter;
 #define BASE_WIDTH                      320
 #define noterased                       viewwindowx
 
-extern int key_backspace;
-extern int key_enter;
-
 static void HU_clearTextLine(hu_textline_t* t)
 {
 

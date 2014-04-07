@@ -14,7 +14,7 @@ typedef struct
 
 } ticcmd_t;
 
-void D_PostEvent(event_t* ev);
+void D_PostEvent(event_t *ev);
 void D_DoomMain(void);
 
 #endif
