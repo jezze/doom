@@ -34,22 +34,20 @@ typedef enum
 
 } dirtype_t;
 
-static void P_NewChaseDir(mobj_t *actor);
-void P_ZBumpCheck(mobj_t *);
-
-mobj_t* corpsehit;
-mobj_t* vileobj;
-fixed_t viletryx;
-fixed_t viletryy;
-int TRACEANGLE = 0xc000000;
+static mobj_t *corpsehit;
+static mobj_t *vileobj;
+static mobj_t **braintargets;
 static mobj_t *current_actor;
+static fixed_t viletryx;
+static fixed_t viletryy;
+static int TRACEANGLE = 0xc000000;
 static int current_allaround;
 static fixed_t dropoff_deltax, dropoff_deltay, floorz;
-static fixed_t xspeed[8] = {FRACUNIT,47000,0,-47000,-FRACUNIT,-47000,0,47000};
-static fixed_t yspeed[8] = {0,47000,FRACUNIT,47000,0,-47000,-FRACUNIT,-47000};
-mobj_t **braintargets;
-int numbraintargets_alloc;
-int numbraintargets;
+static fixed_t xspeed[8] = {FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000, 0, 47000};
+static fixed_t yspeed[8] = {0, 47000, FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000};
+static int numbraintargets_alloc;
+static int numbraintargets;
+
 struct brain_s brain;
 extern line_t **spechit;
 extern int numspechit;

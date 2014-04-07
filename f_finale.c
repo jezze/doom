@@ -12,34 +12,87 @@
 #include "wi_stuff.h"
 #include "v_video.h"
 #include "i_video.h"
+#include "hu_stuff.h"
 
 #define TEXTSPEED                       3
 #define TEXTWAIT                        250
 #define NEWTEXTSPEED                    0.01f
 #define NEWTEXTWAIT                     1000
+#define MAX_CASTORDER                   18
+
+typedef struct
+{
+
+    const char *name;
+    mobjtype_t   type;
+
+} castinfo_t;
 
 static int finalestage;
 static int finalecount;
+static int midstage;
 static const char *finaletext;
 static const char *finaleflat;
-const char *bgflatE1 = "FLOOR4_8";
-const char *bgflatE2 = "SFLR6_1";
-const char *bgflatE3 = "MFLR8_4";
-const char *bgflatE4 = "MFLR8_3";
-const char *bgflat06 = "SLIME16";
-const char *bgflat11 = "RROCK14";
-const char *bgflat20 = "RROCK07";
-const char *bgflat30 = "RROCK17";
-const char *bgflat15 = "RROCK13";
-const char *bgflat31 = "RROCK19";
-const char *bgcastcall = "BOSSBACK";
+static const char *bgflatE1 = "FLOOR4_8";
+static const char *bgflatE2 = "SFLR6_1";
+static const char *bgflatE3 = "MFLR8_4";
+static const char *bgflatE4 = "MFLR8_3";
+static const char *bgflat06 = "SLIME16";
+static const char *bgflat11 = "RROCK14";
+static const char *bgflat20 = "RROCK07";
+static const char *bgflat30 = "RROCK17";
+static const char *bgflat15 = "RROCK13";
+static const char *bgflat31 = "RROCK19";
+static const char *bgcastcall = "BOSSBACK";
+static int castnum;
+static int casttics;
+static state_t *caststate;
+static boolean castdeath;
+static int castframes;
+static int castonmelee;
+static boolean castattacking;
 
-void F_StartCast(void);
-void F_CastTicker(void);
-boolean F_CastResponder(event_t *ev);
-void F_CastDrawer(void);
+static const castinfo_t castorder[] = {
+    {CC_ZOMBIE, MT_POSSESSED},
+    {CC_SHOTGUN, MT_SHOTGUY},
+    {CC_HEAVY, MT_CHAINGUY},
+    {CC_IMP, MT_TROOP},
+    {CC_DEMON, MT_SERGEANT},
+    {CC_LOST, MT_SKULL},
+    {CC_CACO, MT_HEAD},
+    {CC_HELL, MT_KNIGHT},
+    {CC_BARON, MT_BRUISER},
+    {CC_ARACH, MT_BABY},
+    {CC_PAIN, MT_PAIN},
+    {CC_REVEN, MT_UNDEAD},
+    {CC_MANCU, MT_FATSO},
+    {CC_ARCH, MT_VILE},
+    {CC_SPIDER, MT_SPIDER},
+    {CC_CYBER, MT_CYBORG},
+    {CC_HERO, MT_PLAYER},
+    {NULL, 0}
+};
 
-static int midstage;
+static const char pfub2[] = {"PFUB2"};
+static const char pfub1[] = {"PFUB1"};
+
+extern patchnum_t hu_font[HU_FONTSIZE];
+
+static void F_StartCast(void)
+{
+
+    castnum = 0;
+    caststate = &states[mobjinfo[castorder[castnum].type].seestate];
+    casttics = caststate->tics;
+    castdeath = false;
+    finalestage = 2;
+    castframes = 0;
+    castonmelee = 0;
+    castattacking = false;
+
+    S_ChangeMusic(mus_evil, true);
+
+}
 
 void F_StartFinale(void)
 {
@@ -155,7 +208,29 @@ void F_StartFinale(void)
 
 }
 
-boolean F_Responder (event_t *event)
+static boolean F_CastResponder(event_t* ev)
+{
+
+    if (ev->type != ev_keydown)
+        return false;
+
+    if (castdeath)
+        return true;
+
+    castdeath = true;
+    caststate = &states[mobjinfo[castorder[castnum].type].deathstate];
+    casttics = caststate->tics;
+    castframes = 0;
+    castattacking = false;
+
+    if (mobjinfo[castorder[castnum].type].deathsound)
+        S_StartSound(NULL, mobjinfo[castorder[castnum].type].deathsound);
+
+    return true;
+
+}
+
+boolean F_Responder(event_t *event)
 {
 
     if (finalestage == 2)
@@ -171,71 +246,6 @@ static float Get_TextSpeed(void)
     return midstage ? NEWTEXTSPEED : (midstage = acceleratestage) ? acceleratestage = 0, NEWTEXTSPEED : TEXTSPEED;
 
 }
-
-void F_Ticker(void)
-{
-
-    int i;
-
-    WI_checkForAccelerate();
-
-    if (gamemode == commercial && finalecount > 50)
-    {
-
-        for (i = 0; i < MAXPLAYERS; i++)
-        {
-
-            if (players[i].cmd.buttons)
-                goto next_level;
-
-        }
-
-    }
-
-    finalecount++;
-
-    if (finalestage == 2)
-        F_CastTicker();
-
-    if (!finalestage)
-    {
-
-        float speed = Get_TextSpeed();
-
-        if (finalecount > strlen(finaletext) * speed + (midstage ? NEWTEXTWAIT : TEXTWAIT) || (midstage && acceleratestage))
-        {
-
-            if (gamemode != commercial)
-            {
-
-                finalecount = 0;
-                finalestage = 1;
-
-                if (gameepisode == 3)
-                    S_StartMusic(mus_bunny);
-
-            }
-
-            else if (midstage)
-            {
-
-            next_level:
-                if (gamemap == 30)
-                    F_StartCast();
-                else
-                    gameaction = ga_worlddone;
-
-            }
-
-        }
-
-    }
-
-}
-
-#include "hu_stuff.h"
-
-extern patchnum_t hu_font[HU_FONTSIZE];
 
 static void F_TextWrite(void)
 {
@@ -297,62 +307,7 @@ static void F_TextWrite(void)
 
 }
 
-typedef struct
-{
-
-    const char *name;
-    mobjtype_t   type;
-
-} castinfo_t;
-
-#define MAX_CASTORDER 18
-
-static const castinfo_t castorder[] = {
-    {CC_ZOMBIE, MT_POSSESSED},
-    {CC_SHOTGUN, MT_SHOTGUY},
-    {CC_HEAVY, MT_CHAINGUY},
-    {CC_IMP, MT_TROOP},
-    {CC_DEMON, MT_SERGEANT},
-    {CC_LOST, MT_SKULL},
-    {CC_CACO, MT_HEAD},
-    {CC_HELL, MT_KNIGHT},
-    {CC_BARON, MT_BRUISER},
-    {CC_ARACH, MT_BABY},
-    {CC_PAIN, MT_PAIN},
-    {CC_REVEN, MT_UNDEAD},
-    {CC_MANCU, MT_FATSO},
-    {CC_ARCH, MT_VILE},
-    {CC_SPIDER, MT_SPIDER},
-    {CC_CYBER, MT_CYBORG},
-    {CC_HERO, MT_PLAYER},
-    {NULL, 0}
-};
-
-int castnum;
-int casttics;
-state_t *caststate;
-boolean castdeath;
-int castframes;
-int castonmelee;
-boolean castattacking;
-
-void F_StartCast(void)
-{
-
-    castnum = 0;
-    caststate = &states[mobjinfo[castorder[castnum].type].seestate];
-    casttics = caststate->tics;
-    castdeath = false;
-    finalestage = 2;
-    castframes = 0;
-    castonmelee = 0;
-    castattacking = false;
-
-    S_ChangeMusic(mus_evil, true);
-
-}
-
-void F_CastTicker (void)
+static void F_CastTicker(void)
 {
 
     int st;
@@ -472,25 +427,64 @@ void F_CastTicker (void)
 
 }
 
-boolean F_CastResponder (event_t* ev)
+void F_Ticker(void)
 {
 
-    if (ev->type != ev_keydown)
-        return false;
+    int i;
 
-    if (castdeath)
-        return true;
+    WI_checkForAccelerate();
 
-    castdeath = true;
-    caststate = &states[mobjinfo[castorder[castnum].type].deathstate];
-    casttics = caststate->tics;
-    castframes = 0;
-    castattacking = false;
+    if (gamemode == commercial && finalecount > 50)
+    {
 
-    if (mobjinfo[castorder[castnum].type].deathsound)
-        S_StartSound(NULL, mobjinfo[castorder[castnum].type].deathsound);
+        for (i = 0; i < MAXPLAYERS; i++)
+        {
 
-    return true;
+            if (players[i].cmd.buttons)
+                goto next_level;
+
+        }
+
+    }
+
+    finalecount++;
+
+    if (finalestage == 2)
+        F_CastTicker();
+
+    if (!finalestage)
+    {
+
+        float speed = Get_TextSpeed();
+
+        if (finalecount > strlen(finaletext) * speed + (midstage ? NEWTEXTWAIT : TEXTWAIT) || (midstage && acceleratestage))
+        {
+
+            if (gamemode != commercial)
+            {
+
+                finalecount = 0;
+                finalestage = 1;
+
+                if (gameepisode == 3)
+                    S_StartMusic(mus_bunny);
+
+            }
+
+            else if (midstage)
+            {
+
+            next_level:
+                if (gamemap == 30)
+                    F_StartCast();
+                else
+                    gameaction = ga_worlddone;
+
+            }
+
+        }
+
+    }
 
 }
 
@@ -559,7 +553,7 @@ static void F_CastPrint(const char *text)
 
 }
 
-void F_CastDrawer(void)
+static void F_CastDrawer(void)
 {
 
     spritedef_t *sprdef;
@@ -579,10 +573,7 @@ void F_CastDrawer(void)
 
 }
 
-static const char pfub2[] = {"PFUB2"};
-static const char pfub1[] = {"PFUB1"};
-
-static void F_BunnyScroll (void)
+static void F_BunnyScroll(void)
 {
 
     char name[10];
@@ -649,7 +640,7 @@ static void F_BunnyScroll (void)
 
 }
 
-void F_Drawer (void)
+void F_Drawer(void)
 {
 
     if (finalestage == 2)

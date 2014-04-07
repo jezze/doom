@@ -190,7 +190,6 @@ static int st_facecount = 0;
 static int st_faceindex = 0;
 static int keyboxes[3];
 static int st_randomnumber;
-extern char *mapnames[];
 static boolean st_stopped = true;
 
 static void ST_initNum(st_number_t *n, int x, int y, const patchnum_t *pl, int *num, boolean *on, int width)
