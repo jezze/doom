@@ -8,15 +8,12 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <SDL.h>
-#include "doomdef.h"
-#include "d_think.h"
-#include "p_pspr.h"
 #include "doomtype.h"
+#include "doomdef.h"
+#include "m_fixed.h"
 #include "d_main.h"
-#include "s_sound.h"
-#include "i_system.h"
 #include "i_video.h"
-#include "i_sound.h"
+#include "i_system.h"
 
 #define MAX_MESSAGE_SIZE                1024
 
