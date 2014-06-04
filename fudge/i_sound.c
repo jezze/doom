@@ -1,12 +1,11 @@
-#include "z_zone.h"
-#include "i_sound.h"
-#include "m_misc.h"
-#include "w_wad.h"
-#include "s_sound.h"
+#include <stdlib.h>
 #include "doomdef.h"
+#include "d_think.h"
+#include "p_pspr.h"
 #include "doomstat.h"
-#include "doomtype.h"
-#include "d_main.h"
+#include "s_sound.h"
+#include "i_system.h"
+#include "i_sound.h"
 
 int snd_card = 1;
 int mus_card = 1;
@@ -24,6 +23,8 @@ void I_SetChannels(void)
 
 int I_StartSound(int id, int channel, int vol, int sep, int pitch, int priority)
 {
+
+    return 0;
 
 }
 

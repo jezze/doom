@@ -1,15 +1,9 @@
-#include <stdio.h>
-#include <stdarg.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <signal.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <errno.h>
 #include "doomtype.h"
 #include "doomdef.h"
 #include "m_fixed.h"
+#include "d_main.h"
+#include "i_video.h"
 #include "i_system.h"
 
 int ms_to_next_tick;
