@@ -20,10 +20,9 @@
 
 static mapthing_t itemrespawnque[ITEMQUESIZE];
 static int itemrespawntime[ITEMQUESIZE];
-int iquehead;
-int iquetail;
+static int iquehead;
+static int iquetail;
 extern fixed_t attackrange;
-extern byte playernumtotrans[MAXPLAYERS];
 
 boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
 {
@@ -764,7 +763,6 @@ void P_SpawnPlayer(int n, const mapthing_t *mthing)
     y = mthing->y << FRACBITS;
     z = ONFLOORZ;
     mobj = P_SpawnMobj(x, y, z, MT_PLAYER);
-    mobj->flags |= playernumtotrans[n] << MF_TRANSSHIFT;
     mobj->angle = ANG45 * (mthing->angle / 45);
     mobj->player = p;
     mobj->health = p->health;

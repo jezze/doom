@@ -231,9 +231,6 @@ typedef struct mobj_s
 #define MAXGEAR (OVERDRIVE+16)
 #define sentient(mobj) ((mobj)->health > 0 && (mobj)->info->seestate)
 
-extern int iquehead;
-extern int iquetail;
-
 mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type);
 void P_RemoveMobj(mobj_t *th);
 boolean P_SetMobjState(mobj_t *mobj, statenum_t state);

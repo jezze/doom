@@ -42,7 +42,6 @@ int viewheight;
 int viewwindowx;
 int viewwindowy;
 byte *translationtables;
-byte playernumtotrans[MAXPLAYERS];
 extern lighttable_t *(*c_zlight)[LIGHTLEVELS][MAXLIGHTZ];
 
 static int temp_x = 0;

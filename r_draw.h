@@ -87,7 +87,6 @@ typedef struct
 } draw_vars_t;
 
 extern draw_vars_t drawvars;
-extern byte playernumtotrans[MAXPLAYERS];
 extern byte *translationtables;
 typedef void (*R_DrawColumn_f)(draw_column_vars_t *dcvars);
 R_DrawColumn_f R_GetDrawColumnFunc(enum column_pipeline_e type, enum draw_filter_type_e filter, enum draw_filter_type_e filterz);

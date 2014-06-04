@@ -1415,8 +1415,6 @@ void P_SetupLevel(int episode, int map, int playermask, skill_t skill)
     if (gamemode == commercial)
         P_SpawnBrainTargets();
 
-    iquehead = iquetail = 0;
-
     P_SpawnSpecials();
     P_MapEnd();
 
