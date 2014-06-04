@@ -32,8 +32,8 @@
 #define blkmask                         ((1 << blkshift) - 1)
 #define blkmargin                       0
 
-int numvertexes;
-vertex_t *vertexes;
+static int numvertexes;
+static vertex_t *vertexes;
 int numsegs;
 seg_t *segs;
 int numsectors;
@@ -46,8 +46,8 @@ int numlines;
 line_t *lines;
 int numsides;
 side_t *sides;
-int firstglvertex = 0;
-int nodesVersion  = 0;
+static int firstglvertex = 0;
+static int nodesVersion = 0;
 
 typedef struct linelist_t
 {

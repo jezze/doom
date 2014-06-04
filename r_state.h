@@ -12,8 +12,6 @@ extern int firstspritelump;
 extern int lastspritelump;
 extern int numspritelumps;
 extern spritedef_t *sprites;
-extern int numvertexes;
-extern vertex_t *vertexes;
 extern int numsegs;
 extern seg_t *segs;
 extern int numsectors;
