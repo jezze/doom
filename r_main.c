@@ -290,7 +290,6 @@ void R_Init(void)
     R_LoadTrigTables();
     R_InitData();
     R_InitView();
-    R_InitPlanes();
     R_InitLightTables();
     R_InitSkyMap();
     R_InitTranslationTables();
