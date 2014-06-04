@@ -1,29 +1,22 @@
-#define SCREENTYPE byte
-#define TOPLEFT byte_topleft
-#define PITCH byte_pitch
-#define TEMPBUF byte_tempbuf
-
 #if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
-#define GETDESTCOLOR8(col) (tempfuzzmap[6*256+(col)])
+#define GETDESTCOLOR(col) (tempfuzzmap[6 * 256 + (col)])
 #else
-#define GETDESTCOLOR8(col) (col)
+#define GETDESTCOLOR(col) (col)
 #endif
-
-#define GETDESTCOLOR(col) GETDESTCOLOR8(col)
 
 static void R_FLUSHWHOLE_FUNCNAME(void)
 {
 
-    SCREENTYPE *source;
-    SCREENTYPE *dest;
+    byte *source;
+    byte *dest;
     int count, yl;
 
     while (--temp_x >= 0)
     {
 
         yl = tempyl[temp_x];
-        source = &TEMPBUF[temp_x + (yl << 2)];
-        dest = drawvars.TOPLEFT + yl * drawvars.PITCH + startx + temp_x;
+        source = &byte_tempbuf[temp_x + (yl << 2)];
+        dest = drawvars.byte_topleft + yl * drawvars.byte_pitch + startx + temp_x;
         count = tempyh[temp_x] - yl + 1;
       
         while (--count >= 0)
@@ -31,7 +24,7 @@ static void R_FLUSHWHOLE_FUNCNAME(void)
 
 #if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
             *dest = GETDESTCOLOR(dest[fuzzoffset[fuzzpos]]);
-         
+
             if (++fuzzpos == FUZZTABLE) 
                 fuzzpos = 0;
 
@@ -39,7 +32,7 @@ static void R_FLUSHWHOLE_FUNCNAME(void)
             *dest = *source;
 #endif
             source += 4;
-            dest += drawvars.PITCH;
+            dest += drawvars.byte_pitch;
 
       }
 
@@ -50,8 +43,8 @@ static void R_FLUSHWHOLE_FUNCNAME(void)
 static void R_FLUSHHEADTAIL_FUNCNAME(void)
 {
 
-    SCREENTYPE *source;
-    SCREENTYPE *dest;
+    byte *source;
+    byte *dest;
     int count, colnum = 0;
     int yl, yh;
 
@@ -64,8 +57,8 @@ static void R_FLUSHHEADTAIL_FUNCNAME(void)
         if (yl < commontop)
         {
 
-            source = &TEMPBUF[colnum + (yl << 2)];
-            dest = drawvars.TOPLEFT + yl*drawvars.PITCH + startx + colnum;
+            source = &byte_tempbuf[colnum + (yl << 2)];
+            dest = drawvars.byte_topleft + yl*drawvars.byte_pitch + startx + colnum;
             count = commontop - yl;
          
             while (--count >= 0)
@@ -82,7 +75,7 @@ static void R_FLUSHHEADTAIL_FUNCNAME(void)
 #endif
 
                 source += 4;
-                dest += drawvars.PITCH;
+                dest += drawvars.byte_pitch;
 
             }
 
@@ -91,8 +84,8 @@ static void R_FLUSHHEADTAIL_FUNCNAME(void)
         if (yh > commonbot)
         {
 
-            source = &TEMPBUF[colnum + ((commonbot + 1) << 2)];
-            dest = drawvars.TOPLEFT + (commonbot + 1) * drawvars.PITCH + startx + colnum;
+            source = &byte_tempbuf[colnum + ((commonbot + 1) << 2)];
+            dest = drawvars.byte_topleft + (commonbot + 1) * drawvars.byte_pitch + startx + colnum;
             count = yh - commonbot;
          
             while (--count >= 0)
@@ -108,7 +101,7 @@ static void R_FLUSHHEADTAIL_FUNCNAME(void)
                 *dest = *source;
 #endif
                 source += 4;
-                dest += drawvars.PITCH;
+                dest += drawvars.byte_pitch;
 
             }
 
@@ -123,8 +116,8 @@ static void R_FLUSHHEADTAIL_FUNCNAME(void)
 static void R_FLUSHQUAD_FUNCNAME(void)
 {
 
-    SCREENTYPE *source = &TEMPBUF[commontop << 2];
-    SCREENTYPE *dest = drawvars.TOPLEFT + commontop*drawvars.PITCH + startx;
+    byte *source = &byte_tempbuf[commontop << 2];
+    byte *dest = drawvars.byte_topleft + commontop*drawvars.byte_pitch + startx;
     int count;
 #if (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
     int fuzz1 = fuzzpos;
@@ -148,7 +141,7 @@ static void R_FLUSHQUAD_FUNCNAME(void)
         fuzz3 = (fuzz3 + 1) % FUZZTABLE;
         fuzz4 = (fuzz4 + 1) % FUZZTABLE;
         source += 4 * sizeof(byte);
-        dest += drawvars.PITCH * sizeof(byte);
+        dest += drawvars.byte_pitch * sizeof(byte);
 
     }
 #else
@@ -160,7 +153,7 @@ static void R_FLUSHQUAD_FUNCNAME(void)
 
             *(int *)dest = *(int *)source;
             source += 4 * sizeof(byte);
-            dest += drawvars.PITCH * sizeof(byte);
+            dest += drawvars.byte_pitch * sizeof(byte);
 
         }
 
@@ -177,7 +170,7 @@ static void R_FLUSHQUAD_FUNCNAME(void)
             dest[2] = source[2];
             dest[3] = source[3];
             source += 4 * sizeof(byte);
-            dest += drawvars.PITCH * sizeof(byte);
+            dest += drawvars.byte_pitch * sizeof(byte);
 
         }
 
@@ -185,14 +178,5 @@ static void R_FLUSHQUAD_FUNCNAME(void)
 #endif
 
 }
-
-#undef GETDESTCOLOR8
 #undef GETDESTCOLOR
-#undef TEMPBUF
-#undef PITCH
-#undef TOPLEFT
-#undef SCREENTYPE
-#undef R_DRAWCOLUMN_PIPELINE
-#undef R_FLUSHWHOLE_FUNCNAME
-#undef R_FLUSHHEADTAIL_FUNCNAME
-#undef R_FLUSHQUAD_FUNCNAME
+

@@ -34,7 +34,6 @@ angle_t viewangle;
 fixed_t viewcos, viewsin;
 player_t *viewplayer;
 extern lighttable_t **walllights;
-static mobj_t *oviewer;
 angle_t clipangle;
 int viewangletox[FINEANGLES / 2];
 angle_t xtoviewangle[MAX_SCREENWIDTH + 1];
@@ -49,6 +48,7 @@ boolean rendering_stats;
 int skyflatnum;
 int skytexture;
 int skytexturemid;
+static mobj_t *oviewer;
 
 void R_InitSkyMap(void)
 {
@@ -207,12 +207,12 @@ static void R_InitTextureMapping (void)
 
 }
 
-static void R_InitLightTables (void)
+static void R_InitLightTables(void)
 {
 
     int i;
 
-    c_zlight = malloc(sizeof(*c_zlight) * numcolormaps);
+    c_zlight = malloc(sizeof (*c_zlight) * numcolormaps);
 
     for (i = 0; i< LIGHTLEVELS; i++)
     {
@@ -241,28 +241,13 @@ static void R_InitLightTables (void)
 
 }
 
-static void R_ExecuteSetViewSize(int setblocks)
+static void R_InitView()
 {
 
     int i;
 
-    if (setblocks == 11)
-    {
-
-        scaledviewwidth = SCREENWIDTH;
-        viewheight = SCREENHEIGHT;
-
-    }
-
-    else if (setblocks == 10)
-    {
-
-        scaledviewwidth = SCREENWIDTH;
-        viewheight = SCREENHEIGHT - ST_SCALED_HEIGHT;
-
-    }
-
-    viewwidth = scaledviewwidth;
+    viewwidth = SCREENWIDTH;
+    viewheight = SCREENHEIGHT - ST_SCALED_HEIGHT;
     viewheightfrac = viewheight << FRACBITS;
     centery = viewheight / 2;
     centerx = viewwidth / 2;
@@ -271,7 +256,7 @@ static void R_ExecuteSetViewSize(int setblocks)
     projection = centerxfrac;
     projectiony = ((SCREENHEIGHT * centerx * 320) / 200) / SCREENWIDTH * FRACUNIT;
 
-    R_InitBuffer(scaledviewwidth, viewheight);
+    R_InitBuffer(viewwidth, viewheight);
     R_InitTextureMapping();
 
     pspritescale = FRACUNIT * viewwidth / 320;
@@ -304,7 +289,7 @@ void R_Init(void)
 
     R_LoadTrigTables();
     R_InitData();
-    R_ExecuteSetViewSize(10);
+    R_InitView();
     R_InitPlanes();
     R_InitLightTables();
     R_InitSkyMap();
@@ -328,7 +313,7 @@ subsector_t *R_PointInSubsector(fixed_t x, fixed_t y)
 
 }
 
-static void R_SetupFrame (player_t *player)
+static void R_SetupFrame(player_t *player)
 {
 
     int cm;
@@ -363,7 +348,11 @@ static void R_SetupFrame (player_t *player)
     }
 
     else
+    {
+
         cm = 0;
+
+    }
 
     fullcolormap = colormaps[cm];
     zlight = c_zlight[cm];
@@ -376,7 +365,11 @@ static void R_SetupFrame (player_t *player)
     }
 
     else
+    {
+
         fixedcolormap = 0;
+
+    }
 
     validcount++;
 

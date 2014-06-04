@@ -1,8 +1,3 @@
-#define SCREENTYPE byte
-#define TEMPBUF byte_tempbuf
-
-#define GETDESTCOLOR8(col) (col)
-
 #if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLATED)
 #define GETCOL8_MAPPED(col) (translation[(col)])
 #else
@@ -24,10 +19,10 @@
 #elif (R_DRAWCOLUMN_PIPELINE & RDC_ROUNDED)
 #define GETCOL8(frac, nextfrac) GETCOL8_DEPTH(filter_getRoundedForColumn(frac,nextfrac))
 #else
-#define GETCOL8(frac, nextfrac) GETCOL8_DEPTH(source[(frac)>>FRACBITS])
+#define GETCOL8(frac, nextfrac) GETCOL8_DEPTH(source[(frac) >> FRACBITS])
 #endif
 
-#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR|RDC_ROUNDED|RDC_DITHERZ))
+#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR | RDC_ROUNDED | RDC_DITHERZ))
 #define INCY(y) (y++)
 #else
 #define INCY(y)
@@ -42,18 +37,17 @@
 #endif
 
 #define GETCOL(frac, nextfrac) GETCOL8(frac, nextfrac)
-#define GETDESTCOLOR(col) GETDESTCOLOR8(col)
 
 static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
 {
 
     int count;
-    SCREENTYPE *dest;
+    byte *dest;
     fixed_t frac;
     const fixed_t fracstep = dcvars->iscale;
     const fixed_t slope_texu = dcvars->texu;
 
-#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR|RDC_ROUNDED))
+#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR | RDC_ROUNDED))
     if (dcvars->iscale > drawvars.mag_threshold)
     {
 
@@ -157,7 +151,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
         R_FlushWholeColumns = R_FLUSHWHOLE_FUNCNAME;
         R_FlushHTColumns = R_FLUSHHEADTAIL_FUNCNAME;
         R_FlushQuadColumn = R_FLUSHQUAD_FUNCNAME;
-        dest = &TEMPBUF[dcvars->yl << 2];
+        dest = &byte_tempbuf[dcvars->yl << 2];
 
     }
     
@@ -172,7 +166,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
         if (dcvars->yh < commonbot)
             commonbot = dcvars->yh;
 
-        dest = &TEMPBUF[(dcvars->yl << 2) + temp_x];
+        dest = &byte_tempbuf[(dcvars->yl << 2) + temp_x];
 
     }
 
@@ -212,7 +206,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
             while (count--)
             {
 
-                *dest = GETDESTCOLOR(GETCOL(frac & FIXEDT_128MASK, (frac + FRACUNIT) & FIXEDT_128MASK));
+                *dest = (GETCOL(frac & FIXEDT_128MASK, (frac + FRACUNIT) & FIXEDT_128MASK));
 
                 INCY(y);
 
@@ -228,7 +222,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
             while (count--)
             {
 
-                *dest = GETDESTCOLOR(GETCOL(frac, (frac + FRACUNIT)));
+                *dest = (GETCOL(frac, (frac + FRACUNIT)));
 
                 INCY(y);
 
@@ -252,13 +246,13 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
                 while ((count -= 2) >= 0)
                 {
 
-                    *dest = GETDESTCOLOR(GETCOL(frac & fixedt_heightmask, (frac + FRACUNIT) & fixedt_heightmask));
+                    *dest = (GETCOL(frac & fixedt_heightmask, (frac + FRACUNIT) & fixedt_heightmask));
 
                     INCY(y);
 
                     dest += 4;
                     frac += fracstep;
-                    *dest = GETDESTCOLOR(GETCOL(frac & fixedt_heightmask, (frac + FRACUNIT) & fixedt_heightmask));
+                    *dest = (GETCOL(frac & fixedt_heightmask, (frac + FRACUNIT) & fixedt_heightmask));
 
                     INCY(y);
 
@@ -268,7 +262,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
                 }
 
                 if (count & 1)
-                    *dest = GETDESTCOLOR(GETCOL(frac & fixedt_heightmask, (frac + FRACUNIT) & fixedt_heightmask));
+                    *dest = (GETCOL(frac & fixedt_heightmask, (frac + FRACUNIT) & fixedt_heightmask));
 
                 INCY(y);
 
@@ -288,7 +282,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
                     while (frac >= (int)heightmask)
                         frac -= heightmask;
 
-#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR|RDC_ROUNDED))
+#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR | RDC_ROUNDED))
                 nextfrac = frac + FRACUNIT;
 
                 while (nextfrac >= (int)heightmask)
@@ -298,14 +292,14 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
                 while (count--)
                 {
 
-                    *dest = GETDESTCOLOR(GETCOL(frac, nextfrac));
+                    *dest = (GETCOL(frac, nextfrac));
 
                     INCY(y);
 
                     dest += 4;
 
                     INCFRAC(frac);
-#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR|RDC_ROUNDED))
+#if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR | RDC_ROUNDED))
                     INCFRAC(nextfrac); 
 #endif
                 }
@@ -318,8 +312,6 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
 #endif
 
 }
-#undef GETDESTCOLOR8
-#undef GETDESTCOLOR
 #undef GETCOL8_MAPPED
 #undef GETCOL8_DEPTH
 #undef GETCOL8
@@ -327,7 +319,4 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
 #undef INCY
 #undef INCFRAC
 #undef COLTYPE
-#undef TEMPBUF
-#undef SCREENTYPE
-#undef R_DRAWCOLUMN_FUNCNAME
-#undef R_DRAWCOLUMN_PIPELINE
+

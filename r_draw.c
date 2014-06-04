@@ -37,12 +37,14 @@ typedef enum
 
 } columntype_e;
 
-byte *viewimage;
 int viewwidth;
-int scaledviewwidth;
 int viewheight;
 int viewwindowx;
 int viewwindowy;
+byte *translationtables;
+byte playernumtotrans[MAXPLAYERS];
+extern lighttable_t *(*c_zlight)[LIGHTLEVELS][MAXLIGHTZ];
+
 static int temp_x = 0;
 static int tempyl[4], tempyh[4];
 static byte byte_tempbuf[MAX_SCREENHEIGHT * 4];
@@ -140,14 +142,20 @@ void R_ResetColumnBuffer(void)
 #define R_FLUSHHEADTAIL_FUNCNAME R_FlushHT8
 #define R_FLUSHQUAD_FUNCNAME R_FlushQuad8
 #include "r_drawflush.inl"
+#undef R_DRAWCOLUMN_PIPELINE
+#undef R_FLUSHWHOLE_FUNCNAME
+#undef R_FLUSHHEADTAIL_FUNCNAME
+#undef R_FLUSHQUAD_FUNCNAME
 
 #define R_DRAWCOLUMN_PIPELINE RDC_FUZZ
 #define R_FLUSHWHOLE_FUNCNAME R_FlushWholeFuzz8
 #define R_FLUSHHEADTAIL_FUNCNAME R_FlushHTFuzz8
 #define R_FLUSHQUAD_FUNCNAME R_FlushQuadFuzz8
 #include "r_drawflush.inl"
-
-byte *translationtables;
+#undef R_DRAWCOLUMN_PIPELINE
+#undef R_FLUSHWHOLE_FUNCNAME
+#undef R_FLUSHHEADTAIL_FUNCNAME
+#undef R_FLUSHQUAD_FUNCNAME
 
 #define R_DRAWCOLUMN_PIPELINE_TYPE RDC_PIPELINE_STANDARD
 #define R_DRAWCOLUMN_PIPELINE_BASE RDC_STANDARD
@@ -231,10 +239,7 @@ void R_SetDefaultDrawColumnVars(draw_column_vars_t *dcvars)
 
 }
 
-byte playernumtotrans[MAXPLAYERS];
-extern lighttable_t *(*c_zlight)[LIGHTLEVELS][MAXLIGHTZ];
-
-void R_InitTranslationTables (void)
+void R_InitTranslationTables(void)
 {
     int i;
 #define MAXTRANS 3
@@ -272,26 +277,39 @@ void R_InitTranslationTables (void)
 #define R_DRAWSPAN_FUNCNAME R_DrawSpan8_PointUV_PointZ
 #define R_DRAWSPAN_PIPELINE (RDC_STANDARD)
 #include "r_drawspan.inl"
+#undef R_DRAWSPAN_PIPELINE
+#undef R_DRAWSPAN_FUNCNAME
 
 #define R_DRAWSPAN_FUNCNAME R_DrawSpan8_PointUV_LinearZ
 #define R_DRAWSPAN_PIPELINE (RDC_STANDARD | RDC_DITHERZ)
 #include "r_drawspan.inl"
+#undef R_DRAWSPAN_PIPELINE
+#undef R_DRAWSPAN_FUNCNAME
 
 #define R_DRAWSPAN_FUNCNAME R_DrawSpan8_LinearUV_PointZ
 #define R_DRAWSPAN_PIPELINE (RDC_STANDARD | RDC_BILINEAR)
 #include "r_drawspan.inl"
+#undef R_DRAWSPAN_PIPELINE
+#undef R_DRAWSPAN_FUNCNAME
 
 #define R_DRAWSPAN_FUNCNAME R_DrawSpan8_LinearUV_LinearZ
 #define R_DRAWSPAN_PIPELINE (RDC_STANDARD | RDC_BILINEAR | RDC_DITHERZ)
 #include "r_drawspan.inl"
+#undef R_DRAWSPAN_PIPELINE
+#undef R_DRAWSPAN_FUNCNAME
 
 #define R_DRAWSPAN_FUNCNAME R_DrawSpan8_RoundedUV_PointZ
 #define R_DRAWSPAN_PIPELINE (RDC_STANDARD | RDC_ROUNDED)
 #include "r_drawspan.inl"
+#undef R_DRAWSPAN_PIPELINE
+#undef R_DRAWSPAN_FUNCNAME
 
 #define R_DRAWSPAN_FUNCNAME R_DrawSpan8_RoundedUV_LinearZ
 #define R_DRAWSPAN_PIPELINE (RDC_STANDARD | RDC_ROUNDED | RDC_DITHERZ)
 #include "r_drawspan.inl"
+#undef R_DRAWSPAN_PIPELINE
+#undef R_DRAWSPAN_FUNCNAME
+
 
 static R_DrawSpan_f drawspanfuncs[RDRAW_FILTER_MAXFILTERS][RDRAW_FILTER_MAXFILTERS] = {
     {NULL, NULL, NULL, NULL,},
