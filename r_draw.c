@@ -29,11 +29,6 @@ typedef enum
 {
 
     COL_NONE,
-    COL_OPAQUE,
-    COL_TRANS,
-    COL_FLEXTRANS,
-    COL_FUZZ,
-    COL_FLEXADD
 
 } columntype_e;
 

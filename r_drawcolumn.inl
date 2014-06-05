@@ -28,13 +28,7 @@
 #define INCY(y)
 #endif
 
-#if (R_DRAWCOLUMN_PIPELINE & RDC_TRANSLUCENT)
-#define COLTYPE (COL_TRANS)
-#elif (R_DRAWCOLUMN_PIPELINE & RDC_FUZZ)
-#define COLTYPE (COL_FUZZ)
-#else
-#define COLTYPE (COL_OPAQUE)
-#endif
+#define COLTYPE (COL_NONE)
 
 #define GETCOL(frac, nextfrac) GETCOL8(frac, nextfrac)
 
