@@ -10,14 +10,14 @@
 
 static size_t num_intercepts;
 static intercept_t *intercepts, *intercept_p;
-fixed_t opentop;
-fixed_t openbottom;
-fixed_t openrange;
-fixed_t lowfloor;
+int opentop;
+int openbottom;
+int openrange;
+int lowfloor;
 sector_t *openfrontsector;
 sector_t *openbacksector;
 
-fixed_t P_AproxDistance(fixed_t dx, fixed_t dy)
+int P_AproxDistance(int dx, int dy)
 {
   dx = D_abs(dx);
   dy = D_abs(dy);
@@ -26,7 +26,7 @@ fixed_t P_AproxDistance(fixed_t dx, fixed_t dy)
   return dx+dy-(dy>>1);
 }
 
-int P_PointOnLineSide(fixed_t x, fixed_t y, const line_t *line)
+int P_PointOnLineSide(int x, int y, const line_t *line)
 {
   return
     !line->dx ? x <= line->v1->x ? line->dy > 0 : line->dy < 0 :
@@ -35,7 +35,7 @@ int P_PointOnLineSide(fixed_t x, fixed_t y, const line_t *line)
     FixedMul(line->dy>>FRACBITS, x-line->v1->x);
 }
 
-int P_BoxOnLineSide(const fixed_t *tmbox, const line_t *ld)
+int P_BoxOnLineSide(const int *tmbox, const line_t *ld)
 {
   switch (ld->slopetype)
     {
@@ -60,7 +60,7 @@ int P_BoxOnLineSide(const fixed_t *tmbox, const line_t *ld)
     }
 }
 
-static int P_PointOnDivlineSide(fixed_t x, fixed_t y, const divline_t *line)
+static int P_PointOnDivlineSide(int x, int y, const divline_t *line)
 {
   return
     !line->dx ? x <= line->x ? line->dy > 0 : line->dy < 0 :
@@ -78,21 +78,21 @@ static void P_MakeDivline(const line_t *li, divline_t *dl)
 }
 
 
-fixed_t P_InterceptVector2(const divline_t *v2, const divline_t *v1)
+int P_InterceptVector2(const divline_t *v2, const divline_t *v1)
 {
-  fixed_t den;
+  int den;
   return (den = FixedMul(v1->dy>>8, v2->dx) - FixedMul(v1->dx>>8, v2->dy)) ?
     FixedDiv(FixedMul((v1->x - v2->x)>>8, v1->dy) +
              FixedMul((v2->y - v1->y)>>8, v1->dx), den) : 0;
 }
 
-fixed_t P_InterceptVector(const divline_t *v2, const divline_t *v1)
+int P_InterceptVector(const divline_t *v2, const divline_t *v1)
 {
     int_64_t den = (int_64_t)v1->dy * v2->dx - (int_64_t)v1->dx * v2->dy;
     den >>= 16;
     if (!den)
       return 0;
-    return (fixed_t)(((int_64_t)(v1->x - v2->x) * v1->dy - (int_64_t)(v1->y - v2->y) * v1->dx) / den);
+    return (int)(((int_64_t)(v1->x - v2->x) * v1->dy - (int_64_t)(v1->y - v2->y) * v1->dx) / den);
 }
 
 void P_LineOpening(const line_t *linedef)
@@ -237,7 +237,7 @@ boolean PIT_AddLineIntercepts(line_t *ld)
 {
   int       s1;
   int       s2;
-  fixed_t   frac;
+  int   frac;
   divline_t dl;
 
 
@@ -275,11 +275,11 @@ boolean PIT_AddLineIntercepts(line_t *ld)
 
 boolean PIT_AddThingIntercepts(mobj_t *thing)
 {
-  fixed_t   x1, y1;
-  fixed_t   x2, y2;
+  int   x1, y1;
+  int   x2, y2;
   int       s1, s2;
   divline_t dl;
-  fixed_t   frac;
+  int   frac;
 
 
   if ((trace.dx ^ trace.dy) > 0)
@@ -323,13 +323,13 @@ boolean PIT_AddThingIntercepts(mobj_t *thing)
   return true;
 }
 
-boolean P_TraverseIntercepts(traverser_t func, fixed_t maxfrac)
+boolean P_TraverseIntercepts(traverser_t func, int maxfrac)
 {
   intercept_t *in = NULL;
   int count = intercept_p - intercepts;
   while (count--)
     {
-      fixed_t dist = INT_MAX;
+      int dist = INT_MAX;
       intercept_t *scan;
       for (scan = intercepts; scan < intercept_p; scan++)
         if (scan->frac < dist)
@@ -343,13 +343,13 @@ boolean P_TraverseIntercepts(traverser_t func, fixed_t maxfrac)
   return true;
 }
 
-boolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags, boolean trav(intercept_t *))
+boolean P_PathTraverse(int x1, int y1, int x2, int y2, int flags, boolean trav(intercept_t *))
 {
-  fixed_t xt1, yt1;
-  fixed_t xt2, yt2;
-  fixed_t xstep, ystep;
-  fixed_t partial;
-  fixed_t xintercept, yintercept;
+  int xt1, yt1;
+  int xt2, yt2;
+  int xstep, ystep;
+  int partial;
+  int xintercept, yintercept;
   int     mapx, mapy;
   int     mapxstep, mapystep;
   int     count;

@@ -37,9 +37,9 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
 
     int count;
     byte *dest;
-    fixed_t frac;
-    const fixed_t fracstep = dcvars->iscale;
-    const fixed_t slope_texu = dcvars->texu;
+    int frac;
+    const int fracstep = dcvars->iscale;
+    const int slope_texu = dcvars->texu;
 
 #if (R_DRAWCOLUMN_PIPELINE & (RDC_BILINEAR | RDC_ROUNDED))
     if (dcvars->iscale > drawvars.mag_threshold)
@@ -235,7 +235,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
             if (!(dcvars->texheight & heightmask))
             {
 
-                fixed_t fixedt_heightmask = (heightmask << FRACBITS) | 0xffff;
+                int fixedt_heightmask = (heightmask << FRACBITS) | 0xffff;
 
                 while ((count -= 2) >= 0)
                 {
@@ -265,7 +265,7 @@ static void R_DRAWCOLUMN_FUNCNAME(draw_column_vars_t *dcvars)
             else
             {
 
-                fixed_t nextfrac = 0;
+                int nextfrac = 0;
 
                 heightmask++;
                 heightmask <<= FRACBITS;

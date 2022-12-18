@@ -301,7 +301,7 @@ void I_UnRegisterSong(int handle)
 
 }
 
-int I_RegisterSong(const void *data, size_t len)
+int I_RegisterSong(const void *data, unsigned int len)
 {
 
     return 0;

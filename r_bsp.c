@@ -323,7 +323,7 @@ static void R_AddLine (seg_t *line)
 
 }
 
-static boolean R_CheckBBox(const fixed_t *bspcoord)
+static boolean R_CheckBBox(const int *bspcoord)
 {
 
     angle_t angle1, angle2;

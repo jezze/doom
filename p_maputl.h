@@ -13,17 +13,17 @@
 typedef struct
 {
 
-    fixed_t x;
-    fixed_t y;
-    fixed_t dx;
-    fixed_t dy;
+    int x;
+    int y;
+    int dx;
+    int dy;
 
 } divline_t;
 
 typedef struct
 {
 
-    fixed_t frac;
+    int frac;
     boolean isaline;
     union
     {
@@ -36,22 +36,22 @@ typedef struct
 } intercept_t;
 
 typedef boolean (*traverser_t)(intercept_t *in);
-fixed_t P_AproxDistance (fixed_t dx, fixed_t dy);
-int P_PointOnLineSide (fixed_t x, fixed_t y, const line_t *line);
-int P_BoxOnLineSide (const fixed_t *tmbox, const line_t *ld);
-fixed_t P_InterceptVector (const divline_t *v2, const divline_t *v1);
-fixed_t P_InterceptVector2(const divline_t *v2, const divline_t *v1);
+int P_AproxDistance (int dx, int dy);
+int P_PointOnLineSide (int x, int y, const line_t *line);
+int P_BoxOnLineSide (const int *tmbox, const line_t *ld);
+int P_InterceptVector (const divline_t *v2, const divline_t *v1);
+int P_InterceptVector2(const divline_t *v2, const divline_t *v1);
 void P_LineOpening (const line_t *linedef);
 void P_UnsetThingPosition(mobj_t *thing);
 void P_SetThingPosition(mobj_t *thing);
 boolean P_BlockLinesIterator (int x, int y, boolean func(line_t *));
 boolean P_BlockThingsIterator(int x, int y, boolean func(mobj_t *));
-boolean P_PathTraverse(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2, int flags, boolean trav(intercept_t *));
+boolean P_PathTraverse(int x1, int y1, int x2, int y2, int flags, boolean trav(intercept_t *));
 
-extern fixed_t opentop;
-extern fixed_t openbottom;
-extern fixed_t openrange;
-extern fixed_t lowfloor;
+extern int opentop;
+extern int openbottom;
+extern int openrange;
+extern int lowfloor;
 extern divline_t trace;
 
 #endif

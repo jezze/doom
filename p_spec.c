@@ -161,12 +161,12 @@ sector_t* getNextSector
   return line->frontsector;
 }
 
-fixed_t P_FindLowestFloorSurrounding(sector_t* sec)
+int P_FindLowestFloorSurrounding(sector_t* sec)
 {
   int                 i;
   line_t*             check;
   sector_t*           other;
-  fixed_t             floor = sec->floorheight;
+  int             floor = sec->floorheight;
 
   for (i=0 ;i < sec->linecount ; i++)
   {
@@ -182,12 +182,12 @@ fixed_t P_FindLowestFloorSurrounding(sector_t* sec)
   return floor;
 }
 
-fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
+int P_FindHighestFloorSurrounding(sector_t *sec)
 {
   int i;
   line_t* check;
   sector_t* other;
-  fixed_t floor = -32000*FRACUNIT;
+  int floor = -32000*FRACUNIT;
 
   for (i=0 ;i < sec->linecount ; i++)
   {
@@ -203,7 +203,7 @@ fixed_t P_FindHighestFloorSurrounding(sector_t *sec)
   return floor;
 }
 
-fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight)
+int P_FindNextHighestFloor(sector_t *sec, int currentheight)
 {
   sector_t *other;
   int i;
@@ -223,7 +223,7 @@ fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight)
   return currentheight;
 }
 
-fixed_t P_FindNextLowestFloor(sector_t *sec, int currentheight)
+int P_FindNextLowestFloor(sector_t *sec, int currentheight)
 {
   sector_t *other;
   int i;
@@ -243,7 +243,7 @@ fixed_t P_FindNextLowestFloor(sector_t *sec, int currentheight)
   return currentheight;
 }
 
-fixed_t P_FindNextLowestCeiling(sector_t *sec, int currentheight)
+int P_FindNextLowestCeiling(sector_t *sec, int currentheight)
 {
   sector_t *other;
   int i;
@@ -263,7 +263,7 @@ fixed_t P_FindNextLowestCeiling(sector_t *sec, int currentheight)
   return currentheight;
 }
 
-fixed_t P_FindNextHighestCeiling(sector_t *sec, int currentheight)
+int P_FindNextHighestCeiling(sector_t *sec, int currentheight)
 {
   sector_t *other;
   int i;
@@ -283,12 +283,12 @@ fixed_t P_FindNextHighestCeiling(sector_t *sec, int currentheight)
   return currentheight;
 }
 
-fixed_t P_FindLowestCeilingSurrounding(sector_t* sec)
+int P_FindLowestCeilingSurrounding(sector_t* sec)
 {
   int                 i;
   line_t*             check;
   sector_t*           other;
-  fixed_t             height = 32000*FRACUNIT;
+  int             height = 32000*FRACUNIT;
 
   for (i=0 ;i < sec->linecount ; i++)
   {
@@ -304,12 +304,12 @@ fixed_t P_FindLowestCeilingSurrounding(sector_t* sec)
   return height;
 }
 
-fixed_t P_FindHighestCeilingSurrounding(sector_t* sec)
+int P_FindHighestCeilingSurrounding(sector_t* sec)
 {
   int             i;
   line_t* check;
   sector_t*       other;
-  fixed_t height = -32000*FRACUNIT;
+  int height = -32000*FRACUNIT;
 
   for (i=0 ;i < sec->linecount ; i++)
   {
@@ -325,7 +325,7 @@ fixed_t P_FindHighestCeilingSurrounding(sector_t* sec)
   return height;
 }
 
-fixed_t P_FindShortestTextureAround(int secnum)
+int P_FindShortestTextureAround(int secnum)
 {
   int minsize = 32000<<FRACBITS;
   side_t*     side;
@@ -349,7 +349,7 @@ fixed_t P_FindShortestTextureAround(int secnum)
   return minsize;
 }
 
-fixed_t P_FindShortestUpperAround(int secnum)
+int P_FindShortestUpperAround(int secnum)
 {
   int minsize = 32000<<FRACBITS;
   side_t*     side;
@@ -373,7 +373,7 @@ fixed_t P_FindShortestUpperAround(int secnum)
   return minsize;
 }
 
-sector_t *P_FindModelFloorSector(fixed_t floordestheight,int secnum)
+sector_t *P_FindModelFloorSector(int floordestheight,int secnum)
 {
   int i;
   sector_t *sec=NULL;
@@ -396,7 +396,7 @@ sector_t *P_FindModelFloorSector(fixed_t floordestheight,int secnum)
   return NULL;
 }
 
-sector_t *P_FindModelCeilingSector(fixed_t ceildestheight,int secnum)
+sector_t *P_FindModelCeilingSector(int ceildestheight,int secnum)
 {
   int i;
   sector_t *sec=NULL;
@@ -2050,13 +2050,13 @@ void P_SpawnSpecials (void)
 
 void T_Scroll(scroll_t *s)
 {
-  fixed_t dx = s->dx, dy = s->dy;
+  int dx = s->dx, dy = s->dy;
 
   if (s->control != -1)
     {
-      fixed_t height = sectors[s->control].floorheight +
+      int height = sectors[s->control].floorheight +
         sectors[s->control].ceilingheight;
-      fixed_t delta = height - s->last_height;
+      int delta = height - s->last_height;
       s->last_height = height;
       dx = FixedMul(dx, delta);
       dy = FixedMul(dy, delta);
@@ -2076,7 +2076,7 @@ void T_Scroll(scroll_t *s)
     {
       side_t *side;
       sector_t *sec;
-      fixed_t height, waterheight;
+      int height, waterheight;
       msecnode_t *node;
       mobj_t *thing;
 
@@ -2123,7 +2123,7 @@ void T_Scroll(scroll_t *s)
     }
 }
 
-static void Add_Scroller(int type, fixed_t dx, fixed_t dy, int control, int affectee, int accel)
+static void Add_Scroller(int type, int dx, int dy, int control, int affectee, int accel)
 {
   scroll_t *s = Z_Malloc(sizeof *s, PU_LEVSPEC, 0);
   s->thinker.function = T_Scroll;
@@ -2139,24 +2139,24 @@ static void Add_Scroller(int type, fixed_t dx, fixed_t dy, int control, int affe
   P_AddThinker(&s->thinker);
 }
 
-static void Add_WallScroller(fixed_t dx, fixed_t dy, const line_t *l, int control, int accel)
+static void Add_WallScroller(int dx, int dy, const line_t *l, int control, int accel)
 {
 
-    fixed_t x = D_abs(l->dx), y = D_abs(l->dy), d;
+    int x = D_abs(l->dx), y = D_abs(l->dy), d;
 
     if (y > x)
         d = x, x = y, y = d;
 
     d = FixedDiv(x, finesine[(tantoangle[FixedDiv(y,x) >> DBITS] + ANG90) >> ANGLETOFINESHIFT]);
-    x = (fixed_t)(((int_64_t)dy * -(int_64_t)l->dy - (int_64_t)dx * (int_64_t)l->dx) / (int_64_t)d);
-    y = (fixed_t)(((int_64_t)dy * (int_64_t)l->dx - (int_64_t)dx * (int_64_t)l->dy) / (int_64_t)d);
+    x = (int)(((int_64_t)dy * -(int_64_t)l->dy - (int_64_t)dx * (int_64_t)l->dx) / (int_64_t)d);
+    y = (int)(((int_64_t)dy * (int_64_t)l->dx - (int_64_t)dx * (int_64_t)l->dy) / (int_64_t)d);
 
     Add_Scroller(sc_side, x, y, control, *l->sidenum, accel);
 
 }
 
 #define SCROLL_SHIFT 5
-#define CARRYFACTOR ((fixed_t)(FRACUNIT*.09375))
+#define CARRYFACTOR ((int)(FRACUNIT*.09375))
 
 static void P_SpawnScrollers(void)
 {
@@ -2165,8 +2165,8 @@ static void P_SpawnScrollers(void)
 
   for (i=0;i<numlines;i++,l++)
     {
-      fixed_t dx = l->dx >> SCROLL_SHIFT;
-      fixed_t dy = l->dy >> SCROLL_SHIFT;
+      int dx = l->dx >> SCROLL_SHIFT;
+      int dy = l->dy >> SCROLL_SHIFT;
       int control = -1, accel = 0;
       int special = l->special;
 
@@ -2330,9 +2330,9 @@ static boolean PIT_PushThing(mobj_t* thing)
   if ((sentient(thing) || thing->flags & MF_SHOOTABLE) && !(thing->flags & MF_NOCLIP))
     {
       angle_t pushangle;
-      fixed_t speed;
-      fixed_t sx = tmpusher->x;
-      fixed_t sy = tmpusher->y;
+      int speed;
+      int sx = tmpusher->x;
+      int sy = tmpusher->y;
 
       speed = (tmpusher->magnitude -
                ((P_AproxDistance(thing->x - sx,thing->y - sy)

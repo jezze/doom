@@ -38,13 +38,13 @@ static mobj_t *corpsehit;
 static mobj_t *vileobj;
 static mobj_t **braintargets;
 static mobj_t *current_actor;
-static fixed_t viletryx;
-static fixed_t viletryy;
+static int viletryx;
+static int viletryy;
 static int TRACEANGLE = 0xc000000;
 static int current_allaround;
-static fixed_t dropoff_deltax, dropoff_deltay, floorz;
-static fixed_t xspeed[8] = {FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000, 0, 47000};
-static fixed_t yspeed[8] = {0, 47000, FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000};
+static int dropoff_deltax, dropoff_deltay, floorz;
+static int xspeed[8] = {FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000, 0, 47000};
+static int yspeed[8] = {0, 47000, FRACUNIT, 47000, 0, -47000, -FRACUNIT, -47000};
 static int numbraintargets_alloc;
 static int numbraintargets;
 
@@ -118,7 +118,7 @@ static boolean P_HitFriend(mobj_t *actor)
 static boolean P_CheckMissileRange(mobj_t *actor)
 {
 
-    fixed_t dist;
+    int dist;
 
     if (!P_CheckSight(actor, actor->target))
         return false;
@@ -233,7 +233,7 @@ static int P_IsUnderDamage(mobj_t *actor)
 static boolean P_Move(mobj_t *actor, boolean dropoff)
 {
 
-    fixed_t tryx, tryy, deltax, deltay, origx, origy;
+    int tryx, tryy, deltax, deltay, origx, origy;
     boolean try_ok;
     int movefactor = ORIG_FRICTION_FACTOR;
     int friction = ORIG_FRICTION;
@@ -344,7 +344,7 @@ static boolean P_TryWalk(mobj_t *actor)
 
 }
 
-static void P_DoNewChaseDir(mobj_t *actor, fixed_t deltax, fixed_t deltay)
+static void P_DoNewChaseDir(mobj_t *actor, int deltax, int deltay)
 {
 
     dirtype_t xdir, ydir, tdir;
@@ -411,8 +411,8 @@ static boolean PIT_AvoidDropoff(line_t *line)
     if (line->backsector && tmbbox[BOXRIGHT] > line->bbox[BOXLEFT] && tmbbox[BOXLEFT] < line->bbox[BOXRIGHT] && tmbbox[BOXTOP] > line->bbox[BOXBOTTOM] && tmbbox[BOXBOTTOM] < line->bbox[BOXTOP] && P_BoxOnLineSide(tmbbox, line) == -1)
     {
 
-        fixed_t front = line->frontsector->floorheight;
-        fixed_t back  = line->backsector->floorheight;
+        int front = line->frontsector->floorheight;
+        int back  = line->backsector->floorheight;
         angle_t angle;
 
         if (back == floorz && front < floorz - FRACUNIT * 24)
@@ -431,7 +431,7 @@ static boolean PIT_AvoidDropoff(line_t *line)
 
 }
 
-static fixed_t P_AvoidDropoff(mobj_t *actor)
+static int P_AvoidDropoff(mobj_t *actor)
 {
 
     int yh = ((tmbbox[BOXTOP] = actor->y+actor->radius)-bmaporgy) >> MAPBLOCKSHIFT;
@@ -460,8 +460,8 @@ static void P_NewChaseDir(mobj_t *actor)
 {
 
     mobj_t *target = actor->target;
-    fixed_t deltax = target->x - actor->x;
-    fixed_t deltay = target->y - actor->y;
+    int deltax = target->x - actor->x;
+    int deltay = target->y - actor->y;
 
     actor->strafecount = 0;
 
@@ -1162,8 +1162,8 @@ void A_Tracer(mobj_t *actor)
 {
 
     angle_t exact;
-    fixed_t dist;
-    fixed_t slope;
+    int dist;
+    int slope;
     mobj_t *dest;
     mobj_t *th;
 
@@ -1588,9 +1588,9 @@ static void A_PainShootSkull(mobj_t *actor, angle_t angle)
     mobj_t *newmobj;
     angle_t an = angle >> ANGLETOFINESHIFT;
     int prestep = 4 * FRACUNIT + 3 * (actor->info->radius + mobjinfo[MT_SKULL].radius) / 2;
-    fixed_t x = actor->x + FixedMul(prestep, finecosine[an]);
-    fixed_t y = actor->y + FixedMul(prestep, finesine[an]);
-    fixed_t z = actor->z + 8 * FRACUNIT;
+    int x = actor->x + FixedMul(prestep, finecosine[an]);
+    int y = actor->y + FixedMul(prestep, finesine[an]);
+    int z = actor->z + 8 * FRACUNIT;
 
     if (Check_Sides(actor,x,y))
         return;

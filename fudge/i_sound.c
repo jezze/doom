@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "doomdef.h"
 #include "d_think.h"
 #include "p_pspr.h"
@@ -87,7 +86,7 @@ void I_UnRegisterSong(int handle)
 
 }
 
-int I_RegisterSong(const void *data, size_t len)
+int I_RegisterSong(const void *data, unsigned int len)
 {
 
     return 0;

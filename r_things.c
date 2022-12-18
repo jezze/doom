@@ -22,9 +22,9 @@ typedef struct {
   int bottomclip;
 } maskdraw_t;
 
-fixed_t pspritescale;
-fixed_t pspriteiscale;
-fixed_t pspriteyscale;
+int pspritescale;
+int pspriteiscale;
+int pspriteyscale;
 
 int negonearray[MAX_SCREENWIDTH];
 int screenheightarray[MAX_SCREENWIDTH];
@@ -193,8 +193,8 @@ static vissprite_t *R_NewVisSprite(void)
 
 int   *mfloorclip;
 int   *mceilingclip;
-fixed_t spryscale;
-fixed_t sprtopscreen;
+int spryscale;
+int sprtopscreen;
 
 void R_DrawMaskedColumn(
   const rpatch_t *patch,
@@ -208,7 +208,7 @@ void R_DrawMaskedColumn(
   int     i;
   int     topscreen;
   int     bottomscreen;
-  fixed_t basetexturemid = dcvars->texturemid;
+  int basetexturemid = dcvars->texturemid;
 
   dcvars->texheight = patch->height;
   for (i=0; i<column->numPosts; i++) {
@@ -246,7 +246,7 @@ void R_DrawMaskedColumn(
 static void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
 {
   int      texturecolumn;
-  fixed_t  frac;
+  int  frac;
   const rpatch_t *patch = R_CachePatchNum(vis->patch+firstspritelump);
   R_DrawColumn_f colfunc;
   draw_column_vars_t dcvars;
@@ -306,9 +306,9 @@ static void R_DrawVisSprite(vissprite_t *vis, int x1, int x2)
 
 static void R_ProjectSprite (mobj_t* thing, int lightlevel)
 {
-  fixed_t   gzt;
-  fixed_t   tx;
-  fixed_t   xscale;
+  int   gzt;
+  int   tx;
+  int   xscale;
   int       x1;
   int       x2;
   spritedef_t   *sprdef;
@@ -316,13 +316,13 @@ static void R_ProjectSprite (mobj_t* thing, int lightlevel)
   int       lump;
   boolean   flip;
   vissprite_t *vis;
-  fixed_t   iscale;
+  int   iscale;
   int heightsec;
 
-  fixed_t tr_x, tr_y;
-  fixed_t fx, fy, fz;
-  fixed_t gxt, gyt;
-  fixed_t tz;
+  int tr_x, tr_y;
+  int fx, fy, fz;
+  int gxt, gyt;
+  int tz;
   int width;
 
   fx = thing->x;
@@ -475,7 +475,7 @@ static void R_DrawPSprite (pspdef_t *psp, int lightlevel)
   vissprite_t   *vis;
   vissprite_t   avis;
   int           width;
-  fixed_t       topoffset;
+  int       topoffset;
 
   avis.isplayersprite = true;
   sprdef = &sprites[psp->state->sprite];
@@ -485,7 +485,7 @@ static void R_DrawPSprite (pspdef_t *psp, int lightlevel)
 
   {
     const rpatch_t* patch = R_CachePatchNum(lump+firstspritelump);
-    fixed_t       tx;
+    int       tx;
     tx = psp->sx-160*FRACUNIT;
 
     tx -= patch->leftoffset<<FRACBITS;
@@ -617,8 +617,8 @@ static void R_DrawSprite (vissprite_t* spr)
   int     x;
   int     r1;
   int     r2;
-  fixed_t scale;
-  fixed_t lowscale;
+  int scale;
+  int lowscale;
 
   for (x = spr->x1 ; x<=spr->x2 ; x++)
     clipbot[x] = cliptop[x] = -2;
@@ -664,7 +664,7 @@ static void R_DrawSprite (vissprite_t* spr)
 
   if (spr->heightsec != -1)
     {
-      fixed_t h,mh;
+      int h,mh;
       int phs = viewplayer->mo->subsector->sector->heightsec;
       if ((mh = sectors[spr->heightsec].floorheight) > spr->gz &&
           (h = centeryfrac - FixedMul(mh-=viewz, spr->scale)) >= 0 &&

@@ -43,7 +43,7 @@ int       firstflat, lastflat, numflats;
 int       firstspritelump, lastspritelump, numspritelumps;
 int       numtextures;
 texture_t **textures;
-fixed_t   *textureheight;
+int   *textureheight;
 int       *flattranslation;
 int       *texturetranslation;
 
@@ -238,7 +238,7 @@ int R_ColormapNumForName(const char *name)
 static inline int between(int l,int u,int x)
 { return (l > x ? l : x > u ? u : x); }
 
-const lighttable_t* R_ColourMap(int lightlevel, fixed_t spryscale)
+const lighttable_t* R_ColourMap(int lightlevel, int spryscale)
 {
   if (fixedcolormap) return fixedcolormap;
   else {

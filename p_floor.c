@@ -11,12 +11,12 @@
 #include "s_sound.h"
 #include "z_zone.h"
 
-result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crush, int floorOrCeiling, int direction)
+result_e T_MovePlane(sector_t *sector, int speed, int dest, boolean crush, int floorOrCeiling, int direction)
 {
 
     boolean flag;
-    fixed_t lastpos;
-    fixed_t destheight;
+    int lastpos;
+    int destheight;
 
     switch (floorOrCeiling)
     {
@@ -664,8 +664,8 @@ int EV_BuildStairs(line_t *line, stair_e type)
 
             floormove_t *floor = Z_Malloc(sizeof(*floor), PU_LEVSPEC, 0);
             int texture, height;
-            fixed_t stairsize;
-            fixed_t speed;
+            int stairsize;
+            int speed;
             int ok;
 
             rtn = 1;

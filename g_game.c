@@ -93,9 +93,9 @@ int mousebforward;
 #define QUICKREVERSE                    (short)32768
 #define NUMKEYS                         512
 
-fixed_t forwardmove[2] = {0x19, 0x32};
-fixed_t sidemove[2] = {0x18, 0x28};
-fixed_t angleturn[3] = {640, 1280, 320};
+int forwardmove[2] = {0x19, 0x32};
+int sidemove[2] = {0x18, 0x28};
+int angleturn[3] = {640, 1280, 320};
 
 static boolean gamekeydown[NUMKEYS];
 static int turnheld;

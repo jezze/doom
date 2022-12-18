@@ -19,18 +19,18 @@
 IMPLEMENT_BLOCK_MEMORY_ALLOC_ZONE(secnodezone, sizeof(msecnode_t), PU_LEVEL, 32, "SecNodes");
 
 static mobj_t *tmthing;
-static fixed_t tmx;
-static fixed_t tmy;
+static int tmx;
+static int tmy;
 static int pe_x;
 static int pe_y;
 static int ls_x;
 static int ls_y;
 boolean floatok;
 boolean felldown;
-fixed_t tmbbox[4];
-fixed_t tmfloorz;
-static fixed_t tmceilingz;
-static fixed_t tmdropoffz;
+int tmbbox[4];
+int tmfloorz;
+static int tmceilingz;
+static int tmdropoffz;
 line_t *ceilingline;
 line_t *blockline;
 static line_t *floorline;
@@ -40,20 +40,20 @@ static int spechit_max;
 int numspechit;
 msecnode_t *sector_list = NULL;
 static boolean telefrag;
-static fixed_t bestslidefrac;
+static int bestslidefrac;
 static line_t *bestslideline;
 static mobj_t *slidemo;
-static fixed_t tmxmove;
-static fixed_t tmymove;
+static int tmxmove;
+static int tmymove;
 mobj_t *linetarget;
 static mobj_t *shootthing;
 static uint_64_t aim_flags_mask;
-static fixed_t shootz;
+static int shootz;
 static int la_damage;
-fixed_t attackrange;
-static fixed_t aimslope;
-static fixed_t topslope;
-static fixed_t bottomslope;
+int attackrange;
+static int aimslope;
+static int topslope;
+static int bottomslope;
 static mobj_t *bombsource, *bombspot;
 static int bombdamage;
 static mobj_t *usething;
@@ -62,7 +62,7 @@ static boolean crushchange, nofit;
 boolean PIT_StompThing(mobj_t* thing)
 {
 
-    fixed_t blockdist;
+    int blockdist;
 
     if (thing == tmthing)
         return true;
@@ -130,7 +130,7 @@ int P_GetMoveFactor(const mobj_t *mo, int *frictionp)
 
 }
 
-boolean P_TeleportMove(mobj_t* thing,fixed_t x,fixed_t y, boolean boss)
+boolean P_TeleportMove(mobj_t* thing,int x,int y, boolean boss)
 {
 
     int xl;
@@ -198,7 +198,7 @@ static boolean PIT_CrossLine(line_t* ld)
 static int untouched(line_t *ld)
 {
 
-    fixed_t x, y, tmbbox[4];
+    int x, y, tmbbox[4];
 
     return (tmbbox[BOXRIGHT] = (x=tmthing->x)+tmthing->radius) <= ld->bbox[BOXLEFT] || (tmbbox[BOXLEFT] = x-tmthing->radius) >= ld->bbox[BOXRIGHT] || (tmbbox[BOXTOP] = (y=tmthing->y)+tmthing->radius) <= ld->bbox[BOXBOTTOM] || (tmbbox[BOXBOTTOM] = y-tmthing->radius) >= ld->bbox[BOXTOP] || P_BoxOnLineSide(tmbbox, ld) != -1;
 
@@ -278,7 +278,7 @@ static boolean PIT_CheckLine(line_t *ld)
 static boolean PIT_CheckThing(mobj_t *thing)
 {
 
-    fixed_t blockdist;
+    int blockdist;
     int damage;
 
     if (!(thing->flags & (MF_SOLID|MF_SPECIAL|MF_SHOOTABLE|MF_TOUCHY)))
@@ -421,7 +421,7 @@ boolean Check_Sides(mobj_t* actor, int x, int y)
 
 }
 
-boolean P_CheckPosition (mobj_t* thing, fixed_t x, fixed_t y)
+boolean P_CheckPosition (mobj_t* thing, int x, int y)
 {
 
     int xl;
@@ -473,11 +473,11 @@ boolean P_CheckPosition (mobj_t* thing, fixed_t x, fixed_t y)
 
 }
 
-boolean P_TryMove(mobj_t* thing, fixed_t x, fixed_t y, boolean dropoff)
+boolean P_TryMove(mobj_t* thing, int x, int y, boolean dropoff)
 {
 
-    fixed_t oldx;
-    fixed_t oldy;
+    int oldx;
+    int oldy;
 
     felldown = floatok = false;
 
@@ -561,17 +561,17 @@ static boolean PIT_ApplyTorque(line_t *ld)
     {
 
         mobj_t *mo = tmthing;
-        fixed_t dist = (ld->dx >> FRACBITS) * (mo->y >> FRACBITS) - (ld->dy >> FRACBITS) * (mo->x >> FRACBITS) - (ld->dx >> FRACBITS) * (ld->v1->y >> FRACBITS) + (ld->dy >> FRACBITS) * (ld->v1->x >> FRACBITS);
+        int dist = (ld->dx >> FRACBITS) * (mo->y >> FRACBITS) - (ld->dy >> FRACBITS) * (mo->x >> FRACBITS) - (ld->dx >> FRACBITS) * (ld->v1->y >> FRACBITS) + (ld->dy >> FRACBITS) * (ld->v1->x >> FRACBITS);
 
         if (dist < 0 ? ld->frontsector->floorheight < mo->z && ld->backsector->floorheight >= mo->z : ld->backsector->floorheight < mo->z && ld->frontsector->floorheight >= mo->z)
         {
 
-            fixed_t x = D_abs(ld->dx), y = D_abs(ld->dy);
+            int x = D_abs(ld->dx), y = D_abs(ld->dy);
 
             if (y > x)
             {
 
-                fixed_t t = x;
+                int t = x;
                 x = y;
                 y = t;
 
@@ -665,8 +665,8 @@ void P_HitSlideLine (line_t* ld)
     angle_t lineangle;
     angle_t moveangle;
     angle_t deltaangle;
-    fixed_t movelen;
-    fixed_t newlen;
+    int movelen;
+    int newlen;
     boolean icyfloor = P_AproxDistance(tmxmove, tmymove) > 4 * FRACUNIT && slidemo->z <= slidemo->floorz && P_GetFriction(slidemo, NULL) > ORIG_FRICTION;
 
     if (ld->slopetype == ST_HORIZONTAL)
@@ -811,7 +811,7 @@ void P_SlideMove(mobj_t *mo)
     do
     {
 
-        fixed_t leadx, leady, trailx, traily;
+        int leadx, leady, trailx, traily;
 
         if (!--hitcount)
             goto stairstep;
@@ -850,8 +850,8 @@ void P_SlideMove(mobj_t *mo)
         if ((bestslidefrac -= 0x800) > 0)
         {
 
-            fixed_t newx = FixedMul(mo->momx, bestslidefrac);
-            fixed_t newy = FixedMul(mo->momy, bestslidefrac);
+            int newx = FixedMul(mo->momx, bestslidefrac);
+            int newy = FixedMul(mo->momy, bestslidefrac);
 
             if (!P_TryMove(mo, mo->x + newx, mo->y + newy, true))
                 goto stairstep;
@@ -896,10 +896,10 @@ boolean PTR_AimTraverse (intercept_t* in)
 
     line_t *li;
     mobj_t *th;
-    fixed_t slope;
-    fixed_t thingtopslope;
-    fixed_t thingbottomslope;
-    fixed_t dist;
+    int slope;
+    int thingtopslope;
+    int thingbottomslope;
+    int dist;
 
     if (in->isaline)
     {
@@ -981,15 +981,15 @@ boolean PTR_AimTraverse (intercept_t* in)
 boolean PTR_ShootTraverse (intercept_t *in)
 {
 
-    fixed_t x;
-    fixed_t y;
-    fixed_t z;
-    fixed_t frac;
+    int x;
+    int y;
+    int z;
+    int frac;
     mobj_t* th;
-    fixed_t slope;
-    fixed_t dist;
-    fixed_t thingtopslope;
-    fixed_t thingbottomslope;
+    int slope;
+    int dist;
+    int thingtopslope;
+    int thingbottomslope;
 
     if (in->isaline)
     {
@@ -1071,11 +1071,11 @@ boolean PTR_ShootTraverse (intercept_t *in)
 
 }
 
-fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance, uint_64_t mask)
+int P_AimLineAttack(mobj_t *t1, angle_t angle, int distance, uint_64_t mask)
 {
 
-    fixed_t x2;
-    fixed_t y2;
+    int x2;
+    int y2;
 
     angle >>= ANGLETOFINESHIFT;
     shootthing = t1;
@@ -1097,11 +1097,11 @@ fixed_t P_AimLineAttack(mobj_t *t1, angle_t angle, fixed_t distance, uint_64_t m
 
 }
 
-void P_LineAttack(mobj_t* t1, angle_t angle, fixed_t distance, fixed_t slope, int damage)
+void P_LineAttack(mobj_t* t1, angle_t angle, int distance, int slope, int damage)
 {
 
-    fixed_t x2;
-    fixed_t y2;
+    int x2;
+    int y2;
 
     angle >>= ANGLETOFINESHIFT;
     shootthing = t1;
@@ -1163,10 +1163,10 @@ void P_UseLines(player_t *player)
 {
 
     int angle;
-    fixed_t x1;
-    fixed_t y1;
-    fixed_t x2;
-    fixed_t y2;
+    int x1;
+    int y1;
+    int x2;
+    int y2;
 
     usething = player->mo;
 
@@ -1186,9 +1186,9 @@ void P_UseLines(player_t *player)
 boolean PIT_RadiusAttack(mobj_t *thing)
 {
 
-    fixed_t dx;
-    fixed_t dy;
-    fixed_t dist;
+    int dx;
+    int dy;
+    int dist;
 
     if (!(thing->flags & (MF_SHOOTABLE | MF_BOUNCES)))
         return true;
@@ -1217,7 +1217,7 @@ boolean PIT_RadiusAttack(mobj_t *thing)
 void P_RadiusAttack(mobj_t *spot, mobj_t *source, int damage)
 {
 
-    fixed_t dist = (damage + MAXRADIUS) << FRACBITS;
+    int dist = (damage + MAXRADIUS) << FRACBITS;
     int yh = (spot->y + dist - bmaporgy) >> MAPBLOCKSHIFT;
     int yl = (spot->y - dist - bmaporgy) >> MAPBLOCKSHIFT;
     int xh = (spot->x + dist - bmaporgx) >> MAPBLOCKSHIFT;
@@ -1474,7 +1474,7 @@ boolean PIT_GetSectors(line_t *ld)
 
 }
 
-void P_CreateSecNodeList(mobj_t *thing, fixed_t x, fixed_t y)
+void P_CreateSecNodeList(mobj_t *thing, int x, int y)
 {
 
     int xl;

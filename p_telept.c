@@ -37,7 +37,7 @@ int EV_Teleport(line_t *line, int side, mobj_t *thing)
 
   if ((m = P_TeleportDestination(line)) != NULL)
         {
-          fixed_t oldx = thing->x, oldy = thing->y, oldz = thing->z;
+          int oldx = thing->x, oldy = thing->y, oldz = thing->z;
           player_t *player = thing->player;
 
 
@@ -88,18 +88,18 @@ int EV_SilentTeleport(line_t *line, int side, mobj_t *thing)
   if ((m = P_TeleportDestination(line)) != NULL)
         {
 
-          fixed_t z = thing->z - thing->floorz;
+          int z = thing->z - thing->floorz;
 
           angle_t angle =
             R_PointToAngle2(0, 0, line->dx, line->dy) - m->angle + ANG90;
 
 
-          fixed_t s = finesine[angle>>ANGLETOFINESHIFT];
-          fixed_t c = finecosine[angle>>ANGLETOFINESHIFT];
+          int s = finesine[angle>>ANGLETOFINESHIFT];
+          int c = finecosine[angle>>ANGLETOFINESHIFT];
 
 
-          fixed_t momx = thing->momx;
-          fixed_t momy = thing->momy;
+          int momx = thing->momx;
+          int momy = thing->momy;
 
 
           player_t *player = thing->player;
@@ -123,7 +123,7 @@ int EV_SilentTeleport(line_t *line, int side, mobj_t *thing)
           if (player && player->mo == thing)
             {
 
-              fixed_t deltaviewheight = player->deltaviewheight;
+              int deltaviewheight = player->deltaviewheight;
 
 
               player->deltaviewheight = 0;
@@ -156,7 +156,7 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
     if ((l=lines+i) != line && l->backsector)
       {
 
-        fixed_t pos = D_abs(line->dx) > D_abs(line->dy) ?
+        int pos = D_abs(line->dx) > D_abs(line->dy) ?
           FixedDiv(thing->x - line->v1->x, line->dx) :
           FixedDiv(thing->y - line->v1->y, line->dy) ;
 
@@ -164,10 +164,10 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
           R_PointToAngle2(0, 0, l->dx, l->dy) -
           R_PointToAngle2(0, 0, line->dx, line->dy);
 
-        fixed_t x = l->v2->x - FixedMul(pos, l->dx);
-        fixed_t y = l->v2->y - FixedMul(pos, l->dy);
-        fixed_t s = finesine[angle>>ANGLETOFINESHIFT];
-        fixed_t c = finecosine[angle>>ANGLETOFINESHIFT];
+        int x = l->v2->x - FixedMul(pos, l->dx);
+        int y = l->v2->y - FixedMul(pos, l->dy);
+        int s = finesine[angle>>ANGLETOFINESHIFT];
+        int c = finecosine[angle>>ANGLETOFINESHIFT];
 
         int fudge = FUDGEFACTOR;
 
@@ -177,7 +177,7 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
         int stepdown =
           l->frontsector->floorheight < l->backsector->floorheight;
 
-        fixed_t z = thing->z - thing->floorz;
+        int z = thing->z - thing->floorz;
 
         int side = reverse || (player && stepdown);
 
@@ -201,7 +201,7 @@ int EV_SilentLineTeleport(line_t *line, int side, mobj_t *thing,
         if (player)
           {
 
-            fixed_t deltaviewheight = player->deltaviewheight;
+            int deltaviewheight = player->deltaviewheight;
 
             player->deltaviewheight = 0;
 

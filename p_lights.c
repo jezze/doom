@@ -281,7 +281,7 @@ int EV_LightTurnOn(line_t *line, int bright)
 
 }
 
-int EV_LightTurnOnPartway(line_t *line, fixed_t level)
+int EV_LightTurnOnPartway(line_t *line, int level)
 {
 
     int i;

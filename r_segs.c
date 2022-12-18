@@ -20,40 +20,40 @@ static boolean  maskedtexture;
 static int      toptexture;
 static int      bottomtexture;
 static int      midtexture;
-static fixed_t  toptexheight, midtexheight, bottomtexheight;
+static int  toptexheight, midtexheight, bottomtexheight;
 angle_t         rw_normalangle;
 int             rw_angle1;
-fixed_t         rw_distance;
+int         rw_distance;
 static int      rw_x;
 static int      rw_stopx;
 static angle_t  rw_centerangle;
-static fixed_t  rw_offset;
-static fixed_t  rw_scale;
-static fixed_t  rw_scalestep;
-static fixed_t  rw_midtexturemid;
-static fixed_t  rw_toptexturemid;
-static fixed_t  rw_bottomtexturemid;
+static int  rw_offset;
+static int  rw_scale;
+static int  rw_scalestep;
+static int  rw_midtexturemid;
+static int  rw_toptexturemid;
+static int  rw_bottomtexturemid;
 static int      rw_lightlevel;
 static int      worldtop;
 static int      worldbottom;
 static int      worldhigh;
 static int      worldlow;
-static fixed_t  pixhigh;
-static fixed_t  pixlow;
-static fixed_t  pixhighstep;
-static fixed_t  pixlowstep;
-static fixed_t  topfrac;
-static fixed_t  topstep;
-static fixed_t  bottomfrac;
-static fixed_t  bottomstep;
+static int  pixhigh;
+static int  pixlow;
+static int  pixhighstep;
+static int  pixlowstep;
+static int  topfrac;
+static int  topstep;
+static int  bottomfrac;
+static int  bottomstep;
 static int      *maskedtexturecol;
 
-static fixed_t R_ScaleFromGlobalAngle(angle_t visangle)
+static int R_ScaleFromGlobalAngle(angle_t visangle)
 {
   int     anglea = ANG90 + (visangle-viewangle);
   int     angleb = ANG90 + (visangle-rw_normalangle);
   int     den = FixedMul(rw_distance, finesine[anglea>>ANGLETOFINESHIFT]);
-  fixed_t num = FixedMul(projectiony, finesine[angleb>>ANGLETOFINESHIFT]);
+  int num = FixedMul(projectiony, finesine[angleb>>ANGLETOFINESHIFT]);
   return den > num>>16 ? (num = FixedDiv(num, den)) > 64*FRACUNIT ?
     64*FRACUNIT : num < 256 ? 256 : num : 64*FRACUNIT;
 }
@@ -161,7 +161,7 @@ static void R_RenderSegLoop (void)
   const rpatch_t *tex_patch;
   R_DrawColumn_f colfunc = R_GetDrawColumnFunc(RDC_PIPELINE_STANDARD, drawvars.filterwall, drawvars.filterz);
   draw_column_vars_t dcvars;
-  fixed_t  texturecolumn = 0;
+  int  texturecolumn = 0;
 
   R_SetDefaultDrawColumnVars(&dcvars);
 
@@ -326,14 +326,14 @@ static void R_RenderSegLoop (void)
     }
 }
 
-static fixed_t R_PointToDist(fixed_t x, fixed_t y)
+static int R_PointToDist(int x, int y)
 {
-  fixed_t dx = D_abs(x - viewx);
-  fixed_t dy = D_abs(y - viewy);
+  int dx = D_abs(x - viewx);
+  int dy = D_abs(y - viewy);
 
   if (dy > dx)
     {
-      fixed_t t = dx;
+      int t = dx;
       dx = dy;
       dy = t;
     }
@@ -344,7 +344,7 @@ static fixed_t R_PointToDist(fixed_t x, fixed_t y)
 
 void R_StoreWallRange(const int start, const int stop)
 {
-  fixed_t hyp;
+  int hyp;
   angle_t offsetangle;
 
   if (ds_p == drawsegs+maxdrawsegs)
@@ -429,7 +429,7 @@ void R_StoreWallRange(const int start, const int stop)
 
       if (linedef->flags & ML_DONTPEGBOTTOM)
         {
-          fixed_t vtop = frontsector->floorheight +
+          int vtop = frontsector->floorheight +
             textureheight[sidedef->midtexture];
           rw_midtexturemid = vtop - viewz;
         }

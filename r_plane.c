@@ -28,21 +28,21 @@ int *openings, *lastopening;
 int floorclip[MAX_SCREENWIDTH], ceilingclip[MAX_SCREENWIDTH];
 static int spanstart[MAX_SCREENHEIGHT];
 static const lighttable_t **planezlight;
-static fixed_t planeheight;
-static fixed_t basexscale, baseyscale;
-static fixed_t cachedheight[MAX_SCREENHEIGHT];
-static fixed_t cacheddistance[MAX_SCREENHEIGHT];
-static fixed_t cachedxstep[MAX_SCREENHEIGHT];
-static fixed_t cachedystep[MAX_SCREENHEIGHT];
-static fixed_t xoffs, yoffs;
+static int planeheight;
+static int basexscale, baseyscale;
+static int cachedheight[MAX_SCREENHEIGHT];
+static int cacheddistance[MAX_SCREENHEIGHT];
+static int cachedxstep[MAX_SCREENHEIGHT];
+static int cachedystep[MAX_SCREENHEIGHT];
+static int xoffs, yoffs;
 
-fixed_t yslope[MAX_SCREENHEIGHT], distscale[MAX_SCREENWIDTH];
+int yslope[MAX_SCREENHEIGHT], distscale[MAX_SCREENWIDTH];
 
 static void R_MapPlane(int y, int x1, int x2, draw_span_vars_t *dsvars)
 {
 
     angle_t angle;
-    fixed_t distance, length;
+    int distance, length;
     unsigned index;
 
     if (planeheight != cachedheight[y])
@@ -162,7 +162,7 @@ visplane_t *R_DupPlane(const visplane_t *pl, int start, int stop)
 
 }
 
-visplane_t *R_FindPlane(fixed_t height, int picnum, int lightlevel, fixed_t xoffs, fixed_t yoffs)
+visplane_t *R_FindPlane(int height, int picnum, int lightlevel, int xoffs, int yoffs)
 {
 
     visplane_t *check;

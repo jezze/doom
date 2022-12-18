@@ -35,9 +35,9 @@ int weapon_preferences[2][NUMWEAPONS + 1] = {
 };
 
 static const int recoil_values[] = {10, 10, 30, 10, 100, 20, 100, 0, 80};
-static fixed_t bulletslope;
+static int bulletslope;
 
-extern void P_Thrust(player_t *, angle_t, fixed_t);
+extern void P_Thrust(player_t *, angle_t, int);
 
 static void P_SetPsprite(player_t *player, int position, statenum_t stnum)
 {

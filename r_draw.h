@@ -36,11 +36,11 @@ typedef struct
     int x;
     int yl;
     int yh;
-    fixed_t z;
-    fixed_t iscale;
-    fixed_t texturemid;
+    int z;
+    int iscale;
+    int texturemid;
     int texheight;
-    fixed_t texu;
+    int texu;
     const byte *source;
     const byte *prevsource;
     const byte *nextsource;
@@ -59,11 +59,11 @@ typedef struct
     int y;
     int x1;
     int x2;
-    fixed_t z;
-    fixed_t xfrac;
-    fixed_t yfrac;
-    fixed_t xstep;
-    fixed_t ystep;
+    int z;
+    int xfrac;
+    int yfrac;
+    int xstep;
+    int ystep;
     const byte *source;
     const lighttable_t *colormap;
     const lighttable_t *nextcolormap;
@@ -82,7 +82,7 @@ typedef struct
     enum draw_filter_type_e filterpatch;
     enum sloped_edge_type_e sprite_edges;
     enum sloped_edge_type_e patch_edges;
-    fixed_t mag_threshold;
+    int mag_threshold;
 
 } draw_vars_t;
 

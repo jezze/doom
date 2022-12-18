@@ -25,13 +25,13 @@
 int validcount = 1;
 const lighttable_t *fixedcolormap;
 int centerx, centery;
-fixed_t centerxfrac, centeryfrac;
-fixed_t viewheightfrac;
-fixed_t projection;
-fixed_t projectiony;
-fixed_t viewx, viewy, viewz;
+int centerxfrac, centeryfrac;
+int viewheightfrac;
+int projection;
+int projectiony;
+int viewx, viewy, viewz;
 angle_t viewangle;
-fixed_t viewcos, viewsin;
+int viewcos, viewsin;
 player_t *viewplayer;
 extern lighttable_t **walllights;
 angle_t clipangle;
@@ -57,7 +57,7 @@ void R_InitSkyMap(void)
 
 }
 
-void R_InterpolateView(player_t *player, fixed_t frac)
+void R_InterpolateView(player_t *player, int frac)
 {
 
     viewx = player->mo->x;
@@ -67,7 +67,7 @@ void R_InterpolateView(player_t *player, fixed_t frac)
 
 }
 
-int R_PointOnSide(fixed_t x, fixed_t y, const node_t *node)
+int R_PointOnSide(int x, int y, const node_t *node)
 {
 
     if (!node->dx)
@@ -87,13 +87,13 @@ int R_PointOnSide(fixed_t x, fixed_t y, const node_t *node)
 
 }
 
-int R_PointOnSegSide(fixed_t x, fixed_t y, const seg_t *line)
+int R_PointOnSegSide(int x, int y, const seg_t *line)
 {
 
-    fixed_t lx = line->v1->x;
-    fixed_t ly = line->v1->y;
-    fixed_t ldx = line->v2->x - lx;
-    fixed_t ldy = line->v2->y - ly;
+    int lx = line->v1->x;
+    int ly = line->v1->y;
+    int ldx = line->v2->x - lx;
+    int ldy = line->v2->y - ly;
 
     if (!ldx)
         return x <= lx ? ldy > 0 : ldy < 0;
@@ -111,10 +111,10 @@ int R_PointOnSegSide(fixed_t x, fixed_t y, const seg_t *line)
 
 }
 
-angle_t R_PointToAngle(fixed_t x, fixed_t y)
+angle_t R_PointToAngle(int x, int y)
 {
 
-    static fixed_t oldx, oldy;
+    static int oldx, oldy;
     static angle_t oldresult;
 
     x -= viewx; y -= viewy;
@@ -135,7 +135,7 @@ angle_t R_PointToAngle(fixed_t x, fixed_t y)
 
 }
 
-angle_t R_PointToAngle2(fixed_t viewx, fixed_t viewy, fixed_t x, fixed_t y)
+angle_t R_PointToAngle2(int viewx, int viewy, int x, int y)
 {
 
     return (y -= viewy, (x -= viewx) || y) ? x >= 0 ? y >= 0 ? (x > y) ? tantoangle[SlopeDiv(y, x)] : ANG90 - 1 - tantoangle[SlopeDiv(x, y)] : x > (y = -y) ? 0 - tantoangle[SlopeDiv(y, x)] : ANG270 + tantoangle[SlopeDiv(x, y)] : y >= 0 ? (x = -x) > y ? ANG180 - 1 - tantoangle[SlopeDiv(y, x)] : ANG90 + tantoangle[SlopeDiv(x, y)] : (x = -x) > (y = -y) ? ANG180 + tantoangle[SlopeDiv(y, x)] : ANG270 - 1 - tantoangle[SlopeDiv(x, y)] : 0;
@@ -146,7 +146,7 @@ static void R_InitTextureMapping (void)
 {
 
     register int i, x;
-    fixed_t focallength = FixedDiv(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
+    int focallength = FixedDiv(centerxfrac, finetangent[FINEANGLES / 4 + FIELDOFVIEW / 2]);
 
     for (i = 0; i < FINEANGLES / 2; i++)
     {
@@ -269,7 +269,7 @@ static void R_InitView()
     for (i = 0; i < viewheight; i++)
     {
 
-        fixed_t dy = D_abs(((i - viewheight / 2) << FRACBITS) + FRACUNIT / 2);
+        int dy = D_abs(((i - viewheight / 2) << FRACBITS) + FRACUNIT / 2);
         yslope[i] = FixedDiv(projectiony, dy);
 
     }
@@ -277,7 +277,7 @@ static void R_InitView()
     for (i = 0; i < viewwidth; i++)
     {
 
-        fixed_t cosadj = D_abs(finecosine[xtoviewangle[i] >> ANGLETOFINESHIFT]);
+        int cosadj = D_abs(finecosine[xtoviewangle[i] >> ANGLETOFINESHIFT]);
         distscale[i] = FixedDiv(FRACUNIT, cosadj);
 
     }
@@ -297,7 +297,7 @@ void R_Init(void)
 
 }
 
-subsector_t *R_PointInSubsector(fixed_t x, fixed_t y)
+subsector_t *R_PointInSubsector(int x, int y)
 {
 
     int nodenum = numnodes - 1;

@@ -14,7 +14,7 @@
 typedef struct
 {
 
-    fixed_t x, y;
+    int x, y;
 
 } vertex_t;
 
@@ -22,7 +22,7 @@ typedef struct
 {
 
     thinker_t thinker;
-    fixed_t x, y, z;
+    int x, y, z;
 
 } degenmobj_t;
 
@@ -32,8 +32,8 @@ typedef struct
     int iSectorID;
     boolean no_toptextures;
     boolean no_bottomtextures;
-    fixed_t floorheight;
-    fixed_t ceilingheight;
+    int floorheight;
+    int ceilingheight;
     int nexttag, firsttag;
     int soundtraversed;
     mobj_t *soundtarget;
@@ -54,8 +54,8 @@ typedef struct
     int linecount;
     struct line_s **lines;
     int sky;
-    fixed_t floor_xoffs, floor_yoffs;
-    fixed_t ceiling_xoffs, ceiling_yoffs;
+    int floor_xoffs, floor_yoffs;
+    int ceiling_xoffs, ceiling_yoffs;
     int floorlightsec, ceilinglightsec;
     short floorpic;
     short ceilingpic;
@@ -69,8 +69,8 @@ typedef struct
 typedef struct
 {
 
-    fixed_t textureoffset;
-    fixed_t rowoffset;
+    int textureoffset;
+    int rowoffset;
     short toptexture;
     short bottomtexture;
     short midtexture;
@@ -94,12 +94,12 @@ typedef struct line_s
 
     int iLineID;
     vertex_t *v1, *v2;
-    fixed_t dx, dy;
+    int dx, dy;
     unsigned short flags;
     short special;
     short tag;
     unsigned short sidenum[2];
-    fixed_t bbox[4];
+    int bbox[4];
     slopetype_t slopetype;
     sector_t *frontsector;
     sector_t *backsector;
@@ -139,7 +139,7 @@ typedef struct
 {
 
     vertex_t *v1, *v2;
-    fixed_t offset;
+    int offset;
     angle_t angle;
     side_t *sidedef;
     line_t *linedef;
@@ -161,8 +161,8 @@ typedef struct subsector_s
 typedef struct
 {
 
-    fixed_t x, y, dx, dy;
-    fixed_t bbox[2][4];
+    int x, y, dx, dy;
+    int bbox[2][4];
     unsigned short children[2];
 
 } node_t;
@@ -174,11 +174,11 @@ typedef struct drawseg_s
 
     seg_t *curline;
     int x1, x2;
-    fixed_t scale1, scale2, scalestep;
+    int scale1, scale2, scalestep;
     int silhouette;
-    fixed_t bsilheight;
-    fixed_t tsilheight;
-    fixed_t rw_offset, rw_distance, rw_centerangle; 
+    int bsilheight;
+    int tsilheight;
+    int rw_offset, rw_distance, rw_centerangle; 
     int *sprtopclip, *sprbottomclip, *maskedtexturecol;
 
 } drawseg_t;
@@ -198,12 +198,12 @@ typedef struct vissprite_s
     mobj_t *thing;
     boolean flip;
     int x1, x2;
-    fixed_t gx, gy;
-    fixed_t gz, gzt;
-    fixed_t startfrac;
-    fixed_t scale;
-    fixed_t xiscale;
-    fixed_t texturemid;
+    int gx, gy;
+    int gz, gzt;
+    int startfrac;
+    int scale;
+    int xiscale;
+    int texturemid;
     int patch;
     uint_64_t mobjflags;
     const lighttable_t *colormap;
@@ -234,8 +234,8 @@ typedef struct visplane
 
     struct visplane *next;
     int picnum, lightlevel, minx, maxx;
-    fixed_t height;
-    fixed_t xoffs, yoffs;
+    int height;
+    int xoffs, yoffs;
     unsigned int pad1;
     unsigned int top[MAX_SCREENWIDTH];
     unsigned int pad2;

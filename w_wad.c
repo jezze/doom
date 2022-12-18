@@ -10,7 +10,7 @@
 lumpinfo_t *lumpinfo;
 int numlumps;
 wadfile_info_t *wadfiles = NULL;
-size_t numwadfiles = 0;
+unsigned int numwadfiles = 0;
 
 static struct
 {

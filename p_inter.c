@@ -212,7 +212,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
     player_t *player;
     int i;
     int sound;
-    fixed_t delta = special->z - toucher->z;
+    int delta = special->z - toucher->z;
 
     if (delta > toucher->height || delta < -8 * FRACUNIT)
         return;
@@ -725,7 +725,7 @@ void P_DamageMobj(mobj_t *target, mobj_t *inflictor, mobj_t *source, int damage)
     {
 
         unsigned ang = R_PointToAngle2 (inflictor->x, inflictor->y, target->x, target->y);
-        fixed_t thrust = damage * (FRACUNIT >> 3) * 100 / target->info->mass;
+        int thrust = damage * (FRACUNIT >> 3) * 100 / target->info->mass;
 
         if (damage < 40 && damage > target->health && target->z - inflictor->z > 64 * FRACUNIT && P_Random(pr_damagemobj) & 1)
         {

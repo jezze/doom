@@ -444,9 +444,9 @@ typedef struct
 
     thinker_t thinker;
     sector_t* sector;
-    fixed_t speed;
-    fixed_t low;
-    fixed_t high;
+    int speed;
+    int low;
+    int high;
     int wait;
     int count;
     plat_e status;
@@ -472,8 +472,8 @@ typedef struct
     thinker_t thinker;
     vldoor_e type;
     sector_t* sector;
-    fixed_t topheight;
-    fixed_t speed;
+    int topheight;
+    int speed;
     int direction;
     int topwait;
     int topcountdown;
@@ -488,10 +488,10 @@ typedef struct
     thinker_t thinker;
     ceiling_e type;
     sector_t* sector;
-    fixed_t bottomheight;
-    fixed_t topheight;
-    fixed_t speed;
-    fixed_t oldspeed;
+    int bottomheight;
+    int topheight;
+    int speed;
+    int oldspeed;
     boolean crush;
     int newspecial;
     int oldspecial;
@@ -522,8 +522,8 @@ typedef struct
     int newspecial;
     int oldspecial;
     short texture;
-    fixed_t floordestheight;
-    fixed_t speed;
+    int floordestheight;
+    int speed;
 
 } floormove_t;
 
@@ -534,9 +534,9 @@ typedef struct
     elevator_e type;
     sector_t* sector;
     int direction;
-    fixed_t floordestheight;
-    fixed_t ceilingdestheight;
-    fixed_t speed;
+    int floordestheight;
+    int ceilingdestheight;
+    int speed;
 
 } elevator_t;
 
@@ -544,11 +544,11 @@ typedef struct
 {
 
     thinker_t thinker;
-    fixed_t dx, dy;
+    int dx, dy;
     int affectee;
     int control;
-    fixed_t last_height;
-    fixed_t vdx, vdy;
+    int last_height;
+    int vdx, vdy;
     int accel;
     enum
     {
@@ -601,18 +601,18 @@ extern platlist_t *activeplats;
 int twoSided(int sector, int line);
 sector_t *getSector(int currentSector, int line, int side);
 side_t *getSide(int currentSector, int line, int side);
-fixed_t P_FindLowestFloorSurrounding(sector_t *sec);
-fixed_t P_FindHighestFloorSurrounding(sector_t *sec);
-fixed_t P_FindNextHighestFloor(sector_t *sec, int currentheight);
-fixed_t P_FindNextLowestFloor(sector_t *sec, int currentheight);
-fixed_t P_FindLowestCeilingSurrounding(sector_t *sec);
-fixed_t P_FindHighestCeilingSurrounding(sector_t *sec);
-fixed_t P_FindNextLowestCeiling(sector_t *sec, int currentheight);
-fixed_t P_FindNextHighestCeiling(sector_t *sec, int currentheight);
-fixed_t P_FindShortestTextureAround(int secnum);
-fixed_t P_FindShortestUpperAround(int secnum);
-sector_t *P_FindModelFloorSector(fixed_t floordestheight, int secnum);
-sector_t *P_FindModelCeilingSector(fixed_t ceildestheight, int secnum);
+int P_FindLowestFloorSurrounding(sector_t *sec);
+int P_FindHighestFloorSurrounding(sector_t *sec);
+int P_FindNextHighestFloor(sector_t *sec, int currentheight);
+int P_FindNextLowestFloor(sector_t *sec, int currentheight);
+int P_FindLowestCeilingSurrounding(sector_t *sec);
+int P_FindHighestCeilingSurrounding(sector_t *sec);
+int P_FindNextLowestCeiling(sector_t *sec, int currentheight);
+int P_FindNextHighestCeiling(sector_t *sec, int currentheight);
+int P_FindShortestTextureAround(int secnum);
+int P_FindShortestUpperAround(int secnum);
+sector_t *P_FindModelFloorSector(int floordestheight, int secnum);
+sector_t *P_FindModelCeilingSector(int ceildestheight, int secnum);
 int P_FindSectorFromLineTag(const line_t *line, int start);
 int P_FindLineFromLineTag(const line_t *line, int start);
 int P_FindMinSurroundingLight(sector_t *sector, int max);
@@ -630,7 +630,7 @@ void T_Glow(glow_t *g);
 void T_PlatRaise(plat_t *plat);
 void T_VerticalDoor(vldoor_t *door);
 void T_MoveCeiling(ceiling_t *ceiling);
-result_e T_MovePlane(sector_t *sector, fixed_t speed, fixed_t dest, boolean crush, int floorOrCeiling, int direction);
+result_e T_MovePlane(sector_t *sector, int speed, int dest, boolean crush, int floorOrCeiling, int direction);
 void T_MoveFloor(floormove_t *floor);
 void T_MoveElevator(elevator_t *elevator);
 void T_Scroll(scroll_t *);
@@ -650,7 +650,7 @@ int EV_DoLockedDoor(line_t *line, vldoor_e type, mobj_t *thing);
 int EV_StartLightStrobing(line_t *line);
 int EV_TurnTagLightsOff(line_t *line);
 int EV_LightTurnOn(line_t *line, int bright);
-int EV_LightTurnOnPartway(line_t *line, fixed_t level);
+int EV_LightTurnOnPartway(line_t *line, int level);
 int EV_DoChange(line_t *line, change_e changetype);
 int EV_DoDonut(line_t *line);
 int EV_DoPlat(line_t *line, plattype_e type, int amount);

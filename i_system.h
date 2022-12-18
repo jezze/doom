@@ -7,7 +7,7 @@ typedef struct
     unsigned int start;
     unsigned int next;
     unsigned int step;
-    fixed_t frac;
+    int frac;
     float msec;
 
 } tic_vars_t;
@@ -21,11 +21,11 @@ void I_Print(const char *s, ...) __attribute__((format(printf, 1, 2)));
 void I_Error(const char *s, ...) __attribute__((format(printf, 1, 2)));
 boolean I_StartDisplay(void);
 void I_EndDisplay(void);
-fixed_t I_GetTimeFrac(void);
+int I_GetTimeFrac(void);
 unsigned long I_GetRandomTimeSeed(void);
 void I_uSleep(unsigned long usecs);
 char *I_FindFile(const char *wfname, const char *ext);
-void I_Read(int fd, void *buf, size_t sz);
+void I_Read(int fd, void *buf, unsigned int sz);
 int I_Filelength(int handle);
 
 extern int ms_to_next_tick;

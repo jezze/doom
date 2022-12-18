@@ -14,7 +14,7 @@ void I_UpdateMusic(void);
 void I_SetMusicVolume(int volume);
 void I_PauseSong(int handle);
 void I_ResumeSong(int handle);
-int I_RegisterSong(const void *data, size_t len);
+int I_RegisterSong(const void *data, unsigned int len);
 int I_RegisterMusic(const char *filename, struct musicinfo *music);
 void I_PlaySong(int handle, int looping);
 void I_StopSong(int handle);

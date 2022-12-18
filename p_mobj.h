@@ -169,9 +169,9 @@ typedef struct mobj_s
 {
 
     thinker_t           thinker;
-    fixed_t             x;
-    fixed_t             y;
-    fixed_t             z;
+    int             x;
+    int             y;
+    int             z;
     struct mobj_s*      snext;
     struct mobj_s**     sprev;
     angle_t             angle;
@@ -180,14 +180,14 @@ typedef struct mobj_s
     struct mobj_s*      bnext;
     struct mobj_s**     bprev;
     struct subsector_s* subsector;
-    fixed_t             floorz;
-    fixed_t             ceilingz;
-    fixed_t             dropoffz;
-    fixed_t             radius;
-    fixed_t             height;
-    fixed_t             momx;
-    fixed_t             momy;
-    fixed_t             momz;
+    int             floorz;
+    int             ceilingz;
+    int             dropoffz;
+    int             radius;
+    int             height;
+    int             momx;
+    int             momy;
+    int             momz;
     int                 validcount;
     mobjtype_t          type;
     mobjinfo_t*         info;
@@ -212,10 +212,10 @@ typedef struct mobj_s
     int friction;
     int movefactor;
     struct msecnode_s* touching_sectorlist;
-    fixed_t             PrevX;
-    fixed_t             PrevY;
-    fixed_t             PrevZ;
-    fixed_t             pad;
+    int             PrevX;
+    int             PrevY;
+    int             PrevZ;
+    int             pad;
 
 } mobj_t;
 
@@ -231,12 +231,12 @@ typedef struct mobj_s
 #define MAXGEAR (OVERDRIVE+16)
 #define sentient(mobj) ((mobj)->health > 0 && (mobj)->info->seestate)
 
-mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type);
+mobj_t *P_SpawnMobj(int x, int y, int z, mobjtype_t type);
 void P_RemoveMobj(mobj_t *th);
 boolean P_SetMobjState(mobj_t *mobj, statenum_t state);
 void P_MobjThinker(mobj_t *mobj);
-void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z);
-void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage);
+void P_SpawnPuff(int x, int y, int z);
+void P_SpawnBlood(int x, int y, int z, int damage);
 mobj_t *P_SpawnMissile(mobj_t *source, mobj_t *dest, mobjtype_t type);
 void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type);
 boolean P_IsDoomnumAllowed(int doomnum);

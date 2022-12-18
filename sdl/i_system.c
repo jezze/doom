@@ -124,16 +124,16 @@ int I_GetTime(void)
 
 }
 
-fixed_t I_GetTimeFrac(void)
+int I_GetTimeFrac(void)
 {
 
     unsigned long now = SDL_GetTicks();
-    fixed_t frac;
+    int frac;
 
     if (tic_vars.step == 0)
         return FRACUNIT;
 
-    frac = (fixed_t)((now - tic_vars.start + displaytime) * FRACUNIT / tic_vars.step);
+    frac = (int)((now - tic_vars.start + displaytime) * FRACUNIT / tic_vars.step);
 
     if (frac < 0)
         frac = 0;
@@ -152,7 +152,7 @@ unsigned long I_GetRandomTimeSeed(void)
 
 }
 
-void I_Read(int fd, void *vbuf, size_t sz)
+void I_Read(int fd, void *vbuf, unsigned int sz)
 {
 
     unsigned char *buf = vbuf;

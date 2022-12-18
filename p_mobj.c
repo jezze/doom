@@ -22,7 +22,7 @@ static mapthing_t itemrespawnque[ITEMQUESIZE];
 static int itemrespawntime[ITEMQUESIZE];
 static int iquehead;
 static int iquetail;
-extern fixed_t attackrange;
+extern int attackrange;
 
 boolean P_SetMobjState(mobj_t *mobj, statenum_t state)
 {
@@ -106,7 +106,7 @@ static void P_XYMovement(mobj_t *mo)
 {
 
     player_t *player;
-    fixed_t xmove, ymove;
+    int xmove, ymove;
 
     if (!(mo->momx | mo->momy))
     {
@@ -143,7 +143,7 @@ static void P_XYMovement(mobj_t *mo)
     do
     {
 
-        fixed_t ptryx, ptryy;
+        int ptryx, ptryy;
 
         if (xmove > MAXMOVE / 2 || ymove > MAXMOVE / 2 || (xmove < -MAXMOVE / 2 || ymove < -MAXMOVE / 2))
         {
@@ -173,9 +173,9 @@ static void P_XYMovement(mobj_t *mo)
                 if (blockline)
                 {
 
-                    fixed_t r = ((blockline->dx >> FRACBITS) * mo->momx + (blockline->dy >> FRACBITS) * mo->momy) / ((blockline->dx >> FRACBITS) * (blockline->dx >> FRACBITS) + (blockline->dy >> FRACBITS)*(blockline->dy >> FRACBITS));
-                    fixed_t x = FixedMul(r, blockline->dx);
-                    fixed_t y = FixedMul(r, blockline->dy);
+                    int r = ((blockline->dx >> FRACBITS) * mo->momx + (blockline->dy >> FRACBITS) * mo->momy) / ((blockline->dx >> FRACBITS) * (blockline->dx >> FRACBITS) + (blockline->dy >> FRACBITS)*(blockline->dy >> FRACBITS));
+                    int x = FixedMul(r, blockline->dx);
+                    int y = FixedMul(r, blockline->dy);
                     mo->momx = x * 2 - mo->momx;
                     mo->momy = y * 2 - mo->momy;
 
@@ -260,7 +260,7 @@ static void P_XYMovement(mobj_t *mo)
     else
     {
 
-        fixed_t friction = P_GetFriction(mo, NULL);
+        int friction = P_GetFriction(mo, NULL);
 
         mo->momx = FixedMul(mo->momx, friction);
         mo->momy = FixedMul(mo->momy, friction);
@@ -298,7 +298,7 @@ static void P_ZMovement(mobj_t *mo)
                 if (!(mo->flags & MF_NOGRAVITY))
                 {
 
-                    mo->momz = mo->flags & MF_FLOAT ? mo->flags & MF_DROPOFF ? FixedMul(mo->momz, (fixed_t)(FRACUNIT * 0.85)) : FixedMul(mo->momz, (fixed_t)(FRACUNIT * 0.70)) : FixedMul(mo->momz, (fixed_t)(FRACUNIT * 0.45));
+                    mo->momz = mo->flags & MF_FLOAT ? mo->flags & MF_DROPOFF ? FixedMul(mo->momz, (int)(FRACUNIT * 0.85)) : FixedMul(mo->momz, (int)(FRACUNIT * 0.70)) : FixedMul(mo->momz, (int)(FRACUNIT * 0.45));
 
                     if (D_abs(mo->momz) <= mo->info->mass * (GRAVITY * 4 / 256))
                         mo->momz = 0;
@@ -389,7 +389,7 @@ floater:
         if (!((mo->flags ^ MF_FLOAT) & (MF_FLOAT | MF_SKULLFLY | MF_INFLOAT)) && mo->target)
         {
 
-            fixed_t delta = mo->target->z + (mo->height >> 1) - mo->z;
+            int delta = mo->target->z + (mo->height >> 1) - mo->z;
 
             if (P_AproxDistance(mo->x - mo->target->x, mo->y - mo->target->y) < D_abs(delta) * 3)
                 mo->z += delta < 0 ? -FLOATSPEED : FLOATSPEED;
@@ -478,9 +478,9 @@ floater:
 static void P_NightmareRespawn(mobj_t *mobj)
 {
 
-    fixed_t x;
-    fixed_t y;
-    fixed_t z;
+    int x;
+    int y;
+    int z;
     subsector_t *ss;
     mobj_t *mo;
     mapthing_t *mthing;
@@ -609,7 +609,7 @@ void P_MobjThinker(mobj_t *mobj)
 
 }
 
-mobj_t *P_SpawnMobj(fixed_t x, fixed_t y, fixed_t z, mobjtype_t type)
+mobj_t *P_SpawnMobj(int x, int y, int z, mobjtype_t type)
 {
 
     mobj_t *mobj;
@@ -743,9 +743,9 @@ void P_SpawnPlayer(int n, const mapthing_t *mthing)
 {
 
     player_t *p;
-    fixed_t x;
-    fixed_t y;
-    fixed_t z;
+    int x;
+    int y;
+    int z;
     mobj_t *mobj;
 
     if (!playeringame[n])
@@ -823,9 +823,9 @@ void P_SpawnMapThing(const mapthing_t *mthing)
 
     int i;
     mobj_t *mobj;
-    fixed_t x;
-    fixed_t y;
-    fixed_t z;
+    int x;
+    int y;
+    int z;
     int options = mthing->options;
 
     switch (mthing->type)
@@ -908,7 +908,7 @@ void P_SpawnMapThing(const mapthing_t *mthing)
 
 }
 
-void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
+void P_SpawnPuff(int x, int y, int z)
 {
 
     mobj_t* th;
@@ -927,7 +927,7 @@ void P_SpawnPuff(fixed_t x, fixed_t y, fixed_t z)
 
 }
 
-void P_SpawnBlood(fixed_t x, fixed_t y, fixed_t z, int damage)
+void P_SpawnBlood(int x, int y, int z, int damage)
 {
 
     mobj_t *th;
@@ -1013,7 +1013,7 @@ void P_SpawnPlayerMissile(mobj_t *source, mobjtype_t type)
 {
 
     mobj_t *th;
-    fixed_t x, y, z, slope = 0;
+    int x, y, z, slope = 0;
     angle_t an = source->angle;
     uint_64_t mask = MF_FRIEND;
 

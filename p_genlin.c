@@ -203,7 +203,7 @@ int EV_DoGenCeiling(line_t *line)
   int                   secnum;
   int                   rtn;
   boolean               manual;
-  fixed_t               targheight;
+  int               targheight;
   sector_t*             sec;
   ceiling_t*            ceiling;
   unsigned              value = (unsigned)line->special - GenCeilingBase;
@@ -550,8 +550,8 @@ int EV_DoGenStairs(line_t *line)
 
   floormove_t*  floor;
 
-  fixed_t               stairsize;
-  fixed_t               speed;
+  int               stairsize;
+  int               speed;
 
   unsigned              value = (unsigned)line->special - GenStairsBase;
 

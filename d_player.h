@@ -28,11 +28,11 @@ typedef struct player_s
     mobj_t *mo;
     playerstate_t playerstate;
     ticcmd_t cmd;
-    fixed_t viewz;
-    fixed_t viewheight;
-    fixed_t deltaviewheight;
-    fixed_t bob;
-    fixed_t momx, momy;
+    int viewz;
+    int viewheight;
+    int deltaviewheight;
+    int bob;
+    int momx, momy;
     int health;
     int armorpoints;
     int armortype;

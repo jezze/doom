@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "doomtype.h"
 #include "doomdef.h"
 #include "m_fixed.h"
@@ -54,7 +53,7 @@ int I_GetTime(void)
 
 }
 
-fixed_t I_GetTimeFrac(void)
+int I_GetTimeFrac(void)
 {
 
     return 0;
@@ -68,7 +67,7 @@ unsigned long I_GetRandomTimeSeed(void)
 
 }
 
-void I_Read(int fd, void *vbuf, size_t sz)
+void I_Read(int fd, void *vbuf, unsigned int sz)
 {
 
 }

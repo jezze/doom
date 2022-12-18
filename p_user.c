@@ -14,7 +14,7 @@
 
 static boolean onground;
 
-void P_Thrust(player_t *player, angle_t angle, fixed_t move)
+void P_Thrust(player_t *player, angle_t angle, int move)
 {
 
     angle >>= ANGLETOFINESHIFT;
@@ -23,7 +23,7 @@ void P_Thrust(player_t *player, angle_t angle, fixed_t move)
 
 }
 
-static void P_Bob(player_t *player, angle_t angle, fixed_t move)
+static void P_Bob(player_t *player, angle_t angle, int move)
 {
 
     player->momx += FixedMul(move, finecosine[angle >>= ANGLETOFINESHIFT]);
@@ -35,7 +35,7 @@ void P_CalcHeight(player_t *player)
 {
 
     int angle;
-    fixed_t bob;
+    int bob;
 
     player->bob = false ? (FixedMul(player->mo->momx, player->mo->momx) + FixedMul(player->mo->momy,player->mo->momy)) >> 2 : player_bobbing ? (FixedMul(player->momx, player->momx) + FixedMul(player->momy, player->momy)) >> 2 : 0;
 

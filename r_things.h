@@ -8,11 +8,11 @@ extern int screenheightarray[MAX_SCREENWIDTH];
 
 extern int     *mfloorclip;
 extern int     *mceilingclip;
-extern fixed_t spryscale;
-extern fixed_t sprtopscreen;
-extern fixed_t pspritescale;
-extern fixed_t pspriteiscale;
-extern fixed_t pspriteyscale;
+extern int spryscale;
+extern int sprtopscreen;
+extern int pspritescale;
+extern int pspriteiscale;
+extern int pspriteyscale;
 
 void R_DrawMaskedColumn(const rpatch_t *patch, R_DrawColumn_f colfunc, draw_column_vars_t *dcvars, const rcolumn_t *column, const rcolumn_t *prevcolumn, const rcolumn_t *nextcolumn);
 void R_SortVisSprites(void);

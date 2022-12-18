@@ -35,7 +35,7 @@ int R_TextureNumForName(const char *name);
 int R_SafeTextureNumForName(const char *name, int snum);
 int R_CheckTextureNumForName(const char *name);
 int R_ColormapNumForName(const char *name);
-const lighttable_t* R_ColourMap(int lightlevel, fixed_t spryscale);
+const lighttable_t* R_ColourMap(int lightlevel, int spryscale);
 void R_SetPatchNum(patchnum_t *patchnum, const char *name);
 
 #endif

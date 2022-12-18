@@ -21,9 +21,9 @@
 #define DBITS                           (FRACBITS - SLOPEBITS)
 
 typedef unsigned angle_t;
-extern const fixed_t *finesine;
-extern const fixed_t *finecosine;
-extern const fixed_t *finetangent;
+extern const int *finesine;
+extern const int *finecosine;
+extern const int *finetangent;
 extern const angle_t *tantoangle;
 
 void R_LoadTrigTables(void);

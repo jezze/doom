@@ -734,7 +734,7 @@ void S_StopChannel(int cnum)
 int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, int *vol, int *sep, int *pitch)
 {
 
-    fixed_t adx, ady,approx_dist;
+    int adx, ady,approx_dist;
     angle_t angle;
 
     if (!snd_card)

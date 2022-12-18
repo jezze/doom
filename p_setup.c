@@ -71,7 +71,7 @@ typedef struct
 typedef struct
 {
 
-    fixed_t x,y;
+    int x,y;
 
 } mapglvertex_t;
 
@@ -89,13 +89,13 @@ enum
 int bmapwidth, bmapheight;
 long *blockmap;
 long *blockmaplump;
-fixed_t bmaporgx, bmaporgy;
+int bmaporgx, bmaporgy;
 mobj_t **blocklinks;
 static int rejectlump = -1;
 const byte *rejectmatrix;
 mapthing_t playerstarts[MAXPLAYERS];
 
-static void P_AddToBox(fixed_t* box, fixed_t x, fixed_t y)
+static void P_AddToBox(int* box, int x, int y)
 {
 
     if (x < box[BOXLEFT])
@@ -830,7 +830,7 @@ static void P_CreateBlockMap(void)
     for (i = 0; i < numvertexes; i++)
     {
 
-        fixed_t t;
+        int t;
 
         if ((t=vertexes[i].x) < map_minx)
             map_minx = t;
@@ -1232,7 +1232,7 @@ static int P_GroupLines(void)
     for (i = 0, sector = sectors; i < numsectors; i++, sector++)
     {
 
-        fixed_t *bbox = (void *)sector->blockbox;
+        int *bbox = (void *)sector->blockbox;
         int block;
 
         sector->soundorg.x = bbox[BOXRIGHT] / 2 + bbox[BOXLEFT] / 2;

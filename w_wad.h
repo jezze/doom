@@ -65,7 +65,7 @@ typedef struct
 } lumpinfo_t;
 
 extern wadfile_info_t *wadfiles;
-extern size_t numwadfiles;
+extern unsigned int numwadfiles;
 extern lumpinfo_t *lumpinfo;
 extern int numlumps;
 

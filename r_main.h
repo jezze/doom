@@ -14,19 +14,19 @@
 
 extern int skytexture;
 extern int skytexturemid;
-extern fixed_t viewcos;
-extern fixed_t viewsin;
+extern int viewcos;
+extern int viewsin;
 extern int viewwidth;
 extern int viewheight;
 extern int viewwindowx;
 extern int viewwindowy;
 extern int centerx;
 extern int centery;
-extern fixed_t centerxfrac;
-extern fixed_t centeryfrac;
-extern fixed_t viewheightfrac;
-extern fixed_t projection;
-extern fixed_t projectiony;
+extern int centerxfrac;
+extern int centeryfrac;
+extern int viewheightfrac;
+extern int projection;
+extern int projectiony;
 extern int validcount;
 extern int rendered_visplanes, rendered_segs, rendered_vissprites;
 extern boolean rendering_stats;
@@ -38,12 +38,12 @@ extern int extralight;
 extern const lighttable_t *fixedcolormap;
 
 void R_InitSkyMap(void);
-void R_InterpolateView(player_t *player, fixed_t frac);
-int R_PointOnSide(fixed_t x, fixed_t y, const node_t *node);
-int R_PointOnSegSide(fixed_t x, fixed_t y, const seg_t *line);
-angle_t R_PointToAngle(fixed_t x, fixed_t y);
-angle_t R_PointToAngle2(fixed_t x1, fixed_t y1, fixed_t x2, fixed_t y2);
-subsector_t *R_PointInSubsector(fixed_t x, fixed_t y);
+void R_InterpolateView(player_t *player, int frac);
+int R_PointOnSide(int x, int y, const node_t *node);
+int R_PointOnSegSide(int x, int y, const seg_t *line);
+angle_t R_PointToAngle(int x, int y);
+angle_t R_PointToAngle2(int x1, int y1, int x2, int y2);
+subsector_t *R_PointInSubsector(int x, int y);
 void R_RenderPlayerView(player_t *player);
 void R_Init(void);
 
